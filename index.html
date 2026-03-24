@@ -19,6 +19,7 @@
       --orange: #ff9500;
       --blue: #5e9eff;
       --red: #ff5555;
+      --header-height: 60px;
     }
 
     body {
@@ -27,6 +28,7 @@
       color: var(--text);
       min-height: 100vh;
       line-height: 1.5;
+      padding-top: var(--header-height);
     }
 
     /* Canvas fondo */
@@ -37,6 +39,7 @@
       width: 100%;
       height: 100%;
       z-index: 0;
+      transition: opacity 0.3s ease;
     }
 
     .nebula {
@@ -46,6 +49,128 @@
                   radial-gradient(ellipse at 70% 80%, rgba(20, 50, 80, 0.3) 0%, transparent 50%);
       z-index: 1;
       pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    /* STICKY HEADER */
+    .sticky-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(5, 5, 16, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .sticky-header.scrolled {
+      background: rgba(5, 5, 16, 0.95);
+      border-bottom-color: rgba(0, 255, 136, 0.25);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .logo span { color: var(--green); }
+
+    .header-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      max-width: 300px;
+    }
+
+    .mini-progress {
+      flex: 1;
+      height: 6px;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .mini-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-dim), var(--green));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .mini-percent {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--green);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* Mobile menu button */
+    .menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .menu-btn:hover {
+      border-color: var(--green);
+    }
+
+    /* Tabs in header */
+    .header-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .header-tab {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .header-tab:hover {
+      color: var(--text);
+      background: rgba(0, 255, 136, 0.05);
+    }
+
+    .header-tab.active {
+      background: var(--green);
+      color: var(--bg);
+      font-weight: 600;
     }
 
     main {
@@ -56,52 +181,21 @@
       padding: 20px;
     }
 
-    /* Header */
-    header {
-      padding: 80px 0 40px;
+    /* Welcome Section */
+    .welcome-section {
       text-align: center;
+      padding: 40px 0 20px;
     }
 
-    .logo {
+    .welcome-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 16px;
+      font-size: 1.8rem;
+      margin-bottom: 8px;
     }
 
-    .logo span { color: var(--green); }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: 1px solid var(--border);
+    .welcome-subtitle {
       color: var(--text-dim);
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-family: inherit;
       font-size: 0.9rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-
-    .tab-btn:hover {
-      border-color: var(--green);
-      color: var(--text);
-    }
-
-    .tab-btn.active {
-      background: var(--green);
-      border-color: var(--green);
-      color: var(--bg);
     }
 
     /* Progress Bar */
@@ -157,10 +251,16 @@
     /* Content sections */
     .content-section {
       display: none;
+      animation: fadeIn 0.3s ease;
     }
 
     .content-section.active {
       display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Cards Grid */
@@ -170,7 +270,7 @@
       gap: 16px;
     }
 
-    /* Task Card - CLICKEABLE */
+    /* Task Card */
     .task-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -185,6 +285,10 @@
     .task-card:hover {
       border-color: var(--green);
       transform: translateY(-2px);
+    }
+
+    .task-card:active {
+      transform: translateY(0);
     }
 
     .task-card.completed {
@@ -240,14 +344,16 @@
     .task-title {
       font-weight: 500;
       flex: 1;
+      font-size: 0.95rem;
     }
 
     .task-badge {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       padding: 4px 10px;
       border-radius: 20px;
       font-weight: 600;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .badge-principiante {
@@ -318,6 +424,7 @@
       font-family: inherit;
       font-size: 0.9rem;
       cursor: pointer;
+      min-width: 160px;
     }
 
     select:focus {
@@ -374,39 +481,212 @@
     }
 
     .link-tag {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       padding: 3px 8px;
       border-radius: 4px;
       background: rgba(0, 255, 136, 0.15);
       color: var(--green);
+      white-space: nowrap;
     }
 
-    /* Responsive */
-    @media (max-width: 600px) {
-      .logo { font-size: 1.8rem; }
-      .grid { grid-template-columns: 1fr; }
-      .tabs { flex-wrap: nowrap; }
-      .tab-btn { padding: 10px 16px; font-size: 0.8rem; }
+    /* Scroll fade indicator */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      opacity: 1;
+      transition: opacity 0.3s;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .scroll-indicator.hidden {
+      opacity: 0;
+    }
+
+    .scroll-arrow {
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 10px 16px;
+        flex-wrap: wrap;
+      }
+
+      .logo {
+        font-size: 1.2rem;
+      }
+
+      .header-tabs {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(5, 5, 16, 0.98);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .header-tabs.open {
+        display: flex;
+      }
+
+      .header-tab {
+        width: 100%;
+        text-align: left;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+      }
+
+      .menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .header-progress {
+        flex: 1;
+        max-width: none;
+      }
+
+      .welcome-section {
+        padding: 24px 0 16px;
+      }
+
+      .welcome-title {
+        font-size: 1.4rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .progress-section {
+        padding: 16px;
+      }
+
+      .task-card {
+        padding: 16px;
+      }
+
+      .task-title {
+        font-size: 0.9rem;
+      }
+
+      .task-desc {
+        font-size: 0.8rem;
+      }
+
+      .category-header {
+        font-size: 1rem;
+        margin: 24px 0 12px;
+      }
+
+      select {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .header-progress {
+        display: none;
+      }
+
+      .mini-progress-mobile {
+        display: block !important;
+        margin-top: 10px;
+      }
+
+      .header-tabs {
+        padding-bottom: 16px;
+      }
+
+      .header-tabs.open {
+        padding-bottom: 60px;
+      }
+    }
+
+    .mini-progress-mobile {
+      display: none;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 <body>
   <canvas id="stars"></canvas>
-  <div class="nebula"></div>
+  <div class="nebula" id="nebula"></div>
+
+  <!-- Sticky Header -->
+  <header class="sticky-header" id="stickyHeader">
+    <div class="header-inner">
+      <div class="logo-section">
+        <h1 class="logo"><span>&gt;_</span> cyberpath</h1>
+      </div>
+
+      <div class="header-progress" id="headerProgress">
+        <div class="mini-progress">
+          <div class="mini-progress-fill" id="miniProgressFill"></div>
+        </div>
+        <span class="mini-percent" id="miniPercent">0%</span>
+      </div>
+
+      <nav class="header-tabs" id="headerTabs">
+        <button class="header-tab active" data-tab="progreso">Mi Progreso</button>
+        <button class="header-tab" data-tab="formacion">Formacion</button>
+        <button class="header-tab" data-tab="labs">Laboratorios</button>
+        <button class="header-tab" data-tab="comunidades">Comunidades</button>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile progress bar for very small screens -->
+    <div class="mini-progress-mobile" style="padding: 0 16px 10px;">
+      <div class="mini-progress">
+        <div class="mini-progress-fill" id="miniProgressFillMobile"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.75rem; color: var(--text-dim);">
+        <span id="completedCountMobile">0 completados</span>
+        <span id="miniPercentMobile" style="color: var(--green); font-weight: 700;">0%</span>
+      </div>
+    </div>
+  </header>
 
   <main>
-    <header>
-      <h1 class="logo"><span>&gt;_</span> cyberpath</h1>
-      <p style="color: var(--text-dim);">Tu ruta de aprendizaje en ciberseguridad</p>
-    </header>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="progreso">Mi Progreso</button>
-      <button class="tab-btn" data-tab="formacion">Formacion</button>
-      <button class="tab-btn" data-tab="labs">Laboratorios</button>
-      <button class="tab-btn" data-tab="comunidades">Comunidades</button>
-    </div>
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <h2 class="welcome-title">Tu ruta de aprendizaje en ciberseguridad</h2>
+      <p class="welcome-subtitle">Marca los objetivos completados y sigue tu progreso</p>
+    </section>
 
     <!-- Progress Section -->
     <div class="progress-section">
@@ -468,6 +748,14 @@
       <div class="grid" id="comunidadesGrid"></div>
     </div>
   </main>
+
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator" id="scrollIndicator">
+    <span>Desliza para explorar</span>
+    <svg class="scroll-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
 
   <script>
     // ========== DATA ==========
@@ -558,11 +846,18 @@
       completed = {};
     }
 
-    // ========== STARS BACKGROUND ==========
+    // ========== DOM ELEMENTS ==========
     const canvas = document.getElementById('stars');
     const ctx = canvas.getContext('2d');
+    const nebula = document.getElementById('nebula');
+    const stickyHeader = document.getElementById('stickyHeader');
+    const scrollIndicator = document.getElementById('scrollIndicator');
+    const menuBtn = document.getElementById('menuBtn');
+    const headerTabs = document.getElementById('headerTabs');
+    
     let stars = [];
 
+    // ========== STARS BACKGROUND ==========
     function initStars() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -596,6 +891,51 @@
       drawStars();
       window.addEventListener('resize', initStars);
     }
+
+    // ========== SCROLL EFFECTS ==========
+    let lastScrollY = 0;
+    const maxScrollFade = 500;
+
+    function handleScroll() {
+      const scrollY = window.scrollY;
+      
+      // Header scrolled state
+      if (scrollY > 20) {
+        stickyHeader.classList.add('scrolled');
+      } else {
+        stickyHeader.classList.remove('scrolled');
+      }
+
+      // Hide scroll indicator
+      if (scrollY > 100) {
+        scrollIndicator.classList.add('hidden');
+      } else {
+        scrollIndicator.classList.remove('hidden');
+      }
+
+      // Fade out space background
+      const fadeProgress = Math.min(scrollY / maxScrollFade, 1);
+      const opacity = 1 - (fadeProgress * 0.85);
+      
+      canvas.style.opacity = opacity;
+      nebula.style.opacity = opacity;
+
+      lastScrollY = scrollY;
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // ========== MOBILE MENU ==========
+    menuBtn.addEventListener('click', () => {
+      headerTabs.classList.toggle('open');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!headerTabs.contains(e.target) && !menuBtn.contains(e.target)) {
+        headerTabs.classList.remove('open');
+      }
+    });
 
     // ========== RENDER FUNCTIONS ==========
     function renderTasks(filter = 'all') {
@@ -671,20 +1011,51 @@
       const done = Object.values(completed).filter(v => v).length;
       const percent = Math.round((done / total) * 100);
 
+      // Main progress
       document.getElementById('progressFill').style.width = percent + '%';
       document.getElementById('percentDisplay').textContent = percent + '%';
       document.getElementById('completedCount').textContent = done + ' completados';
       document.getElementById('totalCount').textContent = 'de ' + total + ' objetivos';
+
+      // Header mini progress
+      document.getElementById('miniProgressFill').style.width = percent + '%';
+      document.getElementById('miniPercent').textContent = percent + '%';
+
+      // Mobile mini progress
+      const miniMobile = document.getElementById('miniProgressFillMobile');
+      if (miniMobile) {
+        miniMobile.style.width = percent + '%';
+      }
+      const miniPercentMobile = document.getElementById('miniPercentMobile');
+      if (miniPercentMobile) {
+        miniPercentMobile.textContent = percent + '%';
+      }
+      const completedMobile = document.getElementById('completedCountMobile');
+      if (completedMobile) {
+        completedMobile.textContent = done + ' completados';
+      }
     }
 
     // ========== TAB SWITCHING ==========
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    function switchTab(tabName) {
+      // Update header tabs
+      document.querySelectorAll('.header-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.tab === tabName);
+      });
 
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      // Update content sections
+      document.querySelectorAll('.content-section').forEach(s => {
+        s.classList.remove('active');
+      });
+      document.getElementById('tab-' + tabName).classList.add('active');
+
+      // Close mobile menu
+      headerTabs.classList.remove('open');
+    }
+
+    document.querySelectorAll('.header-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchTab(btn.dataset.tab);
       });
     });
 
@@ -707,6 +1078,7 @@
     renderResources(labs, 'labsGrid', 'all', 'LAB');
     renderResources(comunidades, 'comunidadesGrid', 'all', 'COMUNIDAD');
     updateProgress();
+    handleScroll();
   </script>
 </body>
 </html>
