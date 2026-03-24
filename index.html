@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CyberPath - Ruta de Aprendizaje</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg: #050510;
+      --card: rgba(15, 15, 30, 0.9);
+      --text: #e0e0e8;
+      --text-dim: #808090;
+      --green: #00ff88;
+      --green-dim: #00cc6a;
+      --border: rgba(0, 255, 136, 0.2);
+      --orange: #ff9500;
+      --blue: #5e9eff;
+      --red: #ff5555;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* Canvas fondo */
+    #stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .nebula {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(50, 20, 80, 0.4) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(20, 50, 80, 0.3) 0%, transparent 50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      padding: 80px 0 40px;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .logo span { color: var(--green); }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--green);
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: var(--bg);
+    }
+
+    /* Progress Bar */
+    .progress-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .progress-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+    }
+
+    .progress-percent {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-dim), var(--green));
+      border-radius: 6px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    /* Content sections */
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    /* Cards Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    /* Task Card - CLICKEABLE */
+    .task-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-card:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    .task-card.completed {
+      border-color: var(--green);
+      background: rgba(0, 255, 136, 0.05);
+    }
+
+    .task-card.completed::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--green);
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .task-check {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .task-card.completed .task-check {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .task-check svg {
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.2s;
+    }
+
+    .task-card.completed .task-check svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .task-title {
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .task-badge {
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-principiante {
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--green);
+    }
+
+    .badge-intermedio {
+      background: rgba(255, 149, 0, 0.15);
+      color: var(--orange);
+    }
+
+    .badge-avanzado {
+      background: rgba(255, 85, 85, 0.15);
+      color: var(--red);
+    }
+
+    .task-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .task-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+
+    .task-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Category Header */
+    .category-header {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      margin: 32px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-header::before {
+      content: '>';
+      color: var(--green);
+    }
+
+    /* Filter */
+    .filter-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+
+    /* Resources Cards */
+    .resource-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+
+    .resource-card:hover {
+      border-color: var(--green);
+    }
+
+    .resource-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .resource-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .resource-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+
+    .resource-link:hover {
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .link-tag {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--green);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .logo { font-size: 1.8rem; }
+      .grid { grid-template-columns: 1fr; }
+      .tabs { flex-wrap: nowrap; }
+      .tab-btn { padding: 10px 16px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+  <div class="nebula"></div>
+
+  <main>
+    <header>
+      <h1 class="logo"><span>&gt;_</span> cyberpath</h1>
+      <p style="color: var(--text-dim);">Tu ruta de aprendizaje en ciberseguridad</p>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="progreso">Mi Progreso</button>
+      <button class="tab-btn" data-tab="formacion">Formacion</button>
+      <button class="tab-btn" data-tab="labs">Laboratorios</button>
+      <button class="tab-btn" data-tab="comunidades">Comunidades</button>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-title">Progreso Total</span>
+        <span class="progress-percent" id="percentDisplay">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-stats">
+        <span id="completedCount">0 completados</span>
+        <span id="totalCount">de 15 objetivos</span>
+      </div>
+    </div>
+
+    <!-- PROGRESO TAB -->
+    <div class="content-section active" id="tab-progreso">
+      <div class="filter-row">
+        <select id="filterLevel">
+          <option value="all">Todos los niveles</option>
+          <option value="principiante">Principiante</option>
+          <option value="intermedio">Intermedio</option>
+          <option value="avanzado">Avanzado</option>
+        </select>
+      </div>
+
+      <div id="tasksContainer"></div>
+    </div>
+
+    <!-- FORMACION TAB -->
+    <div class="content-section" id="tab-formacion">
+      <div class="filter-row">
+        <select id="formacionLevel">
+          <option value="all">Todos los niveles</option>
+          <option value="principiante">Principiante</option>
+          <option value="intermedio">Intermedio</option>
+          <option value="avanzado">Avanzado</option>
+        </select>
+      </div>
+      <div class="grid" id="formacionGrid"></div>
+    </div>
+
+    <!-- LABS TAB -->
+    <div class="content-section" id="tab-labs">
+      <div class="filter-row">
+        <select id="labsLevel">
+          <option value="all">Todos los niveles</option>
+          <option value="principiante">Principiante</option>
+          <option value="intermedio">Intermedio</option>
+          <option value="avanzado">Avanzado</option>
+        </select>
+      </div>
+      <div class="grid" id="labsGrid"></div>
+    </div>
+
+    <!-- COMUNIDADES TAB -->
+    <div class="content-section" id="tab-comunidades">
+      <div class="grid" id="comunidadesGrid"></div>
+    </div>
+  </main>
+
+  <script>
+    // ========== DATA ==========
+    const tasks = [
+      { id: 1, category: 'Fundamentos', title: 'Redes basicas (TCP/IP, DNS, HTTP)', level: 'principiante', desc: 'Aprende como funciona internet', link: 'https://www.cybrary.it' },
+      { id: 2, category: 'Fundamentos', title: 'Linux y terminal', level: 'principiante', desc: 'Comandos basicos y navegacion', link: 'https://tryhackme.com/path/outline/linuxfundamentals' },
+      { id: 3, category: 'Fundamentos', title: 'Python para scripting', level: 'principiante', desc: 'Automatiza tareas simples', link: 'https://www.udemy.com/course/python-for-cybersecurity' },
+      { id: 4, category: 'Seguridad Web', title: 'OWASP Top 10', level: 'intermedio', desc: 'Los 10 riesgos mas criticos', link: 'https://owasp.org/www-project-top-ten' },
+      { id: 5, category: 'Seguridad Web', title: 'Labs PortSwigger', level: 'intermedio', desc: 'Practica XSS, SQLi, CSRF', link: 'https://portswigger.net/web-security' },
+      { id: 6, category: 'Pentesting', title: 'Curso de pentesting', level: 'intermedio', desc: 'Metodologias y herramientas', link: 'https://tryhackme.com/path/outline/pentesting' },
+      { id: 7, category: 'Pentesting', title: '10 maquinas HTB', level: 'intermedio', desc: 'Hack The Box practico', link: 'https://www.hackthebox.com' },
+      { id: 8, category: 'Pentesting', title: '10 rooms TryHackMe', level: 'principiante', desc: 'Ejercicios guiados', link: 'https://tryhackme.com' },
+      { id: 9, category: 'Blue Team', title: 'Analisis de logs con SIEM', level: 'intermedio', desc: 'Splunk, ELK Stack', link: 'https://www.splunk.com' },
+      { id: 10, category: 'Blue Team', title: 'Wireshark y trafico de red', level: 'intermedio', desc: 'Captura y analisis de paquetes', link: 'https://www.wireshark.org' },
+      { id: 11, category: 'Blue Team', title: 'Forense digital basico', level: 'avanzado', desc: 'Analisis de evidencias', link: 'https://www.autopsy.com' },
+      { id: 12, category: 'OSINT', title: 'Herramientas OSINT basicas', level: 'principiante', desc: 'Reconocimiento de fuentes abiertas', link: 'https://osintframework.com' },
+      { id: 13, category: 'OSINT', title: 'Google Dorks avanzados', level: 'intermedio', desc: 'Busquedas avanzadas', link: 'https://www.exploit-db.com/google-hacking-database' },
+      { id: 14, category: 'Certificaciones', title: 'CompTIA Security+', level: 'principiante', desc: 'Certificacion de entrada', link: 'https://www.comptia.org/certifications/security' },
+      { id: 15, category: 'Certificaciones', title: 'CEH o similar', level: 'avanzado', desc: 'Certificacion profesional', link: 'https://www.eccouncil.org/programs/certified-ethical-hacker-ceh' }
+    ];
+
+    const formacion = [
+      { title: 'OWASP', level: 'principiante', desc: 'Estandar en seguridad web con Top 10 riesgos criticos', links: [
+        { url: 'https://owasp.org/www-project-top-ten', label: 'Top Ten Project' },
+        { url: 'https://owasp.org/Top10/2025', label: 'OWASP Top 10 2025' }
+      ]},
+      { title: 'Cybrary', level: 'principiante', desc: 'Cursos gratuitos y de pago para todos los niveles', links: [
+        { url: 'https://www.cybrary.it', label: 'Plataforma' },
+        { url: 'https://www.cybrary.it/free-content', label: 'Contenido gratis' }
+      ]},
+      { title: 'Coursera', level: 'principiante', desc: 'Certificaciones profesionales de Google e IBM', links: [
+        { url: 'https://www.coursera.org/professional-certificates/google-cybersecurity', label: 'Google Cybersecurity' },
+        { url: 'https://www.coursera.org/professional-certificates/ibm-cybersecurity-analyst', label: 'IBM Cybersecurity' }
+      ]},
+      { title: 'INE Security', level: 'intermedio', desc: 'Formacion avanzada en red team y blue team', links: [
+        { url: 'https://ine.com/security', label: 'INE Security' }
+      ]},
+      { title: 'SANS Institute', level: 'avanzado', desc: 'Formacion elite con 85+ cursos especializados', links: [
+        { url: 'https://www.sans.org', label: 'SANS Institute' },
+        { url: 'https://www.sans.org/cyberaces', label: 'Cyber Aces Gratis' }
+      ]},
+      { title: 'Udemy', level: 'principiante', desc: 'Cursos accesibles de ethical hacking y Python', links: [
+        { url: 'https://www.udemy.com/course/cyber-security-ethical-hacking-v2026-from-zero-to-expert', label: 'Ethical Hacking v2026' },
+        { url: 'https://www.udemy.com/course/python-for-cybersecurity', label: 'Python for Cybersecurity' }
+      ]}
+    ];
+
+    const labs = [
+      { title: 'TryHackMe', level: 'principiante', desc: 'Muy amigable para principiantes con rooms guiados', links: [
+        { url: 'https://tryhackme.com', label: 'Plataforma' },
+        { url: 'https://tryhackme.com/path/outline/cybersecurity101', label: 'Cyber Security 101' }
+      ]},
+      { title: 'Hack The Box', level: 'intermedio', desc: 'Maquinas reales vulnerables para pentesting', links: [
+        { url: 'https://www.hackthebox.com', label: 'Plataforma' },
+        { url: 'https://www.hackthebox.com/machines', label: 'Maquinas' }
+      ]},
+      { title: 'PortSwigger Academy', level: 'intermedio', desc: 'Labs gratuitos de vulnerabilidades web', links: [
+        { url: 'https://portswigger.net/web-security', label: 'Web Security Academy' },
+        { url: 'https://portswigger.net/web-security/all-labs', label: 'Todos los labs' }
+      ]},
+      { title: 'Root-Me', level: 'intermedio', desc: '600+ retos de cracking, forense y redes', links: [
+        { url: 'https://www.root-me.org', label: 'Plataforma' },
+        { url: 'https://www.root-me.org/en/Challenges', label: 'Retos' }
+      ]}
+    ];
+
+    const comunidades = [
+      { title: 'Reddit', level: 'principiante', desc: 'Foros globales de discusion sobre ciberseguridad', links: [
+        { url: 'https://www.reddit.com/r/cybersecurity', label: 'r/cybersecurity' },
+        { url: 'https://www.reddit.com/r/netsec', label: 'r/netsec' },
+        { url: 'https://www.reddit.com/r/hacking', label: 'r/hacking' }
+      ]},
+      { title: 'Discord', level: 'principiante', desc: 'Servidores de hacking etico y bug bounty', links: [
+        { url: 'https://discord.com/invite/cyberverse', label: 'CyberVerse' },
+        { url: 'https://disboard.org/es/search?keyword=ciberseguridad', label: 'Buscar servidores' }
+      ]},
+      { title: 'Stack Overflow', level: 'intermedio', desc: 'Dudas tecnicas de programacion y seguridad', links: [
+        { url: 'https://stackoverflow.com/questions/tagged/security', label: 'Tag Security' },
+        { url: 'https://security.stackexchange.com', label: 'Security StackExchange' }
+      ]}
+    ];
+
+    // ========== STATE ==========
+    let completed = {};
+    try {
+      completed = JSON.parse(localStorage.getItem('cyberpath_tasks') || '{}');
+    } catch(e) {
+      completed = {};
+    }
+
+    // ========== STARS BACKGROUND ==========
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function initStars() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const count = Math.floor((canvas.width * canvas.height) / 6000);
+      stars = [];
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.5 + 0.5,
+          a: Math.random()
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => {
+        s.a += 0.005 * (Math.random() > 0.5 ? 1 : -1);
+        s.a = Math.max(0.2, Math.min(1, s.a));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, Math.max(0.1, s.r), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      initStars();
+      drawStars();
+      window.addEventListener('resize', initStars);
+    }
+
+    // ========== RENDER FUNCTIONS ==========
+    function renderTasks(filter = 'all') {
+      const container = document.getElementById('tasksContainer');
+      const categories = [...new Set(tasks.map(t => t.category))];
+      
+      container.innerHTML = categories.map(cat => {
+        const catTasks = tasks.filter(t => t.category === cat && (filter === 'all' || t.level === filter));
+        if (catTasks.length === 0) return '';
+        
+        return `
+          <h3 class="category-header">${cat}</h3>
+          <div class="grid">
+            ${catTasks.map(t => `
+              <div class="task-card ${completed[t.id] ? 'completed' : ''}" data-id="${t.id}">
+                <div class="task-header">
+                  <div class="task-check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#050510" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <div class="task-title">${t.title}</div>
+                  <span class="task-badge badge-${t.level}">${t.level}</span>
+                </div>
+                <p class="task-desc">${t.desc}</p>
+                <a href="${t.link}" target="_blank" class="task-link" onclick="event.stopPropagation()">
+                  Ir al recurso
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                  </svg>
+                </a>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+
+      // Add click handlers
+      container.querySelectorAll('.task-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = parseInt(card.dataset.id);
+          completed[id] = !completed[id];
+          card.classList.toggle('completed');
+          localStorage.setItem('cyberpath_tasks', JSON.stringify(completed));
+          updateProgress();
+        });
+      });
+    }
+
+    function renderResources(data, containerId, filter = 'all', tag = '') {
+      const container = document.getElementById(containerId);
+      const filtered = filter === 'all' ? data : data.filter(r => r.level === filter);
+      
+      container.innerHTML = filtered.map(r => `
+        <div class="resource-card">
+          <div class="resource-title">${r.title}</div>
+          <span class="task-badge badge-${r.level}" style="margin-bottom: 8px; display: inline-block;">${r.level}</span>
+          <p class="resource-desc">${r.desc}</p>
+          <div class="resource-links">
+            ${r.links.map(l => `
+              <a href="${l.url}" target="_blank" class="resource-link">
+                <span class="link-tag">${tag || r.title}</span>
+                ${l.label}
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateProgress() {
+      const total = tasks.length;
+      const done = Object.values(completed).filter(v => v).length;
+      const percent = Math.round((done / total) * 100);
+
+      document.getElementById('progressFill').style.width = percent + '%';
+      document.getElementById('percentDisplay').textContent = percent + '%';
+      document.getElementById('completedCount').textContent = done + ' completados';
+      document.getElementById('totalCount').textContent = 'de ' + total + ' objetivos';
+    }
+
+    // ========== TAB SWITCHING ==========
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ========== FILTERS ==========
+    document.getElementById('filterLevel').addEventListener('change', e => {
+      renderTasks(e.target.value);
+    });
+
+    document.getElementById('formacionLevel').addEventListener('change', e => {
+      renderResources(formacion, 'formacionGrid', e.target.value, 'FORMACION');
+    });
+
+    document.getElementById('labsLevel').addEventListener('change', e => {
+      renderResources(labs, 'labsGrid', e.target.value, 'LAB');
+    });
+
+    // ========== INIT ==========
+    renderTasks();
+    renderResources(formacion, 'formacionGrid', 'all', 'FORMACION');
+    renderResources(labs, 'labsGrid', 'all', 'LAB');
+    renderResources(comunidades, 'comunidadesGrid', 'all', 'COMUNIDAD');
+    updateProgress();
+  </script>
+</body>
+</html>
