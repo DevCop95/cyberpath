@@ -1,1084 +1,196 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CyberPath - Ruta de Aprendizaje</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    :root {
-      --bg: #050510;
-      --card: rgba(15, 15, 30, 0.9);
-      --text: #e0e0e8;
-      --text-dim: #808090;
-      --green: #00ff88;
-      --green-dim: #00cc6a;
-      --border: rgba(0, 255, 136, 0.2);
-      --orange: #ff9500;
-      --blue: #5e9eff;
-      --red: #ff5555;
-      --header-height: 60px;
-    }
-
-    body {
-      font-family: 'JetBrains Mono', monospace;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.5;
-      padding-top: var(--header-height);
-    }
-
-    /* Canvas fondo */
-    #stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .nebula {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 20%, rgba(50, 20, 80, 0.4) 0%, transparent 50%),
-                  radial-gradient(ellipse at 70% 80%, rgba(20, 50, 80, 0.3) 0%, transparent 50%);
-      z-index: 1;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    /* STICKY HEADER */
-    .sticky-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(5, 5, 16, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 255, 136, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .sticky-header.scrolled {
-      background: rgba(5, 5, 16, 0.95);
-      border-bottom-color: rgba(0, 255, 136, 0.25);
-    }
-
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .logo span { color: var(--green); }
-
-    .header-progress {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      max-width: 300px;
-    }
-
-    .mini-progress {
-      flex: 1;
-      height: 6px;
-      background: rgba(0, 255, 136, 0.1);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .mini-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green-dim), var(--green));
-      border-radius: 3px;
-      transition: width 0.3s ease;
-    }
-
-    .mini-percent {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--green);
-      min-width: 40px;
-      text-align: right;
-    }
-
-    /* Mobile menu button */
-    .menu-btn {
-      display: none;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .menu-btn:hover {
-      border-color: var(--green);
-    }
-
-    /* Tabs in header */
-    .header-tabs {
-      display: flex;
-      gap: 4px;
-    }
-
-    .header-tab {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-dim);
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 0.8rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-
-    .header-tab:hover {
-      color: var(--text);
-      background: rgba(0, 255, 136, 0.05);
-    }
-
-    .header-tab.active {
-      background: var(--green);
-      color: var(--bg);
-      font-weight: 600;
-    }
-
-    main {
-      position: relative;
-      z-index: 10;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* Welcome Section */
-    .welcome-section {
-      text-align: center;
-      padding: 40px 0 20px;
-    }
-
-    .welcome-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.8rem;
-      margin-bottom: 8px;
-    }
-
-    .welcome-subtitle {
-      color: var(--text-dim);
-      font-size: 0.9rem;
-    }
-
-    /* Progress Bar */
-    .progress-section {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-
-    .progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .progress-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.1rem;
-    }
-
-    .progress-percent {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--green);
-    }
-
-    .progress-bar {
-      height: 12px;
-      background: rgba(0, 255, 136, 0.1);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green-dim), var(--green));
-      border-radius: 6px;
-      width: 0%;
-      transition: width 0.5s ease;
-    }
-
-    .progress-stats {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: var(--text-dim);
-    }
-
-    /* Content sections */
-    .content-section {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .content-section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Cards Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
-    }
-
-    /* Task Card */
-    .task-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .task-card:hover {
-      border-color: var(--green);
-      transform: translateY(-2px);
-    }
-
-    .task-card:active {
-      transform: translateY(0);
-    }
-
-    .task-card.completed {
-      border-color: var(--green);
-      background: rgba(0, 255, 136, 0.05);
-    }
-
-    .task-card.completed::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--green);
-    }
-
-    .task-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .task-check {
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--border);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.2s;
-    }
-
-    .task-card.completed .task-check {
-      background: var(--green);
-      border-color: var(--green);
-    }
-
-    .task-check svg {
-      opacity: 0;
-      transform: scale(0);
-      transition: all 0.2s;
-    }
-
-    .task-card.completed .task-check svg {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .task-title {
-      font-weight: 500;
-      flex: 1;
-      font-size: 0.95rem;
-    }
-
-    .task-badge {
-      font-size: 0.65rem;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .badge-principiante {
-      background: rgba(0, 255, 136, 0.15);
-      color: var(--green);
-    }
-
-    .badge-intermedio {
-      background: rgba(255, 149, 0, 0.15);
-      color: var(--orange);
-    }
-
-    .badge-avanzado {
-      background: rgba(255, 85, 85, 0.15);
-      color: var(--red);
-    }
-
-    .task-desc {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      margin-bottom: 12px;
-    }
-
-    .task-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--green);
-      font-size: 0.85rem;
-      text-decoration: none;
-    }
-
-    .task-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Category Header */
-    .category-header {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.2rem;
-      margin: 32px 0 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .category-header::before {
-      content: '>';
-      color: var(--green);
-    }
-
-    /* Filter */
-    .filter-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    select {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      cursor: pointer;
-      min-width: 160px;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: var(--green);
-    }
-
-    /* Resources Cards */
-    .resource-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-      transition: all 0.2s;
-    }
-
-    .resource-card:hover {
-      border-color: var(--green);
-    }
-
-    .resource-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-    }
-
-    .resource-desc {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      margin-bottom: 16px;
-    }
-
-    .resource-links {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .resource-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.85rem;
-      transition: background 0.2s;
-    }
-
-    .resource-link:hover {
-      background: rgba(0, 255, 136, 0.1);
-    }
-
-    .link-tag {
-      font-size: 0.65rem;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(0, 255, 136, 0.15);
-      color: var(--green);
-      white-space: nowrap;
-    }
-
-    /* Scroll fade indicator */
-    .scroll-indicator {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      opacity: 1;
-      transition: opacity 0.3s;
-      z-index: 50;
-      pointer-events: none;
-    }
-
-    .scroll-indicator.hidden {
-      opacity: 0;
-    }
-
-    .scroll-arrow {
-      animation: bounce 1.5s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(5px); }
-    }
-
-    /* Mobile Styles */
-    @media (max-width: 768px) {
-      .header-inner {
-        padding: 10px 16px;
-        flex-wrap: wrap;
-      }
-
-      .logo {
-        font-size: 1.2rem;
-      }
-
-      .header-tabs {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: rgba(5, 5, 16, 0.98);
-        border-bottom: 1px solid var(--border);
-        padding: 12px 16px;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .header-tabs.open {
-        display: flex;
-      }
-
-      .header-tab {
-        width: 100%;
-        text-align: left;
-        padding: 12px 16px;
-        font-size: 0.9rem;
-      }
-
-      .menu-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .header-progress {
-        flex: 1;
-        max-width: none;
-      }
-
-      .welcome-section {
-        padding: 24px 0 16px;
-      }
-
-      .welcome-title {
-        font-size: 1.4rem;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .progress-section {
-        padding: 16px;
-      }
-
-      .task-card {
-        padding: 16px;
-      }
-
-      .task-title {
-        font-size: 0.9rem;
-      }
-
-      .task-desc {
-        font-size: 0.8rem;
-      }
-
-      .category-header {
-        font-size: 1rem;
-        margin: 24px 0 12px;
-      }
-
-      select {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .header-progress {
-        display: none;
-      }
-
-      .mini-progress-mobile {
-        display: block !important;
-        margin-top: 10px;
-      }
-
-      .header-tabs {
-        padding-bottom: 16px;
-      }
-
-      .header-tabs.open {
-        padding-bottom: 60px;
-      }
-    }
-
-    .mini-progress-mobile {
-      display: none;
-    }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CyberPath — Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:#050510; overflow:hidden; font-family:'JetBrains Mono',monospace; touch-action:none; }
+canvas { display:block; }
+#ui { position:fixed; inset:0; pointer-events:none; z-index:10; }
+.header { position:absolute; top:12px; left:50%; transform:translateX(-50%); text-align:center; pointer-events:none; width:100%; max-width:90vw; }
+.header h1 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.2rem,4vw,1.8rem); color:#00ff88; text-shadow:0 0 20px rgba(0,255,136,0.5); letter-spacing:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.header p { color:#505060; font-size:0.7rem; margin-top:2px; }
+#tooltip { position:absolute; background:rgba(5,5,16,0.98); border:1px solid rgba(0,255,136,0.35); border-radius:12px; padding:12px 16px; min-width:200px; max-width:280px; opacity:0; transition:opacity 0.15s; pointer-events:none; box-shadow:0 0 20px rgba(0,255,136,0.15); z-index:20; }
+#tooltip.visible { opacity:1; }
+.tt-num { font-size:0.65rem; color:#505060; margin-bottom:2px; letter-spacing:1px; }
+.tt-name { font-family:'Space Grotesk',sans-serif; font-size:0.95rem; color:#e0e0e8; margin-bottom:4px; }
+.tt-badge { display:inline-block; font-size:0.6rem; font-weight:700; padding:2px 8px; border-radius:20px; margin-bottom:6px; letter-spacing:1px; }
+.tt-url { font-size:0.68rem; color:#404055; word-break:break-all; }
+.tt-desc { font-size:0.65rem; color:#808090; margin:6px 0; line-height:1.3; }
+.tt-features { font-size:0.6rem; color:#606070; margin-top:4px; }
+.tt-features span { display:inline-block; margin:2px 4px 2px 0; padding:2px 6px; background:rgba(0,255,136,0.1); border-radius:4px; color:#00cc66; }
+.tt-click { font-size:0.65rem; margin-top:8px; color:#00ff88; display:flex; align-items:center; gap:6px; }
+.modal-overlay { position:fixed; inset:0; background:rgba(2,2,12,0.82); backdrop-filter:blur(6px); z-index:100; display:none; align-items:center; justify-content:center; padding:16px; pointer-events:all; }
+.modal-overlay.active { display:flex; }
+.modal-card { background:rgba(8,8,22,0.98); border:1px solid rgba(0,255,136,0.22); border-radius:18px; width:100%; max-width:480px; max-height:88vh; overflow-y:auto; padding:22px 22px 26px; box-shadow:0 0 60px rgba(0,255,136,0.08), 0 30px 80px rgba(0,0,0,0.7); animation:modalIn 0.22s cubic-bezier(.16,1,.3,1); scrollbar-width:thin; scrollbar-color:#1a2a1a transparent; }
+.modal-card::-webkit-scrollbar { width:4px; }
+.modal-card::-webkit-scrollbar-thumb { background:#1a3a1a; border-radius:4px; }
+@keyframes modalIn { from { opacity:0; transform:translateY(18px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+.modal-header { display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid rgba(0,255,136,0.15); margin-bottom:18px; }
+.modal-header h2 { font-family:'Space Grotesk',sans-serif; color:#00ff88; font-size:1.15rem; display:flex; align-items:center; gap:8px; }
+.modal-close { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#808090; width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.modal-close:hover { border-color:#00ff88; color:#00ff88; }
+.level-card { background:rgba(10,10,26,0.8); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:14px; }
+.level-card h3 { font-family:'Space Grotesk',sans-serif; font-size:0.95rem; margin-bottom:7px; display:flex; align-items:center; gap:8px; }
+.level-card h3 .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.level-card p { font-size:0.73rem; color:#808090; line-height:1.5; margin-bottom:7px; }
+.level-card ul { font-size:0.68rem; color:#606070; padding-left:16px; }
+.level-card li { margin:3px 0; }
+.preview-header { display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.09); margin-bottom:16px; }
+.preview-title { font-family:'Space Grotesk',sans-serif; color:#e0e0e8; font-size:1.15rem; }
+.preview-badge { font-size:0.62rem; font-weight:700; padding:3px 10px; border-radius:20px; margin-top:5px; display:inline-block; }
+.preview-content { display:grid; gap:14px; }
+.preview-section h4 { font-family:'Space Grotesk',sans-serif; color:#00ff88; font-size:0.82rem; margin-bottom:7px; display:flex; align-items:center; gap:6px; }
+.preview-section p, .preview-section li { font-size:0.73rem; color:#808090; line-height:1.5; }
+.preview-section ul { padding-left:16px; }
+.preview-section li { margin:3px 0; }
+.preview-meta { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:6px; }
+.preview-meta-item { background:rgba(0,255,136,0.07); border-radius:8px; padding:9px 10px; font-size:0.68rem; }
+.preview-meta-label { color:#505060; font-size:0.62rem; display:block; margin-bottom:3px; }
+.preview-meta-value { color:#00ff88; font-weight:700; }
+.preview-cta { margin-top:18px; display:flex; gap:8px; }
+.preview-cta a { flex:1; text-align:center; padding:11px; background:#00ff88; color:#050510; text-decoration:none; border-radius:10px; font-weight:700; font-size:0.82rem; transition:transform 0.15s, box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:6px; }
+.preview-cta a:hover { transform:scale(1.03); box-shadow:0 4px 20px rgba(0,255,136,0.3); }
+.preview-cta a.secondary { background:rgba(255,255,255,0.08); color:#c0c0d0; border:1px solid rgba(255,255,255,0.1); }
+.preview-cta a.secondary:hover { background:rgba(255,255,255,0.13); box-shadow:none; }
+.legend { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:14px; background:rgba(5,5,16,0.85); border:1px solid rgba(0,255,136,0.12); border-radius:24px; padding:8px 16px; pointer-events:none; }
+.leg-item { display:flex; align-items:center; gap:6px; font-size:0.7rem; color:#707080; }
+.leg-dot { width:8px; height:8px; border-radius:50%; }
+.hint { position:absolute; bottom:64px; left:50%; transform:translateX(-50%); color:#303040; font-size:0.68rem; white-space:nowrap; text-align:center; padding:0 10px; }
+.controls { position:absolute; top:12px; right:12px; display:flex; flex-direction:column; gap:6px; pointer-events:all; }
+.ctrl-btn { background:rgba(5,5,16,0.85); border:1px solid rgba(0,255,136,0.18); color:#808090; width:36px; height:36px; border-radius:8px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; font-family:inherit; }
+.ctrl-btn:hover { border-color:#00ff88; color:#00ff88; }
+.level-panel { position:absolute; top:12px; left:12px; display:flex; flex-direction:column; gap:6px; pointer-events:none; }
+.lp-row { display:flex; align-items:center; gap:8px; background:rgba(5,5,16,0.75); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:6px 12px; }
+.lp-num { font-size:1rem; font-weight:700; }
+.lp-label { font-size:0.68rem; color:#606070; }
+#btnInfo { position:absolute; top:12px; left:12px; width:36px; height:36px; border-radius:8px; background:rgba(5,5,16,0.85); border:1px solid rgba(0,255,136,0.3); color:#00ff88; font-weight:700; font-size:1rem; cursor:pointer; pointer-events:all; display:none; align-items:center; justify-content:center; transition:all 0.15s; }
+#btnInfo:hover { background:rgba(0,255,136,0.12); }
+@media(max-width:768px){ .header { top:8px; } .header h1 { font-size:1.3rem; } .level-panel { display:none; } #btnInfo { display:flex; } .hint { bottom:56px; font-size:0.65rem; } .legend { bottom:12px; padding:6px 12px; gap:10px; } .leg-item { font-size:0.65rem; } .controls { top:8px; right:8px; } .ctrl-btn { width:34px; height:34px; } .modal-card { padding:16px 16px 20px; } .preview-meta { grid-template-columns:1fr; } }
+@media(max-width:480px){ .header h1 { font-size:1.15rem; } .controls { gap:4px; } .ctrl-btn { width:32px; height:32px; } #btnInfo { width:32px; height:32px; } .legend { gap:8px; padding:5px 10px; } .leg-item { font-size:0.6rem; gap:4px; } .leg-dot { width:7px; height:7px; } .hint { display:none; } }
+</style>
 </head>
 <body>
-  <canvas id="stars"></canvas>
-  <div class="nebula" id="nebula"></div>
 
-  <!-- Sticky Header -->
-  <header class="sticky-header" id="stickyHeader">
-    <div class="header-inner">
-      <div class="logo-section">
-        <h1 class="logo"><span>&gt;_</span> cyberpath</h1>
-      </div>
+<div id="ui">
+  <div class="header"><h1>&gt;_ cyberpath</h1><p>Roadmap interactivo · 18 laboratorios de ciberseguridad</p></div>
+  <div id="tooltip"><div class="tt-num" id="ttNum">PLATAFORMA #01</div><div class="tt-name" id="ttName">—</div><div class="tt-badge" id="ttBadge">—</div><div class="tt-url" id="ttUrl">—</div><div class="tt-desc" id="ttDesc">—</div><div class="tt-features" id="ttFeatures"></div><div class="tt-click"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:14px"></i> Abrir plataforma</div></div>
+  <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
+  <div class="level-panel"><div class="lp-row"><span class="lp-num" style="color:#00ff88">6</span><span class="lp-label">Principiante</span></div><div class="lp-row"><span class="lp-num" style="color:#ff9500">6</span><span class="lp-label">Intermedio</span></div><div class="lp-row"><span class="lp-num" style="color:#ff5555">6</span><span class="lp-label">Avanzado</span></div></div>
+  <div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div>Principiante</div><div class="leg-item"><div class="leg-dot" style="background:#ff9500"></div>Intermedio</div><div class="leg-item"><div class="leg-dot" style="background:#ff5555"></div>Avanzado</div></div>
+  <div class="hint">Arrastra para rotar · Tocá para visitar · Ver niveles</div>
+  <div class="controls"><button class="ctrl-btn" id="btnReset" title="Reset"><i class="fa-solid fa-house" style="font-size:18px"></i></button><button class="ctrl-btn" id="btnAuto" title="Auto-rotar"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button></div>
+</div>
 
-      <div class="header-progress" id="headerProgress">
-        <div class="mini-progress">
-          <div class="mini-progress-fill" id="miniProgressFill"></div>
-        </div>
-        <span class="mini-percent" id="miniPercent">0%</span>
-      </div>
+<div class="modal-overlay" id="levelOverlay"><div class="modal-card"><div class="modal-header"><h2><i class="fa-solid fa-chart-simple" style="color:#00ff88;font-size:22px"></i> Criterios de Nivel</h2><button class="modal-close" id="closeLevelModal"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="level-card" style="border-left:3px solid #00ff88"><h3><span class="dot" style="background:#00ff88"></span><span style="color:#00ff88">Principiante</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Personas sin experiencia previa en ciberseguridad.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Tutoriales guiados, conceptos básicos, retos con pistas y soluciones paso a paso.</p><ul><li>Sin necesidad de conocimientos técnicos previos</li><li>Entornos controlados y seguros</li><li>Feedback inmediato y educativo</li><li>Fundamentos: Linux, redes, web básica</li></ul></div><div class="level-card" style="border-left:3px solid #ff9500"><h3><span class="dot" style="background:#ff9500"></span><span style="color:#ff9500">Intermedio</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Quienes ya dominan lo básico y buscan escenarios más realistas.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Máquinas vulnerables, CTFs, laboratorios de explotación web.</p><ul><li>Requiere terminal, HTTP y scripting básico</li><li>Menos pistas, más investigación autónoma</li><li>Herramientas profesionales (Burp, Nmap, Metasploit)</li><li>Metodologías de pentesting</li></ul></div><div class="level-card" style="border-left:3px solid #ff5555"><h3><span class="dot" style="background:#ff5555"></span><span style="color:#ff5555">Avanzado</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Profesionales que buscan simular entornos de producción reales.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Infraestructuras complejas, exploits, ingeniería inversa, escenarios enterprise.</p><ul><li>Requiere dominio de redes, sistemas y programación</li><li>Investigación profunda necesaria</li><li>Debugging, fuzzing, análisis de binarios</li><li>Preparación para OSCP, OSCE, etc.</li></ul></div><p style="text-align:center; color:#404055; font-size:0.68rem; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="fa-regular fa-lightbulb" style="color:#505060;font-size:14px"></i> Sigue el orden sugerido para construir una base sólida.</p></div></div>
 
-      <nav class="header-tabs" id="headerTabs">
-        <button class="header-tab active" data-tab="progreso">Mi Progreso</button>
-        <button class="header-tab" data-tab="formacion">Formacion</button>
-        <button class="header-tab" data-tab="labs">Laboratorios</button>
-        <button class="header-tab" data-tab="comunidades">Comunidades</button>
-      </nav>
+<div class="modal-overlay" id="previewOverlay"><div class="modal-card"><div class="preview-header"><div><div class="preview-title" id="pvName">—</div><span class="preview-badge" id="pvBadge">—</span></div><button class="modal-close" id="closePreview"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="preview-content"><div class="preview-section"><h4><i class="fa-regular fa-clipboard" style="font-size:16px"></i> Descripción</h4><p id="pvDesc">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-bullseye" style="font-size:16px"></i> ¿Por qué este nivel?</h4><p id="pvReason">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-wand-magic-sparkles" style="font-size:16px"></i> Características</h4><ul id="pvFeatures"></ul></div><div class="preview-section"><h4><i class="fa-solid fa-chart-pie" style="font-size:16px"></i> Información Técnica</h4><div class="preview-meta"><div class="preview-meta-item"><span class="preview-meta-label">Dominio</span><span class="preview-meta-value" id="pvDomain">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Tipo</span><span class="preview-meta-value" id="pvType">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Idioma</span><span class="preview-meta-value" id="pvLang">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Precio</span><span class="preview-meta-value" id="pvPrice">—</span></div></div></div><div class="preview-cta"><a href="#" target="_blank" id="pvVisit"><i class="fa-solid fa-rocket" style="font-size:16px"></i> Visitar Plataforma</a><a href="#" target="_blank" id="pvSEO" class="secondary"><i class="fa-solid fa-magnifying-glass" style="font-size:16px"></i> Ver Info</a></div></div></div></div>
 
-      <button class="menu-btn" id="menuBtn" aria-label="Menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-    <!-- Mobile progress bar for very small screens -->
-    <div class="mini-progress-mobile" style="padding: 0 16px 10px;">
-      <div class="mini-progress">
-        <div class="mini-progress-fill" id="miniProgressFillMobile"></div>
-      </div>
-      <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.75rem; color: var(--text-dim);">
-        <span id="completedCountMobile">0 completados</span>
-        <span id="miniPercentMobile" style="color: var(--green); font-weight: 700;">0%</span>
-      </div>
-    </div>
-  </header>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const PLATFORMS = [
+  { name:'TryHackMe', url:'https://tryhackme.com', domain:'tryhackme.com', level:0, desc:'Plataforma gamificada con rutas de aprendizaje guiadas y máquinas vulnerables en la nube.', reason:'Ideal para principiantes: interfaz amigable, tutoriales paso a paso, sin configuración local.', features:['Rutas estructuradas','Máquinas en la nube','Comunidad activa','Gratis + Premium'], type:'LMS + Labs', lang:'Inglés', price:'Freemium' },
+  { name:'PicoCTF', url:'https://picoctf.org', domain:'picoctf.org', level:0, desc:'CTF educativo creado por la Universidad Carnegie Mellon, perfecto para aprender jugando.', reason:'Retos progresivos con pistas, enfoque pedagógico, sin presión competitiva.', features:['CTF educativo','Pistas integradas','Sin registro obligatorio','100% gratuito'], type:'CTF', lang:'Inglés', price:'Gratis' },
+  { name:'OverTheWire', url:'https://overthewire.org/wargames', domain:'overthewire.org', level:0, desc:'Wargames clásicos para aprender seguridad mediante la línea de comandos y exploits básicos.', reason:'Enseña fundamentos de Linux y redes desde cero, con progreso gradual.', features:['Enfoque en CLI','Niveles progresivos','Sin interfaz gráfica','Comunidad histórica'], type:'Wargames', lang:'Inglés', price:'Gratis' },
+  { name:'OWASP Juice Shop', url:'https://juice-shop.github.io', domain:'owasp.org', level:0, desc:'Aplicación web vulnerable moderna que cubre las 10 vulnerabilidades OWASP Top 10.', reason:'Entorno seguro para practicar hacking web sin riesgos, con documentación excelente.', features:['OWASP Top 10','Docker/K8s ready','Scoreboard','Open Source'], type:'App Vulnerable', lang:'Multi', price:'Gratis' },
+  { name:'Hacker101', url:'https://hacker101.com', domain:'hacker101.com', level:0, desc:'Cursos gratuitos de HackerOne para aprender bug bounty y seguridad web desde cero.', reason:'Contenido creado por expertos en bug bounty, enfocado en habilidades prácticas.', features:['Cursos en video','Retos prácticos','Certificados','Enfoque bug bounty'], type:'Cursos + CTF', lang:'Inglés', price:'Gratis' },
+  { name:'CryptoHack', url:'https://cryptohack.org', domain:'cryptohack.org', level:0, desc:'Plataforma interactiva para aprender criptografía moderna mediante retos de código.', reason:'Introduce conceptos criptográficos con ejemplos prácticos y Python, ideal para principiantes.', features:['Criptografía aplicada','Python integrado','Progreso gamificado','Comunidad Discord'], type:'Crypto CTF', lang:'Inglés', price:'Gratis' },
+  { name:'Hack The Box', url:'https://hackthebox.com', domain:'hackthebox.com', level:1, desc:'Plataforma líder con máquinas vulnerables reales, CTFs y certificaciones profesionales.', reason:'Requiere conocimientos básicos de pentesting; menos guías, más investigación autónoma.', features:['Máquinas reales','Academy integrada','Certificaciones','Ranking global'], type:'Labs + CTF', lang:'Inglés', price:'Freemium' },
+  { name:'PortSwigger', url:'https://portswigger.net/web-security', domain:'portswigger.net', level:1, desc:'Academy gratuita de los creadores de Burp Suite, con laboratorios de seguridad web.', reason:'Profundiza en vulnerabilidades web con teoría sólida y práctica guiada.', features:['Burp Suite integrado','Teoría + práctica','Certificación disponible','Actualizado constantemente'], type:'Academy Web', lang:'Inglés', price:'Gratis' },
+  { name:'Root Me', url:'https://root-me.org', domain:'root-me.org', level:1, desc:'Plataforma francesa con +1000 retos de seguridad informática en múltiples categorías.', reason:'Variedad de desafíos que requieren aplicar conocimientos de forma creativa.', features:['1000+ retos','Múltiples categorías','Writeups comunitarios','Sin costo'], type:'Challenge Platform', lang:'FR/EN', price:'Gratis' },
+  { name:'PentesterLab', url:'https://pentesterlab.com', domain:'pentesterlab.com', level:1, desc:'Ejercicios prácticos enfocados en vulnerabilidades web y metodologías de pentesting.', reason:'Enseña el "cómo" y "por qué" de cada exploit, ideal para consolidar conocimientos.', features:['Ejercicios guiados','Badges de progreso','Enfoque metodológico','Pro + Free'], type:'Hands-on Labs', lang:'Inglés', price:'Freemium' },
+  { name:'CTFChallenge', url:'https://ctfchallenge.co.uk', domain:'ctfchallenge.co.uk', level:1, desc:'Agregador de CTFs con calendario, writeups y recursos para competidores.', reason:'Ayuda a transicionar de aprendizaje guiado a competencia real con soporte comunitario.', features:['Calendario CTF','Writeups','Recursos de estudio','Comunidad activa'], type:'CTF Aggregator', lang:'Inglés', price:'Gratis' },
+  { name:'YesWeHack DOJO', url:'https://dojo-yeswehack.com', domain:'yeswehack.com', level:1, desc:'Entrenamiento en bug bounty con escenarios reales y metodología profesional.', reason:'Puente entre aprendizaje y bug bounty real, con enfoque en reportes profesionales.', features:['Escenarios reales','Metodología pro','Preparación bug bounty','Plataforma europea'], type:'Bug Bounty Training', lang:'EN/FR', price:'Freemium' },
+  { name:'VulnHub', url:'https://vulnhub.com', domain:'vulnhub.com', level:2, desc:'Repositorio de máquinas vulnerables para descargar y practicar en entorno local.', reason:'Requiere configurar laboratorios propios; ideal para simular entornos reales sin límites.', features:['Máquinas descargables','Sin límites de tiempo','Comunidad de creadores','100% offline'], type:'VM Repository', lang:'Inglés', price:'Gratis' },
+  { name:'crAPI (OWASP)', url:'https://github.com/OWASP/crAPI', domain:'github.com', level:2, desc:'Aplicación de referencia vulnerable para practicar seguridad en APIs modernas.', reason:'Enfocado en APIs REST/GraphQL, requiere conocimientos de arquitectura y testing avanzado.', features:['APIs vulnerables','Docker/K8s','OWASP API Top 10','Open Source'], type:'API Security Lab', lang:'Multi', price:'Gratis' },
+  { name:'Metasploitable 3', url:'https://github.com/rapid7/metasploitable3', domain:'rapid7.com', level:2, desc:'Máquina vulnerable diseñada para probar herramientas de pentesting como Metasploit.', reason:'Entorno complejo con múltiples servicios vulnerables; requiere análisis profundo.', features:['Múltiples vectores','Integración Metasploit','Documentación técnica','Enterprise focus'], type:'Vulnerable VM', lang:'Inglés', price:'Gratis' },
+  { name:'APIsec University', url:'https://apisecuniversity.com', domain:'apisecuniversity.com', level:2, desc:'Cursos especializados en seguridad de APIs con laboratorios prácticos y certificaciones.', reason:'Contenido avanzado para profesionales que trabajan con arquitecturas modernas.', features:['Cursos especializados','Labs prácticos','Certificación','Enfoque enterprise'], type:'API Security Academy', lang:'Inglés', price:'Freemium' },
+  { name:'Google CTF', url:'https://capturetheflag.withgoogle.com', domain:'google.com', level:2, desc:'CTF anual de Google con desafíos de nivel mundial en criptografía, reversing y exploits.', reason:'Retos diseñados por ingenieros de Google; requieren pensamiento creativo y técnico avanzado.', features:['Desafíos de élite','Tecnologías Google','Writeups oficiales','Competencia global'], type:'Elite CTF', lang:'Inglés', price:'Gratis' },
+  { name:'Hacking Hub', url:'https://hackinghub.io', domain:'hackinghub.io', level:2, desc:'Plataforma emergente con laboratorios de pentesting y rutas de certificación avanzada.', reason:'Contenido para quienes buscan especializarse en áreas específicas de seguridad ofensiva.', features:['Rutas especializadas','Labs realistas','Mentoría disponible','Enfoque certificaciones'], type:'Advanced Labs', lang:'Inglés', price:'Premium' },
+];
+const LEVEL_COLORS = ['#00ff88', '#ff9500', '#ff5555'];
+const LEVEL_NAMES = ['PRINCIPIANTE', 'INTERMEDIO', 'AVANZADO'];
+const SX = 4.6, SZ = 6.5;
+const GRID_POS = [[-2.5*SX,0,-SZ],[-1.5*SX,0,-SZ],[-0.5*SX,0,-SZ],[0.5*SX,0,-SZ],[1.5*SX,0,-SZ],[2.5*SX,0,-SZ],[2.5*SX,0,0],[1.5*SX,0,0],[0.5*SX,0,0],[-0.5*SX,0,0],[-1.5*SX,0,0],[-2.5*SX,0,0],[-2.5*SX,0,SZ],[-1.5*SX,0,SZ],[-0.5*SX,0,SZ],[0.5*SX,0,SZ],[1.5*SX,0,SZ],[2.5*SX,0,SZ]];
 
-  <main>
-    <!-- Welcome Section -->
-    <section class="welcome-section">
-      <h2 class="welcome-title">Tu ruta de aprendizaje en ciberseguridad</h2>
-      <p class="welcome-subtitle">Marca los objetivos completados y sigue tu progreso</p>
-    </section>
+let W = window.innerWidth, H = window.innerHeight, aspect = W/H, BASE_F = 34;
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setSize(W,H); renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050510);
+scene.fog = new THREE.FogExp2(0x050510, 0.012);
+const camera = new THREE.OrthographicCamera(-BASE_F*aspect/2, BASE_F*aspect/2, BASE_F/2, -BASE_F/2, -200, 200);
 
-    <!-- Progress Section -->
-    <div class="progress-section">
-      <div class="progress-header">
-        <span class="progress-title">Progreso Total</span>
-        <span class="progress-percent" id="percentDisplay">0%</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="progress-stats">
-        <span id="completedCount">0 completados</span>
-        <span id="totalCount">de 15 objetivos</span>
-      </div>
-    </div>
+// LIGHTS - CORREGIDO
+scene.add(new THREE.AmbientLight(0x0d0d25, 1.2));
+const sun = new THREE.DirectionalLight(0xffffff, 0.7);
+sun.position.set(15,25,15); sun.castShadow = true; sun.shadow.mapSize.set(1024,1024); scene.add(sun);
+const glow0 = new THREE.PointLight(0x00ff88, 2.5, 28); glow0.position.set(-10,4,-8); scene.add(glow0);
+const glow1 = new THREE.PointLight(0xff9500, 2, 28); glow1.position.set(10,4,0); scene.add(glow1);
+const glow2 = new THREE.PointLight(0xff5555, 2, 28); glow2.position.set(-10,4,8); scene.add(glow2);
 
-    <!-- PROGRESO TAB -->
-    <div class="content-section active" id="tab-progreso">
-      <div class="filter-row">
-        <select id="filterLevel">
-          <option value="all">Todos los niveles</option>
-          <option value="principiante">Principiante</option>
-          <option value="intermedio">Intermedio</option>
-          <option value="avanzado">Avanzado</option>
-        </select>
-      </div>
+const gridH = new THREE.GridHelper(70,35,0x0d0d25,0x080818); gridH.position.y = -0.55; scene.add(gridH);
 
-      <div id="tasksContainer"></div>
-    </div>
+function makeLogoTexture(p){const S=128,cv=document.createElement('canvas');cv.width=cv.height=S;const cx=cv.getContext('2d');cx.fillStyle='#07071a';cx.fillRect(0,0,S,S);cx.strokeStyle=LEVEL_COLORS[p.level];cx.lineWidth=5;cx.strokeRect(5,5,S-10,S-10);cx.font=`bold 54px 'Space Grotesk',sans-serif`;cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle=LEVEL_COLORS[p.level];cx.fillText(p.name.charAt(0),S/2,S/2);const tex=new THREE.CanvasTexture(cv);const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{cx.clearRect(0,0,S,S);cx.fillStyle='#07071a';cx.fillRect(0,0,S,S);cx.strokeStyle=LEVEL_COLORS[p.level];cx.lineWidth=5;cx.strokeRect(5,5,S-10,S-10);const pad=22;cx.drawImage(img,pad,pad,S-pad*2,S-pad*2);tex.needsUpdate=true};img.src=`https://www.google.com/s2/favicons?domain=${p.domain}&sz=64`;return tex;}
+function makeNameSprite(text,color){const cv=document.createElement('canvas');cv.width=320;cv.height=48;const cx=cv.getContext('2d');cx.font=`bold 22px 'JetBrains Mono',monospace`;cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle=color;cx.globalAlpha=0.9;cx.fillText(text,160,24);const tex=new THREE.CanvasTexture(cv);const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});const sp=new THREE.Sprite(mat);sp.scale.set(4.2,0.64,1);return sp;}
+function makeNumSprite(n,color){const cv=document.createElement('canvas');cv.width=cv.height=64;const cx=cv.getContext('2d');cx.beginPath();cx.arc(32,32,28,0,Math.PI*2);cx.fillStyle=color;cx.fill();cx.font=`bold 24px 'JetBrains Mono',monospace`;cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle='#050510';cx.fillText(String(n),32,33);const tex=new THREE.CanvasTexture(cv);const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});const sp=new THREE.Sprite(mat);sp.scale.set(0.9,0.9,1);return sp;}
 
-    <!-- FORMACION TAB -->
-    <div class="content-section" id="tab-formacion">
-      <div class="filter-row">
-        <select id="formacionLevel">
-          <option value="all">Todos los niveles</option>
-          <option value="principiante">Principiante</option>
-          <option value="intermedio">Intermedio</option>
-          <option value="avanzado">Avanzado</option>
-        </select>
-      </div>
-      <div class="grid" id="formacionGrid"></div>
-    </div>
+const allPlatformGroups = [], hitObjects = [];
+let time = 0;
 
-    <!-- LABS TAB -->
-    <div class="content-section" id="tab-labs">
-      <div class="filter-row">
-        <select id="labsLevel">
-          <option value="all">Todos los niveles</option>
-          <option value="principiante">Principiante</option>
-          <option value="intermedio">Intermedio</option>
-          <option value="avanzado">Avanzado</option>
-        </select>
-      </div>
-      <div class="grid" id="labsGrid"></div>
-    </div>
+PLATFORMS.forEach((p,i)=>{const [px,py,pz]=GRID_POS[i];const col=new THREE.Color(LEVEL_COLORS[p.level]);const colDark=col.clone().multiplyScalar(0.18);const colGlow=col.clone().multiplyScalar(0.08);const group=new THREE.Group();group.position.set(px,py,pz);group.userData={platform:p,idx:i,phase:Math.random()*Math.PI*2};const pedestalG=new THREE.CylinderGeometry(1.55,1.75,0.45,6,1);const pedestalM=new THREE.MeshLambertMaterial({color:colDark,emissive:colGlow});const pedestal=new THREE.Mesh(pedestalG,pedestalM);pedestal.position.y=-0.22;pedestal.castShadow=true;group.add(pedestal);const blockG=new THREE.BoxGeometry(2.75,0.85,2.75);const blockM=new THREE.MeshLambertMaterial({color:new THREE.Color(0x0c0c20),emissive:colGlow});const block=new THREE.Mesh(blockG,blockM);block.position.y=0.42;block.castShadow=true;block.receiveShadow=true;group.add(block);const logoG=new THREE.PlaneGeometry(2.1,2.1);const logoM=new THREE.MeshBasicMaterial({map:makeLogoTexture(p),transparent:true});const logoFace=new THREE.Mesh(logoG,logoM);logoFace.rotation.x=-Math.PI/2;logoFace.position.y=0.86;group.add(logoFace);const ringG=new THREE.RingGeometry(1.15,1.42,6);const ringM=new THREE.MeshBasicMaterial({color:LEVEL_COLORS[p.level],transparent:true,opacity:0.45,side:THREE.DoubleSide});const ring=new THREE.Mesh(ringG,ringM);ring.rotation.x=-Math.PI/2;ring.position.y=0.87;group.add(ring);group.userData.ring=ring;for(let c=0;c<4;c++){const angle=(c/4)*Math.PI*2+Math.PI/4;const lineG=new THREE.BoxGeometry(0.04,0.88,0.04);const lineM=new THREE.MeshBasicMaterial({color:LEVEL_COLORS[p.level],transparent:true,opacity:0.3});const line=new THREE.Mesh(lineG,lineM);line.position.set(Math.cos(angle)*1.36,0.42,Math.sin(angle)*1.36);group.add(line);}const nameSp=makeNameSprite(p.name,LEVEL_COLORS[p.level]);nameSp.position.set(0,-1.0,0);group.add(nameSp);const numSp=makeNumSprite(i+1,LEVEL_COLORS[p.level]);numSp.position.set(1.55,1.55,0);group.add(numSp);const hitG=new THREE.BoxGeometry(3,2,3);const hitM=new THREE.MeshBasicMaterial({visible:false});const hitMesh=new THREE.Mesh(hitG,hitM);hitMesh.userData={isPlatform:true,platform:p,idx:i};group.add(hitMesh);hitObjects.push(hitMesh);allPlatformGroups.push(group);scene.add(group);});
 
-    <!-- COMUNIDADES TAB -->
-    <div class="content-section" id="tab-comunidades">
-      <div class="grid" id="comunidadesGrid"></div>
-    </div>
-  </main>
+function buildPath(){const pts=[];GRID_POS.forEach(([x,,z],i)=>{pts.push(new THREE.Vector3(x,0.12,z));if(i===5){pts.push(new THREE.Vector3(x+2.0,0.12,z));pts.push(new THREE.Vector3(x+2.0,0.12,(z+GRID_POS[6][2])/2));pts.push(new THREE.Vector3(GRID_POS[6][0]+2.0,0.12,GRID_POS[6][2]));}if(i===11){pts.push(new THREE.Vector3(x-2.0,0.12,z));pts.push(new THREE.Vector3(x-2.0,0.12,(z+GRID_POS[12][2])/2));pts.push(new THREE.Vector3(GRID_POS[12][0]-2.0,0.12,GRID_POS[12][2]));}});const curve=new THREE.CatmullRomCurve3(pts,false,'catmullrom',0.5);const tubeG=new THREE.TubeGeometry(curve,260,0.055,8,false);const tubeM=new THREE.MeshBasicMaterial({color:0x00ff88,transparent:true,opacity:0.45});scene.add(new THREE.Mesh(tubeG,tubeM));return curve;}
+const pathCurve=buildPath();
 
-  <!-- Scroll Indicator -->
-  <div class="scroll-indicator" id="scrollIndicator">
-    <span>Desliza para explorar</span>
-    <svg class="scroll-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
-  </div>
+const PCOUNT=50;const pPositions=new Float32Array(PCOUNT*3);const pGeo=new THREE.BufferGeometry();pGeo.setAttribute('position',new THREE.BufferAttribute(pPositions,3));const pMat=new THREE.PointsMaterial({color:0x00ff88,size:0.22,transparent:true,opacity:0.85,sizeAttenuation:true});const pSystem=new THREE.Points(pGeo,pMat);scene.add(pSystem);const pOffsets=Array.from({length:PCOUNT},(_,i)=>i/PCOUNT);
 
-  <script>
-    // ========== DATA ==========
-    const tasks = [
-      { id: 1, category: 'Fundamentos', title: 'Redes basicas (TCP/IP, DNS, HTTP)', level: 'principiante', desc: 'Aprende como funciona internet', link: 'https://www.cybrary.it' },
-      { id: 2, category: 'Fundamentos', title: 'Linux y terminal', level: 'principiante', desc: 'Comandos basicos y navegacion', link: 'https://tryhackme.com/path/outline/linuxfundamentals' },
-      { id: 3, category: 'Fundamentos', title: 'Python para scripting', level: 'principiante', desc: 'Automatiza tareas simples', link: 'https://www.udemy.com/course/python-for-cybersecurity' },
-      { id: 4, category: 'Seguridad Web', title: 'OWASP Top 10', level: 'intermedio', desc: 'Los 10 riesgos mas criticos', link: 'https://owasp.org/www-project-top-ten' },
-      { id: 5, category: 'Seguridad Web', title: 'Labs PortSwigger', level: 'intermedio', desc: 'Practica XSS, SQLi, CSRF', link: 'https://portswigger.net/web-security' },
-      { id: 6, category: 'Pentesting', title: 'Curso de pentesting', level: 'intermedio', desc: 'Metodologias y herramientas', link: 'https://tryhackme.com/path/outline/pentesting' },
-      { id: 7, category: 'Pentesting', title: '10 maquinas HTB', level: 'intermedio', desc: 'Hack The Box practico', link: 'https://www.hackthebox.com' },
-      { id: 8, category: 'Pentesting', title: '10 rooms TryHackMe', level: 'principiante', desc: 'Ejercicios guiados', link: 'https://tryhackme.com' },
-      { id: 9, category: 'Blue Team', title: 'Analisis de logs con SIEM', level: 'intermedio', desc: 'Splunk, ELK Stack', link: 'https://www.splunk.com' },
-      { id: 10, category: 'Blue Team', title: 'Wireshark y trafico de red', level: 'intermedio', desc: 'Captura y analisis de paquetes', link: 'https://www.wireshark.org' },
-      { id: 11, category: 'Blue Team', title: 'Forense digital basico', level: 'avanzado', desc: 'Analisis de evidencias', link: 'https://www.autopsy.com' },
-      { id: 12, category: 'OSINT', title: 'Herramientas OSINT basicas', level: 'principiante', desc: 'Reconocimiento de fuentes abiertas', link: 'https://osintframework.com' },
-      { id: 13, category: 'OSINT', title: 'Google Dorks avanzados', level: 'intermedio', desc: 'Busquedas avanzadas', link: 'https://www.exploit-db.com/google-hacking-database' },
-      { id: 14, category: 'Certificaciones', title: 'CompTIA Security+', level: 'principiante', desc: 'Certificacion de entrada', link: 'https://www.comptia.org/certifications/security' },
-      { id: 15, category: 'Certificaciones', title: 'CEH o similar', level: 'avanzado', desc: 'Certificacion profesional', link: 'https://www.eccouncil.org/programs/certified-ethical-hacker-ceh' }
-    ];
+(function(){const COUNT=1200;const starPos=new Float32Array(COUNT*3);for(let i=0;i<COUNT;i++){starPos[i*3]=(Math.random()-0.5)*180;starPos[i*3+1]=Math.random()*40+5;starPos[i*3+2]=(Math.random()-0.5)*180;}const sGeo=new THREE.BufferGeometry();sGeo.setAttribute('position',new THREE.BufferAttribute(starPos,3));scene.add(new THREE.Points(sGeo,new THREE.PointsMaterial({color:0xaaaacc,size:0.12,transparent:true,opacity:0.5,sizeAttenuation:true})));})();
 
-    const formacion = [
-      { title: 'OWASP', level: 'principiante', desc: 'Estandar en seguridad web con Top 10 riesgos criticos', links: [
-        { url: 'https://owasp.org/www-project-top-ten', label: 'Top Ten Project' },
-        { url: 'https://owasp.org/Top10/2025', label: 'OWASP Top 10 2025' }
-      ]},
-      { title: 'Cybrary', level: 'principiante', desc: 'Cursos gratuitos y de pago para todos los niveles', links: [
-        { url: 'https://www.cybrary.it', label: 'Plataforma' },
-        { url: 'https://www.cybrary.it/free-content', label: 'Contenido gratis' }
-      ]},
-      { title: 'Coursera', level: 'principiante', desc: 'Certificaciones profesionales de Google e IBM', links: [
-        { url: 'https://www.coursera.org/professional-certificates/google-cybersecurity', label: 'Google Cybersecurity' },
-        { url: 'https://www.coursera.org/professional-certificates/ibm-cybersecurity-analyst', label: 'IBM Cybersecurity' }
-      ]},
-      { title: 'INE Security', level: 'intermedio', desc: 'Formacion avanzada en red team y blue team', links: [
-        { url: 'https://ine.com/security', label: 'INE Security' }
-      ]},
-      { title: 'SANS Institute', level: 'avanzado', desc: 'Formacion elite con 85+ cursos especializados', links: [
-        { url: 'https://www.sans.org', label: 'SANS Institute' },
-        { url: 'https://www.sans.org/cyberaces', label: 'Cyber Aces Gratis' }
-      ]},
-      { title: 'Udemy', level: 'principiante', desc: 'Cursos accesibles de ethical hacking y Python', links: [
-        { url: 'https://www.udemy.com/course/cyber-security-ethical-hacking-v2026-from-zero-to-expert', label: 'Ethical Hacking v2026' },
-        { url: 'https://www.udemy.com/course/python-for-cybersecurity', label: 'Python for Cybersecurity' }
-      ]}
-    ];
+let zoomF=1.0;const MIN_ZOOM=0.85,MAX_ZOOM=1.15;let autoRotate=false;const sph={theta:Math.PI*0.22,phi:0.82};const CAM_R=55;
+function applyCam(){const f=BASE_F/zoomF;camera.left=-f*aspect/2;camera.right=f*aspect/2;camera.top=f/2;camera.bottom=-f/2;camera.updateProjectionMatrix();camera.position.set(CAM_R*Math.sin(sph.phi)*Math.sin(sph.theta),CAM_R*Math.cos(sph.phi),CAM_R*Math.sin(sph.phi)*Math.cos(sph.theta));camera.lookAt(0,0,0);}
 
-    const labs = [
-      { title: 'TryHackMe', level: 'principiante', desc: 'Muy amigable para principiantes con rooms guiados', links: [
-        { url: 'https://tryhackme.com', label: 'Plataforma' },
-        { url: 'https://tryhackme.com/path/outline/cybersecurity101', label: 'Cyber Security 101' }
-      ]},
-      { title: 'Hack The Box', level: 'intermedio', desc: 'Maquinas reales vulnerables para pentesting', links: [
-        { url: 'https://www.hackthebox.com', label: 'Plataforma' },
-        { url: 'https://www.hackthebox.com/machines', label: 'Maquinas' }
-      ]},
-      { title: 'PortSwigger Academy', level: 'intermedio', desc: 'Labs gratuitos de vulnerabilidades web', links: [
-        { url: 'https://portswigger.net/web-security', label: 'Web Security Academy' },
-        { url: 'https://portswigger.net/web-security/all-labs', label: 'Todos los labs' }
-      ]},
-      { title: 'Root-Me', level: 'intermedio', desc: '600+ retos de cracking, forense y redes', links: [
-        { url: 'https://www.root-me.org', label: 'Plataforma' },
-        { url: 'https://www.root-me.org/en/Challenges', label: 'Retos' }
-      ]}
-    ];
+let dragging=false,prevM={x:0,y:0};const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+renderer.domElement.addEventListener('mousedown',e=>{if(isMobile)return;dragging=true;prevM={x:e.clientX,y:e.clientY};renderer.domElement.style.cursor='grabbing';});
+window.addEventListener('mouseup',()=>{dragging=false;renderer.domElement.style.cursor='';});
+window.addEventListener('mousemove',e=>{if(dragging&&!isMobile){sph.theta-=(e.clientX-prevM.x)*0.007;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.clientY-prevM.y)*0.007));prevM={x:e.clientX,y:e.clientY};applyCam();}handleHover(e.clientX,e.clientY);});
+renderer.domElement.addEventListener('wheel',e=>{if(isMobile){e.preventDefault();return;}zoomF=Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,zoomF-e.deltaY*0.0015));applyCam();},{passive:false});
+let prevT=null;renderer.domElement.addEventListener('touchstart',e=>{if(e.touches.length===1){prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};handleHover(e.touches[0].clientX,e.touches[0].clientY);}},{passive:true});
+renderer.domElement.addEventListener('touchmove',e=>{if(!prevT||e.touches.length!==1)return;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();handleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();},{passive:false});
 
-    const comunidades = [
-      { title: 'Reddit', level: 'principiante', desc: 'Foros globales de discusion sobre ciberseguridad', links: [
-        { url: 'https://www.reddit.com/r/cybersecurity', label: 'r/cybersecurity' },
-        { url: 'https://www.reddit.com/r/netsec', label: 'r/netsec' },
-        { url: 'https://www.reddit.com/r/hacking', label: 'r/hacking' }
-      ]},
-      { title: 'Discord', level: 'principiante', desc: 'Servidores de hacking etico y bug bounty', links: [
-        { url: 'https://discord.com/invite/cyberverse', label: 'CyberVerse' },
-        { url: 'https://disboard.org/es/search?keyword=ciberseguridad', label: 'Buscar servidores' }
-      ]},
-      { title: 'Stack Overflow', level: 'intermedio', desc: 'Dudas tecnicas de programacion y seguridad', links: [
-        { url: 'https://stackoverflow.com/questions/tagged/security', label: 'Tag Security' },
-        { url: 'https://security.stackexchange.com', label: 'Security StackExchange' }
-      ]}
-    ];
+document.getElementById('btnReset').addEventListener('click',()=>{sph.theta=Math.PI*0.22;sph.phi=0.82;zoomF=1.0;applyCam();});
+const autoBtn=document.getElementById('btnAuto');
+autoBtn.addEventListener('click',()=>{autoRotate=!autoRotate;document.getElementById('autoIcon').className=autoRotate?'fa-solid fa-pause':'fa-solid fa-play';autoBtn.style.color=autoRotate?'#00ff88':'';autoBtn.style.borderColor=autoRotate?'#00ff88':'';});
 
-    // ========== STATE ==========
-    let completed = {};
-    try {
-      completed = JSON.parse(localStorage.getItem('cyberpath_tasks') || '{}');
-    } catch(e) {
-      completed = {};
-    }
+const levelOverlay=document.getElementById('levelOverlay');
+document.getElementById('btnInfo').addEventListener('click',()=>levelOverlay.classList.add('active'));
+document.getElementById('closeLevelModal').addEventListener('click',()=>levelOverlay.classList.remove('active'));
+levelOverlay.addEventListener('click',e=>{if(e.target===levelOverlay)levelOverlay.classList.remove('active');});
 
-    // ========== DOM ELEMENTS ==========
-    const canvas = document.getElementById('stars');
-    const ctx = canvas.getContext('2d');
-    const nebula = document.getElementById('nebula');
-    const stickyHeader = document.getElementById('stickyHeader');
-    const scrollIndicator = document.getElementById('scrollIndicator');
-    const menuBtn = document.getElementById('menuBtn');
-    const headerTabs = document.getElementById('headerTabs');
-    
-    let stars = [];
+const previewOverlay=document.getElementById('previewOverlay');
+document.getElementById('closePreview').addEventListener('click',()=>previewOverlay.classList.remove('active'));
+previewOverlay.addEventListener('click',e=>{if(e.target===previewOverlay)previewOverlay.classList.remove('active');});
 
-    // ========== STARS BACKGROUND ==========
-    function initStars() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const count = Math.floor((canvas.width * canvas.height) / 6000);
-      stars = [];
-      for (let i = 0; i < count; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.5 + 0.5,
-          a: Math.random()
-        });
-      }
-    }
+const raycaster=new THREE.Raycaster();const mouseVec=new THREE.Vector2();const tooltip=document.getElementById('tooltip');let hovered=null;
+function handleHover(cx,cy){const rect=renderer.domElement.getBoundingClientRect();mouseVec.x=((cx-rect.left)/rect.width)*2-1;mouseVec.y=-((cy-rect.top)/rect.height)*2+1;raycaster.setFromCamera(mouseVec,camera);const hits=raycaster.intersectObjects(hitObjects);if(hits.length>0){const{platform,idx}=hits[0].object.userData;hovered=platform;document.getElementById('ttNum').textContent=`# ${String(idx+1).padStart(2,'0')}`;document.getElementById('ttName').textContent=platform.name;const badge=document.getElementById('ttBadge');badge.textContent=LEVEL_NAMES[platform.level];badge.style.background=LEVEL_COLORS[platform.level]+'22';badge.style.color=LEVEL_COLORS[platform.level];document.getElementById('ttUrl').textContent=platform.domain;document.getElementById('ttDesc').textContent=platform.desc;document.getElementById('ttFeatures').innerHTML=platform.features.map(f=>`<span>${f}</span>`).join('');const tw=280,th=180;let tx=cx+15,ty=cy-10;if(cx+tw>W-20)tx=cx-tw-15;if(ty+th>H-20)ty=H-th-20;if(ty<10)ty=10;tooltip.style.left=tx+'px';tooltip.style.top=ty+'px';tooltip.classList.add('visible');renderer.domElement.style.cursor=dragging?'grabbing':'pointer';}else{hovered=null;tooltip.classList.remove('visible');renderer.domElement.style.cursor=dragging?'grabbing':'';}}
 
-    function drawStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(s => {
-        s.a += 0.005 * (Math.random() > 0.5 ? 1 : -1);
-        s.a = Math.max(0.2, Math.min(1, s.a));
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, Math.max(0.1, s.r), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${s.a})`;
-        ctx.fill();
-      });
-      requestAnimationFrame(drawStars);
-    }
+renderer.domElement.addEventListener('click',e=>{if(hovered){e.preventDefault();showPlatformPreview(hovered);}});
 
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      initStars();
-      drawStars();
-      window.addEventListener('resize', initStars);
-    }
+function showPlatformPreview(p){document.getElementById('pvName').textContent=p.name;const badge=document.getElementById('pvBadge');badge.textContent=LEVEL_NAMES[p.level];badge.style.background=LEVEL_COLORS[p.level]+'22';badge.style.color=LEVEL_COLORS[p.level];document.getElementById('pvDesc').textContent=p.desc;document.getElementById('pvReason').textContent=p.reason;document.getElementById('pvFeatures').innerHTML=p.features.map(f=>`<li>${f}</li>`).join('');document.getElementById('pvDomain').textContent=p.domain;document.getElementById('pvType').textContent=p.type;document.getElementById('pvLang').textContent=p.lang;document.getElementById('pvPrice').textContent=p.price;document.getElementById('pvVisit').href=p.url;document.getElementById('pvSEO').href=`https://www.google.com/search?q=site:${p.domain}+seo+security+info`;previewOverlay.classList.add('active');}
 
-    // ========== SCROLL EFFECTS ==========
-    let lastScrollY = 0;
-    const maxScrollFade = 500;
+window.addEventListener('resize',()=>{W=window.innerWidth;H=window.innerHeight;aspect=W/H;renderer.setSize(W,H);applyCam();});
 
-    function handleScroll() {
-      const scrollY = window.scrollY;
-      
-      // Header scrolled state
-      if (scrollY > 20) {
-        stickyHeader.classList.add('scrolled');
-      } else {
-        stickyHeader.classList.remove('scrolled');
-      }
+const clock=new THREE.Clock();
+function animate(){requestAnimationFrame(animate);const dt=clock.getDelta();time+=dt;if(autoRotate){sph.theta+=dt*0.15;applyCam();}allPlatformGroups.forEach(g=>{const{phase}=g.userData;g.position.y=Math.sin(time*0.7+phase)*0.15;if(g.userData.ring)g.userData.ring.material.opacity=0.3+Math.sin(time*1.8+phase)*0.2;});for(let i=0;i<PCOUNT;i++){pOffsets[i]=(pOffsets[i]+dt*0.05)%1;const pt=pathCurve.getPointAt(pOffsets[i]);pPositions[i*3]=pt.x;pPositions[i*3+1]=pt.y+0.35;pPositions[i*3+2]=pt.z;}pGeo.attributes.position.needsUpdate=true;pMat.opacity=0.6+Math.sin(time*3)*0.3;renderer.render(scene,camera);}
 
-      // Hide scroll indicator
-      if (scrollY > 100) {
-        scrollIndicator.classList.add('hidden');
-      } else {
-        scrollIndicator.classList.remove('hidden');
-      }
-
-      // Fade out space background
-      const fadeProgress = Math.min(scrollY / maxScrollFade, 1);
-      const opacity = 1 - (fadeProgress * 0.85);
-      
-      canvas.style.opacity = opacity;
-      nebula.style.opacity = opacity;
-
-      lastScrollY = scrollY;
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // ========== MOBILE MENU ==========
-    menuBtn.addEventListener('click', () => {
-      headerTabs.classList.toggle('open');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!headerTabs.contains(e.target) && !menuBtn.contains(e.target)) {
-        headerTabs.classList.remove('open');
-      }
-    });
-
-    // ========== RENDER FUNCTIONS ==========
-    function renderTasks(filter = 'all') {
-      const container = document.getElementById('tasksContainer');
-      const categories = [...new Set(tasks.map(t => t.category))];
-      
-      container.innerHTML = categories.map(cat => {
-        const catTasks = tasks.filter(t => t.category === cat && (filter === 'all' || t.level === filter));
-        if (catTasks.length === 0) return '';
-        
-        return `
-          <h3 class="category-header">${cat}</h3>
-          <div class="grid">
-            ${catTasks.map(t => `
-              <div class="task-card ${completed[t.id] ? 'completed' : ''}" data-id="${t.id}">
-                <div class="task-header">
-                  <div class="task-check">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#050510" stroke-width="3">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                  <div class="task-title">${t.title}</div>
-                  <span class="task-badge badge-${t.level}">${t.level}</span>
-                </div>
-                <p class="task-desc">${t.desc}</p>
-                <a href="${t.link}" target="_blank" class="task-link" onclick="event.stopPropagation()">
-                  Ir al recurso
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                  </svg>
-                </a>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }).join('');
-
-      // Add click handlers
-      container.querySelectorAll('.task-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const id = parseInt(card.dataset.id);
-          completed[id] = !completed[id];
-          card.classList.toggle('completed');
-          localStorage.setItem('cyberpath_tasks', JSON.stringify(completed));
-          updateProgress();
-        });
-      });
-    }
-
-    function renderResources(data, containerId, filter = 'all', tag = '') {
-      const container = document.getElementById(containerId);
-      const filtered = filter === 'all' ? data : data.filter(r => r.level === filter);
-      
-      container.innerHTML = filtered.map(r => `
-        <div class="resource-card">
-          <div class="resource-title">${r.title}</div>
-          <span class="task-badge badge-${r.level}" style="margin-bottom: 8px; display: inline-block;">${r.level}</span>
-          <p class="resource-desc">${r.desc}</p>
-          <div class="resource-links">
-            ${r.links.map(l => `
-              <a href="${l.url}" target="_blank" class="resource-link">
-                <span class="link-tag">${tag || r.title}</span>
-                ${l.label}
-              </a>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function updateProgress() {
-      const total = tasks.length;
-      const done = Object.values(completed).filter(v => v).length;
-      const percent = Math.round((done / total) * 100);
-
-      // Main progress
-      document.getElementById('progressFill').style.width = percent + '%';
-      document.getElementById('percentDisplay').textContent = percent + '%';
-      document.getElementById('completedCount').textContent = done + ' completados';
-      document.getElementById('totalCount').textContent = 'de ' + total + ' objetivos';
-
-      // Header mini progress
-      document.getElementById('miniProgressFill').style.width = percent + '%';
-      document.getElementById('miniPercent').textContent = percent + '%';
-
-      // Mobile mini progress
-      const miniMobile = document.getElementById('miniProgressFillMobile');
-      if (miniMobile) {
-        miniMobile.style.width = percent + '%';
-      }
-      const miniPercentMobile = document.getElementById('miniPercentMobile');
-      if (miniPercentMobile) {
-        miniPercentMobile.textContent = percent + '%';
-      }
-      const completedMobile = document.getElementById('completedCountMobile');
-      if (completedMobile) {
-        completedMobile.textContent = done + ' completados';
-      }
-    }
-
-    // ========== TAB SWITCHING ==========
-    function switchTab(tabName) {
-      // Update header tabs
-      document.querySelectorAll('.header-tab').forEach(t => {
-        t.classList.toggle('active', t.dataset.tab === tabName);
-      });
-
-      // Update content sections
-      document.querySelectorAll('.content-section').forEach(s => {
-        s.classList.remove('active');
-      });
-      document.getElementById('tab-' + tabName).classList.add('active');
-
-      // Close mobile menu
-      headerTabs.classList.remove('open');
-    }
-
-    document.querySelectorAll('.header-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        switchTab(btn.dataset.tab);
-      });
-    });
-
-    // ========== FILTERS ==========
-    document.getElementById('filterLevel').addEventListener('change', e => {
-      renderTasks(e.target.value);
-    });
-
-    document.getElementById('formacionLevel').addEventListener('change', e => {
-      renderResources(formacion, 'formacionGrid', e.target.value, 'FORMACION');
-    });
-
-    document.getElementById('labsLevel').addEventListener('change', e => {
-      renderResources(labs, 'labsGrid', e.target.value, 'LAB');
-    });
-
-    // ========== INIT ==========
-    renderTasks();
-    renderResources(formacion, 'formacionGrid', 'all', 'FORMACION');
-    renderResources(labs, 'labsGrid', 'all', 'LAB');
-    renderResources(comunidades, 'comunidadesGrid', 'all', 'COMUNIDAD');
-    updateProgress();
-    handleScroll();
-  </script>
+applyCam();animate();
+document.body.addEventListener('touchmove',e=>{if(!e.target.closest('.modal-card'))e.preventDefault();},{passive:false});
+</script>
 </body>
 </html>
