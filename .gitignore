@@ -1,0 +1,10 @@
+# Local browser/session artifacts
+.chrome-codex/
+
+# Local server logs
+server.err
+server.out
+
+# Codex temporary files
+.__codex_index_check.js
+codex-menu-check.png
