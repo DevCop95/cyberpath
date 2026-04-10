@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="80" x2="1080" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B0F1E"/>
+      <stop offset="1" stop-color="#050510"/>
+    </linearGradient>
+    <linearGradient id="gridGlow" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00FF88" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#00FF88" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <rect x="22" y="22" width="1156" height="586" rx="28" stroke="#00FF88" stroke-opacity="0.18" stroke-width="2"/>
+
+  <g opacity="0.18">
+    <path d="M0 84H1200" stroke="url(#gridGlow)"/>
+    <path d="M0 168H1200" stroke="url(#gridGlow)"/>
+    <path d="M0 252H1200" stroke="url(#gridGlow)"/>
+    <path d="M0 336H1200" stroke="url(#gridGlow)"/>
+    <path d="M0 420H1200" stroke="url(#gridGlow)"/>
+    <path d="M0 504H1200" stroke="url(#gridGlow)"/>
+    <path d="M120 0V630" stroke="url(#gridGlow)"/>
+    <path d="M240 0V630" stroke="url(#gridGlow)"/>
+    <path d="M360 0V630" stroke="url(#gridGlow)"/>
+    <path d="M480 0V630" stroke="url(#gridGlow)"/>
+    <path d="M600 0V630" stroke="url(#gridGlow)"/>
+    <path d="M720 0V630" stroke="url(#gridGlow)"/>
+    <path d="M840 0V630" stroke="url(#gridGlow)"/>
+    <path d="M960 0V630" stroke="url(#gridGlow)"/>
+    <path d="M1080 0V630" stroke="url(#gridGlow)"/>
+  </g>
+
+  <circle cx="938" cy="188" r="134" fill="#00FF88" opacity="0.07" filter="url(#softGlow)"/>
+  <circle cx="250" cy="470" r="164" fill="#A78BFA" opacity="0.06" filter="url(#softGlow)"/>
+
+  <text x="110" y="180" fill="#00FF88" font-family="'JetBrains Mono', monospace" font-size="68" font-weight="700">&gt;_ cyberpath</text>
+  <text x="110" y="232" fill="#7E8198" font-family="'JetBrains Mono', monospace" font-size="26" letter-spacing="1.5">Interactive cybersecurity roadmap</text>
+
+  <text x="110" y="330" fill="#E5E7F2" font-family="'Space Grotesk', sans-serif" font-size="54" font-weight="700">18 platforms. 5 labs. ES / EN.</text>
+  <text x="110" y="382" fill="#A6A8BC" font-family="'JetBrains Mono', monospace" font-size="24">3D journey + in-browser PDF viewer + challenge lab</text>
+
+  <g>
+    <rect x="110" y="448" width="188" height="54" rx="27" fill="#00FF88" fill-opacity="0.12" stroke="#00FF88" stroke-opacity="0.32"/>
+    <text x="158" y="482" fill="#00FF88" font-family="'JetBrains Mono', monospace" font-size="22" font-weight="700">BEGINNER</text>
+
+    <rect x="320" y="448" width="228" height="54" rx="27" fill="#FF9500" fill-opacity="0.12" stroke="#FF9500" stroke-opacity="0.32"/>
+    <text x="372" y="482" fill="#FF9500" font-family="'JetBrains Mono', monospace" font-size="22" font-weight="700">INTERMEDIATE</text>
+
+    <rect x="570" y="448" width="198" height="54" rx="27" fill="#FF5555" fill-opacity="0.12" stroke="#FF5555" stroke-opacity="0.32"/>
+    <text x="622" y="482" fill="#FF5555" font-family="'JetBrains Mono', monospace" font-size="22" font-weight="700">ADVANCED</text>
+  </g>
+
+  <g opacity="0.9">
+    <rect x="884" y="358" width="200" height="112" rx="22" fill="#090D1B" stroke="#00FF88" stroke-opacity="0.26"/>
+    <text x="916" y="402" fill="#00FF88" font-family="'JetBrains Mono', monospace" font-size="24" font-weight="700">PDF + Labs</text>
+    <text x="916" y="436" fill="#9EA2B8" font-family="'JetBrains Mono', monospace" font-size="18">Static site ready for GitHub Pages</text>
+  </g>
+</svg>

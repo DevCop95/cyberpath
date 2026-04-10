@@ -2,17 +2,39 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CyberPath — Dragon Edition</title>
+<meta name="description" content="Interactive cybersecurity roadmap with 18 platforms, 5 labs, ES/EN language switching, and an in-browser PDF companion.">
+<meta name="keywords" content="cybersecurity, ethical hacking, pentesting, CTF, Three.js, interactive roadmap, bilingual UI, PDF viewer">
+<meta name="author" content="devcop95">
+<meta name="theme-color" content="#050510">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CyberPath — Dragon Edition">
+<meta property="og:description" content="Interactive cybersecurity roadmap with 18 platforms, 5 labs, bilingual UI, and an embedded PDF companion.">
+<meta property="og:url" content="https://devcop95.github.io/cyberpath/">
+<meta property="og:image" content="https://devcop95.github.io/cyberpath/assets/cyberpath-social.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CyberPath — Dragon Edition">
+<meta name="twitter:description" content="Explore the interactive offensive security roadmap, launch labs, switch ES/EN, and open the PDF without leaving the site.">
+<meta name="twitter:image" content="https://devcop95.github.io/cyberpath/assets/cyberpath-social.svg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23050510'/><text x='50' y='68' font-size='58' text-anchor='middle' font-family='monospace' fill='%2300ff88'>%3E_</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
+:root{
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:#050510;overflow:hidden;font-family:'JetBrains Mono',monospace;touch-action:none}
+body{background:#050510;overflow:hidden;font-family:'JetBrains Mono',monospace;touch-action:none;color:#e0e0e8}
 canvas{display:block}
 #ui{position:fixed;inset:0;pointer-events:none;z-index:10}
-.header{position:absolute;top:12px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;width:100%;max-width:90vw}
+.header{position:absolute;top:calc(12px + var(--safe-top));left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;width:100%;max-width:90vw}
 .header h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.2rem,4vw,1.8rem);color:#00ff88;text-shadow:0 0 20px rgba(0,255,136,0.5);letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .header p{color:#505060;font-size:0.7rem;margin-top:2px}
 #tooltip{position:absolute;background:rgba(5,5,16,0.98);border:1px solid rgba(0,255,136,0.35);border-radius:12px;padding:12px 16px;min-width:200px;max-width:280px;opacity:0;transition:opacity 0.15s;pointer-events:none;box-shadow:0 0 20px rgba(0,255,136,0.15);z-index:20}
@@ -35,10 +57,10 @@ canvas{display:block}
 .sb-badge{display:inline-block;font-size:0.58rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:8px;letter-spacing:1px}
 .sb-cmd{font-size:0.62rem;color:#00ff88;font-family:'JetBrains Mono',monospace;margin-bottom:0;padding:4px 8px;background:rgba(0,255,136,0.07);border-radius:6px;border-left:2px solid #00ff88}
 .sb-desc{display:none}
-#dragonInfo{position:absolute;bottom:70px;right:12px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:8px 12px;pointer-events:none;font-size:0.65rem;color:#505060;text-align:right;min-width:120px}
+#dragonInfo{position:absolute;bottom:calc(70px + var(--safe-bottom));right:calc(12px + var(--safe-right));background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:8px 12px;pointer-events:none;font-size:0.65rem;color:#505060;text-align:right;min-width:120px}
 #dragonInfo .di-name{color:#00ff88;font-family:'Space Grotesk',sans-serif;font-size:0.75rem;margin-bottom:2px}
 #dragonInfo .di-status{color:#404050;font-size:0.6rem}
-.modal-overlay{position:fixed;inset:0;background:rgba(2,2,12,0.82);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px;pointer-events:all}
+.modal-overlay{position:fixed;inset:0;background:rgba(2,2,12,0.82);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));pointer-events:all}
 .modal-overlay.active{display:flex}
 .modal-card{background:rgba(8,8,22,0.98);border:1px solid rgba(0,255,136,0.22);border-radius:18px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding:22px 22px 26px;box-shadow:0 0 60px rgba(0,255,136,0.08),0 30px 80px rgba(0,0,0,0.7);animation:modalIn 0.22s cubic-bezier(.16,1,.3,1);scrollbar-width:thin;scrollbar-color:#1a2a1a transparent}
 .modal-card::-webkit-scrollbar{width:4px}
@@ -46,7 +68,7 @@ canvas{display:block}
 @keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .modal-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(0,255,136,0.15);margin-bottom:18px}
 .modal-header h2{font-family:'Space Grotesk',sans-serif;color:#00ff88;font-size:1.15rem;display:flex;align-items:center;gap:8px}
-.modal-close{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#808090;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.modal-close{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#808090;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0}
 .modal-close:hover{border-color:#00ff88;color:#00ff88}
 .level-card{background:rgba(10,10,26,0.8);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px;margin-bottom:14px}
 .level-card h3{font-family:'Space Grotesk',sans-serif;font-size:0.95rem;margin-bottom:7px;display:flex;align-items:center;gap:8px}
@@ -71,20 +93,41 @@ canvas{display:block}
 .preview-cta a:hover{transform:scale(1.03);box-shadow:0 4px 20px rgba(0,255,136,0.3)}
 .preview-cta a.secondary{background:rgba(255,255,255,0.08);color:#c0c0d0;border:1px solid rgba(255,255,255,0.1)}
 .preview-cta a.secondary:hover{background:rgba(255,255,255,0.13);box-shadow:none}
-.pdf-card{max-width:min(1080px,96vw);height:min(90vh,900px);display:flex;flex-direction:column}
+.pdf-card{max-width:min(1080px,96vw);height:min(90vh,900px);height:min(90dvh,900px);display:flex;flex-direction:column;overflow:hidden}
 .pdf-intro{font-size:0.73rem;color:#8a8aa0;line-height:1.5;margin:-4px 0 14px}
-.pdf-frame-wrap{flex:1;min-height:320px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.03)}
-#pdfFrame{width:100%;height:100%;border:none;background:#fff}
-.legend{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:14px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.12);border-radius:24px;padding:8px 16px;pointer-events:none}
+.pdf-frame-wrap{flex:1;min-height:320px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex;flex-direction:column}
+.pdf-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(6,6,18,0.88)}
+.pdf-status{font-size:0.65rem;color:#7c7c94;letter-spacing:0.4px}
+.pdf-toolbar-actions{display:flex;align-items:center;gap:6px}
+.pdf-tool-btn{width:34px;height:34px;border-radius:10px;border:1px solid rgba(0,255,136,0.16);background:rgba(255,255,255,0.04);color:#b5b5c8;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.16s}
+.pdf-tool-btn:hover{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,0.08)}
+.pdf-tool-btn:disabled{opacity:0.38;cursor:not-allowed}
+.pdf-viewer{position:relative;flex:1;overflow:auto;padding:14px;background:
+  radial-gradient(circle at top, rgba(0,255,136,0.08), transparent 34%),
+  linear-gradient(180deg, rgba(5,5,16,0.98), rgba(3,3,12,1))}
+.pdf-pages{position:relative;z-index:1;display:grid;gap:14px;justify-items:center}
+.pdf-page{width:min(100%,920px);background:#f5f5f5;border-radius:16px;padding:10px 10px 12px;box-shadow:0 20px 40px rgba(0,0,0,0.35)}
+.pdf-page canvas{display:block;width:100%;height:auto;border-radius:10px}
+.pdf-page-label{font-size:0.64rem;color:#4f4f63;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.pdf-loading,.pdf-fallback{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;background:
+  radial-gradient(circle at top, rgba(0,255,136,0.08), transparent 34%),
+  linear-gradient(180deg, rgba(5,5,16,0.96), rgba(3,3,12,0.98))}
+.pdf-loading i,.pdf-fallback i{font-size:2rem;color:#00ff88}
+.pdf-loading p,.pdf-fallback p{font-size:0.78rem;color:#d7d7e6;line-height:1.55;max-width:560px}
+.pdf-note{font-size:0.67rem;color:#707086;line-height:1.5;max-width:560px}
+.pdf-loading[hidden],.pdf-fallback[hidden],.pdf-pages[hidden]{display:none!important}
+.pdf-card .preview-cta{margin-top:14px;flex-wrap:wrap}
+.pdf-card .preview-cta a{min-height:50px}
+.legend{position:absolute;bottom:calc(16px + var(--safe-bottom));left:50%;transform:translateX(-50%);display:flex;gap:14px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.12);border-radius:24px;padding:8px 16px;pointer-events:none}
 .leg-item{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:#707080}
 .leg-dot{width:8px;height:8px;border-radius:50%}
-.hint{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);color:#303040;font-size:0.68rem;white-space:nowrap;text-align:center;padding:0 10px}
-.controls{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:all}
+.hint{position:absolute;bottom:calc(64px + var(--safe-bottom));left:50%;transform:translateX(-50%);color:#303040;font-size:0.68rem;white-space:nowrap;text-align:center;padding:0 10px}
+.controls{position:absolute;top:calc(12px + var(--safe-top));right:calc(12px + var(--safe-right));display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:all}
 .ctrl-btn{background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.18);color:#808090;width:36px;height:36px;border-radius:8px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-family:inherit}
 .ctrl-btn:hover{border-color:#00ff88;color:#00ff88}
 .ctrl-btn.active{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,0.08)}
 .menu-trigger{box-shadow:0 0 18px rgba(0,255,136,0.06)}
-.control-menu{display:flex;flex-direction:column;gap:6px;padding:8px;background:rgba(5,5,16,0.78);border:1px solid rgba(0,255,136,0.12);border-radius:14px;backdrop-filter:blur(8px);box-shadow:0 18px 40px rgba(0,0,0,0.38),0 0 24px rgba(0,255,136,0.05);opacity:0;transform:translateY(-8px) scale(0.96);transform-origin:top right;pointer-events:none;transition:opacity 0.18s ease,transform 0.18s ease;max-height:0;overflow:hidden}
+.control-menu{display:flex;flex-direction:column;gap:6px;padding:8px;background:rgba(5,5,16,0.86);border:1px solid rgba(0,255,136,0.12);border-radius:14px;backdrop-filter:blur(12px);box-shadow:0 18px 40px rgba(0,0,0,0.38),0 0 24px rgba(0,255,136,0.05);opacity:0;transform:translateY(-8px) scale(0.96);transform-origin:top right;pointer-events:none;transition:opacity 0.18s ease,transform 0.18s ease;max-height:0;overflow:hidden}
 .control-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;max-height:320px}
 .lang-toggle{display:flex;background:rgba(5,5,16,0.9);border:1px solid rgba(0,255,136,0.16);border-radius:10px;padding:3px;gap:3px;box-shadow:0 0 18px rgba(0,255,136,0.06)}
 .lang-btn{min-width:40px;height:30px;border:none;border-radius:8px;background:transparent;color:#707080;font-size:0.68rem;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.15s;font-family:'JetBrains Mono',monospace}
@@ -94,37 +137,49 @@ canvas{display:block}
 .lp-row{display:flex;align-items:center;gap:8px;background:rgba(5,5,16,0.75);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:6px 12px}
 .lp-num{font-size:1rem;font-weight:700}
 .lp-label{font-size:0.68rem;color:#606070}
-#btnInfo{position:absolute;top:12px;left:12px;width:36px;height:36px;border-radius:8px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.3);color:#00ff88;font-weight:700;font-size:1rem;cursor:pointer;pointer-events:all;display:none;align-items:center;justify-content:center;transition:all 0.15s}
+#btnInfo{position:absolute;top:calc(12px + var(--safe-top));left:calc(12px + var(--safe-left));width:36px;height:36px;border-radius:8px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.3);color:#00ff88;font-weight:700;font-size:1rem;cursor:pointer;pointer-events:all;display:none;align-items:center;justify-content:center;transition:all 0.15s}
 #btnInfo:hover{background:rgba(0,255,136,0.12)}
+.lab-modal-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(167,139,250,0.2);flex-shrink:0;gap:12px}
+.lab-modal-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+#labInputBar{padding-bottom:calc(10px + var(--safe-bottom))}
 @media(max-width:768px){
-  .header{top:8px}
+  .header{top:calc(8px + var(--safe-top))}
   .header h1{font-size:1.3rem}
   .level-panel{display:none}
   #btnInfo{display:flex}
-  .hint{bottom:56px;font-size:0.65rem}
-  .legend{bottom:12px;padding:6px 12px;gap:10px}
+  .hint{bottom:calc(56px + var(--safe-bottom));font-size:0.65rem;max-width:72vw;white-space:normal}
+  .legend{bottom:calc(12px + var(--safe-bottom));padding:6px 12px;gap:10px}
   .leg-item{font-size:0.65rem}
-  .controls{top:8px;right:8px}
+  .controls{top:calc(8px + var(--safe-top));right:calc(8px + var(--safe-right))}
   .ctrl-btn{width:34px;height:34px}
   .lang-toggle{align-self:flex-end}
   .lang-btn{min-width:38px;height:28px}
   .control-menu{padding:6px}
-  #levelOverlay .modal-card,#previewOverlay .modal-card{padding:16px 16px 20px}
-  #pdfOverlay .modal-card{padding:16px 16px 20px}
+  #levelOverlay .modal-card,#previewOverlay .modal-card{padding:16px 16px calc(20px + var(--safe-bottom))}
+  #pdfOverlay .modal-card{padding:16px 16px calc(20px + var(--safe-bottom))}
   .preview-meta{grid-template-columns:1fr}
   #dragonInfo{display:none}
+  .modal-overlay{padding:calc(12px + var(--safe-top)) calc(10px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(10px + var(--safe-left))}
+  .modal-close{width:36px;height:36px}
+  .pdf-card{height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px);max-height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px)}
+  .pdf-toolbar{padding:10px}
+  .pdf-status{font-size:0.62rem}
+  .pdf-viewer{padding:10px}
+  .pdf-card .preview-cta{margin-top:12px;padding-bottom:2px}
+  .pdf-card .preview-cta a{flex-basis:calc(50% - 4px)}
 
   /* ── Lab modal mobile ── */
-  #labOverlay{padding:8px!important}
+  #labOverlay{padding:calc(8px + var(--safe-top)) calc(8px + var(--safe-right)) calc(8px + var(--safe-bottom)) calc(8px + var(--safe-left))!important}
   #labOverlay .modal-card,#labModalCard{
-    height:calc(100vh - 16px)!important;
-    max-height:calc(100vh - 16px)!important;
+    height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 16px)!important;
+    max-height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 16px)!important;
     border-radius:14px!important;
     overflow:hidden!important;
     padding:0!important;
     display:flex!important;
     flex-direction:column!important;
   }
+  .lab-modal-header{padding:12px 14px 12px!important}
   #labBodyFlex{
     flex:1!important;
     flex-direction:column!important;
@@ -172,12 +227,12 @@ canvas{display:block}
   .lab-item>div{font-size:0.7rem!important;white-space:nowrap!important;overflow:hidden!important;max-width:120px!important;text-overflow:ellipsis!important;margin-bottom:0!important}
   #labDescArea{padding:8px 12px!important;flex-shrink:0!important}
   #labTerminal{flex:1!important;font-size:0.7rem!important;padding:10px 12px!important;overflow-y:auto!important}
-  #labInputBar{flex-wrap:nowrap!important;gap:6px!important;padding:8px 10px!important;flex-shrink:0!important}
+  #labInputBar{flex-wrap:nowrap!important;gap:6px!important;padding:8px 10px calc(10px + var(--safe-bottom))!important;flex-shrink:0!important}
   #labInputBar #labPrompt{display:none!important}
   #labInputBar #labInput{min-width:0!important;font-size:0.75rem!important;flex:1!important}
   #labInputBar #labRun{padding:6px 12px!important;font-size:0.7rem!important;white-space:nowrap!important;flex-shrink:0!important}
   #labInputBar #labHint,#labInputBar #labReset{padding:6px 10px!important;flex-shrink:0!important}
-  #theoryPanel{padding:14px 14px 18px!important}
+  #theoryPanel{padding:14px 14px calc(18px + var(--safe-bottom))!important}
 }
 @media(max-width:480px){
   .header h1{font-size:1.15rem}
@@ -188,14 +243,16 @@ canvas{display:block}
   .leg-item{font-size:0.6rem;gap:4px}
   .leg-dot{width:7px;height:7px}
   .hint{display:none}
-  #labOverlay{padding:0!important}
-  #labOverlay .modal-card,#labModalCard{height:100vh!important;max-height:100vh!important;border-radius:0!important}
+  #labOverlay{padding:calc(6px + var(--safe-top)) calc(6px + var(--safe-right)) calc(6px + var(--safe-bottom)) calc(6px + var(--safe-left))!important}
+  #labOverlay .modal-card,#labModalCard{height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 12px)!important;max-height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 12px)!important;border-radius:18px!important}
+  .lab-modal-header{padding:12px 12px 10px!important}
   #labSidebarWrapper{max-height:46px!important;min-height:40px!important}
   #labTerminal{font-size:0.67rem!important}
-  .pdf-card{height:100vh!important;max-height:100vh!important;border-radius:0!important}
+  .pdf-card{height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 12px)!important;max-height:calc(100dvh - var(--safe-top) - var(--safe-bottom) - 12px)!important;border-radius:18px!important;padding:14px 14px calc(16px + var(--safe-bottom))}
+  .pdf-card .preview-cta a{flex-basis:100%}
 }
 /* ── Theory / Clase Magistral ── */
-#theoryPanel{display:none;position:absolute;inset:0;background:rgba(4,4,14,0.98);z-index:10;overflow-y:auto;padding:20px 22px 24px;flex-direction:column;gap:14px}
+#theoryPanel{display:none;position:absolute;inset:0;background:rgba(4,4,14,0.98);z-index:10;overflow-y:auto;padding:20px 22px calc(24px + var(--safe-bottom));flex-direction:column;gap:14px}
 #theoryPanel.visible{display:flex}
 .theory-badge{display:inline-block;font-size:0.58rem;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:1px;margin-bottom:8px}
 .theory-title{font-family:'Space Grotesk',sans-serif;color:#e0e0e8;font-size:1.1rem;margin-bottom:4px}
@@ -217,7 +274,7 @@ canvas{display:block}
 <div id="ui">
   <div class="header">
     <h1>&gt;_ cyberpath &nbsp;<span style="color:#ff3333;font-size:0.75em;vertical-align:middle">🐉</span></h1>
-    <p id="headerSubtitle">Roadmap interactivo · 18 plataformas · 5 laboratorios</p>
+    <p id="headerSubtitle">Roadmap interactivo · 18 plataformas</p>
   </div>
   <div id="tooltip">
     <div class="tt-num" id="ttNum">PLATAFORMA #01</div>
@@ -259,13 +316,14 @@ canvas{display:block}
       <button class="lang-btn active" id="langEs" data-lang="es" type="button">ES</button>
       <button class="lang-btn" id="langEn" data-lang="en" type="button">EN</button>
     </div>
-    <button class="ctrl-btn menu-trigger" id="btnMenu" title="Abrir menu" type="button" aria-expanded="false" aria-controls="controlMenu"><i class="fa-solid fa-bars" style="font-size:15px"></i></button>
+    <button class="ctrl-btn menu-trigger" id="btnMenu" title="Abrir menú" type="button" aria-expanded="false" aria-controls="controlMenu" aria-label="Abrir menú"><i class="fa-solid fa-bars" style="font-size:15px"></i></button>
     <div class="control-menu" id="controlMenu">
       <button class="ctrl-btn" id="btnPdf" title="Ver PDF" type="button"><i class="fa-solid fa-file-pdf" style="font-size:16px"></i></button>
       <button class="ctrl-btn" id="btnReset" title="Reset" type="button"><i class="fa-solid fa-house" style="font-size:18px"></i></button>
       <button class="ctrl-btn" id="btnAuto" title="Auto-rotar" type="button"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button>
-    <button class="ctrl-btn" id="btnDragon" title="Toggle dragón" style="color:#00ff88;border-color:rgba(0,255,136,0.4)"><i class="fa-solid fa-dragon" style="font-size:16px"></i></button>
-    <button class="ctrl-btn" id="btnLab" title="Laboratorio de retos" style="color:#a78bfa;border-color:rgba(167,139,250,0.4)"><i class="fa-solid fa-terminal" style="font-size:15px"></i></button>
+      <button class="ctrl-btn" id="btnDragon" title="Toggle dragón" type="button" style="color:#00ff88;border-color:rgba(0,255,136,0.4)"><i class="fa-solid fa-dragon" style="font-size:16px"></i></button>
+      <button class="ctrl-btn" id="btnLab" title="Laboratorio de retos" type="button" style="color:#a78bfa;border-color:rgba(167,139,250,0.4)"><i class="fa-solid fa-terminal" style="font-size:15px"></i></button>
+    </div>
   </div>
 </div>
 
@@ -305,7 +363,7 @@ canvas{display:block}
         </div>
       </div>
       <div class="preview-cta">
-        <a href="#" target="_blank" id="pvVisit"><i class="fa-solid fa-rocket" style="font-size:16px"></i> <span id="pvVisitText">Visitar Plataforma</span></a>
+        <a href="#" target="_blank" rel="noopener" id="pvVisit"><i class="fa-solid fa-rocket" style="font-size:16px"></i> <span id="pvVisitText">Visitar Plataforma</span></a>
       </div>
     </div>
   </div>
@@ -319,10 +377,30 @@ canvas{display:block}
     </div>
     <p class="pdf-intro" id="pdfIntro">Consulta la versión visual del roadmap sin salir de la web.</p>
     <div class="pdf-frame-wrap">
-      <iframe id="pdfFrame" src="assets/CyberPath_Dragon_Edition.pdf#view=FitH" title="CyberPath PDF"></iframe>
+      <div class="pdf-toolbar">
+        <div class="pdf-status" id="pdfStatus" aria-live="polite">Cargando PDF...</div>
+        <div class="pdf-toolbar-actions">
+          <button class="pdf-tool-btn" id="pdfZoomOut" type="button" title="Reducir zoom" aria-label="Reducir zoom"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+          <button class="pdf-tool-btn" id="pdfZoomReset" type="button" title="Ajustar al ancho" aria-label="Ajustar al ancho"><i class="fa-solid fa-expand"></i></button>
+          <button class="pdf-tool-btn" id="pdfZoomIn" type="button" title="Aumentar zoom" aria-label="Aumentar zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+          <button class="pdf-tool-btn" id="pdfFullscreen" type="button" title="Pantalla completa" aria-label="Pantalla completa"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+        </div>
+      </div>
+      <div class="pdf-viewer" id="pdfViewer">
+        <div class="pdf-loading" id="pdfLoading">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p id="pdfLoadingText">Cargando PDF...</p>
+          <span class="pdf-note" id="pdfViewerHint">Si el navegador no puede incrustarlo, igual podrás abrirlo o descargarlo.</span>
+        </div>
+        <div class="pdf-pages" id="pdfPages" hidden></div>
+        <div class="pdf-fallback" id="pdfFallback" hidden>
+          <i class="fa-solid fa-file-arrow-down"></i>
+          <p id="pdfFallbackText">Este navegador no pudo renderizar el PDF dentro de la página.</p>
+        </div>
+      </div>
     </div>
     <div class="preview-cta">
-      <a href="assets/CyberPath_Dragon_Edition.pdf" target="_blank" id="pdfOpen"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:16px"></i> <span id="pdfOpenText">Abrir en nueva pestaña</span></a>
+      <a href="assets/CyberPath_Dragon_Edition.pdf" target="_blank" rel="noopener" id="pdfOpen"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:16px"></i> <span id="pdfOpenText">Abrir en nueva pestaña</span></a>
       <a href="assets/CyberPath_Dragon_Edition.pdf" download class="secondary" id="pdfDownload"><i class="fa-solid fa-download" style="font-size:16px"></i> <span id="pdfDownloadText">Descargar PDF</span></a>
     </div>
   </div>
@@ -332,8 +410,8 @@ canvas{display:block}
 <div class="modal-overlay" id="labOverlay">
   <div class="modal-card" id="labModalCard" style="max-width:860px;padding:0;overflow:hidden;display:flex;flex-direction:column;height:88vh">
     <!-- Header -->
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(167,139,250,0.2);flex-shrink:0">
-      <div style="display:flex;align-items:center;gap:10px">
+    <div class="lab-modal-header">
+      <div class="lab-modal-title-wrap">
         <i class="fa-solid fa-terminal" style="color:#a78bfa;font-size:18px"></i>
         <span style="font-family:'Space Grotesk',sans-serif;color:#a78bfa;font-size:1.1rem" id="labModalTitle">Laboratorio de Retos</span>
         <span id="labDifficulty" style="font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:1px"></span>
@@ -432,6 +510,7 @@ canvas{display:block}
 </svg>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 /* =====================================================================
    PRETEXT-LITE — Inspirado en @chenglou/pretext (MIT)
@@ -533,7 +612,7 @@ let currentLang = (localStorage.getItem(LANG_STORAGE_KEY) || 'es') === 'en' ? 'e
 const UI_STRINGS = {
   es: {
     pageTitle: 'CyberPath — Dragon Edition',
-    headerSubtitle: 'Roadmap interactivo · 18 plataformas · 5 laboratorios',
+    headerSubtitle: 'Roadmap interactivo · 18 plataformas',
     tooltipAction: 'Abrir plataforma',
     levelNames: ['PRINCIPIANTE', 'INTERMEDIO', 'AVANZADO'],
     levelLabels: ['Principiante', 'Intermedio', 'Avanzado'],
@@ -564,6 +643,7 @@ const UI_STRINGS = {
     dragonStealth: 'En modo stealth...',
     controls: {
       info: '¿Por qué estos niveles?',
+      menu: 'Abrir menú',
       pdf: 'Ver PDF',
       reset: 'Reiniciar vista',
       auto: 'Auto-rotar',
@@ -586,6 +666,15 @@ const UI_STRINGS = {
       intro: 'Consulta la versión visual del roadmap sin salir de la web.',
       open: 'Abrir en nueva pestaña',
       download: 'Descargar PDF',
+      loading: 'Cargando PDF...',
+      viewerHint: 'Si el navegador bloquea el visor embebido, igual podrás abrirlo o descargarlo.',
+      fallback: 'Este navegador no pudo renderizar el PDF dentro de la página.',
+      zoomOut: 'Reducir zoom',
+      zoomReset: 'Ajustar al ancho',
+      zoomIn: 'Aumentar zoom',
+      fullscreen: 'Pantalla completa',
+      rendering: (page, total) => `Renderizando página ${page} de ${total}...`,
+      ready: total => `${total} páginas listas · desplázate para explorar`,
     },
     lab: {
       title: 'Laboratorio de Retos',
@@ -611,7 +700,7 @@ const UI_STRINGS = {
   },
   en: {
     pageTitle: 'CyberPath — Dragon Edition',
-    headerSubtitle: 'Interactive roadmap · 18 platforms · 5 labs',
+    headerSubtitle: 'Interactive roadmap · 18 platforms',
     tooltipAction: 'Open platform',
     levelNames: ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'],
     levelLabels: ['Beginner', 'Intermediate', 'Advanced'],
@@ -642,6 +731,7 @@ const UI_STRINGS = {
     dragonStealth: 'Stealth mode...',
     controls: {
       info: 'Why these levels?',
+      menu: 'Open menu',
       pdf: 'Open PDF',
       reset: 'Reset view',
       auto: 'Auto-rotate',
@@ -664,6 +754,15 @@ const UI_STRINGS = {
       intro: 'Read the visual roadmap companion without leaving the site.',
       open: 'Open in new tab',
       download: 'Download PDF',
+      loading: 'Loading PDF...',
+      viewerHint: 'If the browser blocks the embedded viewer, you can still open or download the PDF.',
+      fallback: 'This browser could not render the PDF inside the page.',
+      zoomOut: 'Zoom out',
+      zoomReset: 'Fit to width',
+      zoomIn: 'Zoom in',
+      fullscreen: 'Full screen',
+      rendering: (page, total) => `Rendering page ${page} of ${total}...`,
+      ready: total => `${total} pages ready · scroll to explore`,
     },
     lab: {
       title: 'Challenge Lab',
@@ -1102,8 +1201,20 @@ const pvPriceLabel = document.getElementById('pvPriceLabel');
 const pvVisitText = document.getElementById('pvVisitText');
 const pdfTitle = document.getElementById('pdfTitle');
 const pdfIntro = document.getElementById('pdfIntro');
+const pdfStatus = document.getElementById('pdfStatus');
+const pdfLoading = document.getElementById('pdfLoading');
+const pdfLoadingText = document.getElementById('pdfLoadingText');
+const pdfViewerHint = document.getElementById('pdfViewerHint');
+const pdfFallback = document.getElementById('pdfFallback');
+const pdfFallbackText = document.getElementById('pdfFallbackText');
+const pdfPages = document.getElementById('pdfPages');
+const pdfViewer = document.getElementById('pdfViewer');
 const pdfOpenText = document.getElementById('pdfOpenText');
 const pdfDownloadText = document.getElementById('pdfDownloadText');
+const pdfZoomOut = document.getElementById('pdfZoomOut');
+const pdfZoomReset = document.getElementById('pdfZoomReset');
+const pdfZoomIn = document.getElementById('pdfZoomIn');
+const pdfFullscreen = document.getElementById('pdfFullscreen');
 const labModalTitle = document.getElementById('labModalTitle');
 const theorySubtitle = document.getElementById('theorySubtitle');
 const theoryLearnLabel = document.getElementById('theoryLearnLabel');
@@ -1122,9 +1233,23 @@ const levelOverlay = document.getElementById('levelOverlay');
 const levelModalCard = document.getElementById('levelModalCard');
 const previewOverlay = document.getElementById('previewOverlay');
 const pdfOverlay = document.getElementById('pdfOverlay');
+const pdfCard = pdfOverlay.querySelector('.pdf-card');
+const PDF_URL = 'assets/CyberPath_Dragon_Edition.pdf';
+const PDF_WORKER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let pdfDoc = null;
+let pdfDocPromise = null;
+let pdfZoom = window.innerWidth <= 768 ? 0.96 : 1;
+let pdfRenderToken = 0;
+let pdfResizeTimer = null;
+let pdfRenderedWidth = 0;
+let pdfRenderedZoom = 0;
 let activePreviewPlatform = null;
 let lastPointer = { x: W / 2, y: H / 2 };
 let dragonStatusInteracted = false;
+
+if (window.pdfjsLib) {
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_URL;
+}
 
 function showSpeech(platform, screenX, screenY) {}
 
@@ -1172,6 +1297,161 @@ function refreshLanguageButtons() {
   langButtons.forEach(button => button.classList.toggle('active', button.dataset.lang === currentLang));
 }
 
+function setPdfStatus(text) {
+  pdfStatus.textContent = text;
+}
+
+function updatePdfToolLabels() {
+  const s = getStrings();
+  pdfZoomOut.title = s.pdf.zoomOut;
+  pdfZoomOut.setAttribute('aria-label', s.pdf.zoomOut);
+  pdfZoomReset.title = s.pdf.zoomReset;
+  pdfZoomReset.setAttribute('aria-label', s.pdf.zoomReset);
+  pdfZoomIn.title = s.pdf.zoomIn;
+  pdfZoomIn.setAttribute('aria-label', s.pdf.zoomIn);
+  pdfFullscreen.title = s.pdf.fullscreen;
+  pdfFullscreen.setAttribute('aria-label', s.pdf.fullscreen);
+}
+
+function setPdfToolState(disabled = false) {
+  pdfZoomOut.disabled = disabled || pdfZoom <= 0.78;
+  pdfZoomIn.disabled = disabled || pdfZoom >= 2.18;
+  pdfZoomReset.disabled = disabled;
+}
+
+function showPdfLoading(message = getStrings().pdf.loading) {
+  pdfLoading.hidden = false;
+  pdfPages.hidden = true;
+  pdfFallback.hidden = true;
+  pdfLoadingText.textContent = message;
+  pdfViewerHint.textContent = getStrings().pdf.viewerHint;
+  setPdfStatus(message);
+  setPdfToolState(true);
+}
+
+function showPdfFallback(message = getStrings().pdf.fallback) {
+  pdfLoading.hidden = true;
+  pdfPages.hidden = true;
+  pdfFallback.hidden = false;
+  pdfFallbackText.textContent = message;
+  setPdfStatus(message);
+  setPdfToolState(true);
+}
+
+function clampPdfZoom(nextZoom) {
+  return Math.max(0.8, Math.min(2.2, Number(nextZoom.toFixed(2))));
+}
+
+function getPdfAvailableWidth() {
+  return Math.max(260, Math.min(pdfViewer.clientWidth - 28, 920));
+}
+
+async function ensurePdfDocument() {
+  if (!window.pdfjsLib) {
+    throw new Error('PDF.js unavailable');
+  }
+  if (pdfDoc) return pdfDoc;
+  if (!pdfDocPromise) {
+    pdfDocPromise = window.pdfjsLib.getDocument(PDF_URL).promise
+      .then(doc => {
+        pdfDoc = doc;
+        return doc;
+      })
+      .catch(error => {
+        pdfDocPromise = null;
+        throw error;
+      });
+  }
+  return pdfDocPromise;
+}
+
+async function renderPdfDocument() {
+  try {
+    const doc = await ensurePdfDocument();
+    const renderToken = ++pdfRenderToken;
+    const availableWidth = getPdfAvailableWidth();
+
+    if (
+      pdfPages.childElementCount === doc.numPages &&
+      Math.abs(pdfRenderedWidth - availableWidth) < 2 &&
+      Math.abs(pdfRenderedZoom - pdfZoom) < 0.001
+    ) {
+      pdfLoading.hidden = true;
+      pdfFallback.hidden = true;
+      pdfPages.hidden = false;
+      setPdfStatus(getStrings().pdf.ready(doc.numPages));
+      setPdfToolState(false);
+      return;
+    }
+
+    showPdfLoading(getStrings().pdf.loading);
+    pdfPages.innerHTML = '';
+    pdfViewer.scrollTop = 0;
+    let firstPageReady = false;
+
+    for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber++) {
+      if (renderToken !== pdfRenderToken) return;
+      setPdfStatus(getStrings().pdf.rendering(pageNumber, doc.numPages));
+
+      const page = await doc.getPage(pageNumber);
+      const baseViewport = page.getViewport({ scale: 1 });
+      const fitScale = (availableWidth / baseViewport.width) * pdfZoom;
+      const viewport = page.getViewport({ scale: fitScale });
+      const deviceScale = Math.min(window.devicePixelRatio || 1, 2);
+
+      const pageEl = document.createElement('section');
+      pageEl.className = 'pdf-page';
+      const pageLabel = document.createElement('div');
+      pageLabel.className = 'pdf-page-label';
+      pageLabel.textContent = `${currentLang === 'es' ? 'Página' : 'Page'} ${pageNumber}`;
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d', { alpha: false });
+      canvas.width = Math.floor(viewport.width * deviceScale);
+      canvas.height = Math.floor(viewport.height * deviceScale);
+      canvas.style.width = `${Math.floor(viewport.width)}px`;
+      canvas.style.height = `${Math.floor(viewport.height)}px`;
+      context.setTransform(deviceScale, 0, 0, deviceScale, 0, 0);
+
+      pageEl.append(pageLabel, canvas);
+      pdfPages.appendChild(pageEl);
+      await page.render({ canvasContext: context, viewport }).promise;
+
+      if (!firstPageReady) {
+        firstPageReady = true;
+        pdfLoading.hidden = true;
+        pdfFallback.hidden = true;
+        pdfPages.hidden = false;
+        setPdfToolState(false);
+      }
+    }
+
+    if (renderToken !== pdfRenderToken) return;
+    pdfRenderedWidth = availableWidth;
+    pdfRenderedZoom = pdfZoom;
+    setPdfStatus(getStrings().pdf.ready(doc.numPages));
+    setPdfToolState(false);
+  } catch (error) {
+    console.error('PDF viewer error:', error);
+    showPdfFallback(getStrings().pdf.fallback);
+  }
+}
+
+function schedulePdfRerender() {
+  clearTimeout(pdfResizeTimer);
+  pdfResizeTimer = setTimeout(() => {
+    if (pdfOverlay.classList.contains('active')) {
+      renderPdfDocument();
+    }
+  }, 180);
+}
+
+function openPdfViewer() {
+  pdfOverlay.classList.add('active');
+  setControlsMenuOpen(false);
+  requestAnimationFrame(() => renderPdfDocument());
+}
+
 function applyLanguage() {
   const s = getStrings();
   document.documentElement.lang = currentLang;
@@ -1186,7 +1466,7 @@ function applyLanguage() {
   legendAdvanced.textContent = s.levelLabels[2];
   sceneHintEl.textContent = s.hint;
   btnInfo.title = s.controls.info;
-  btnMenu.title = currentLang === 'en' ? 'Open menu' : 'Abrir menu';
+  btnMenu.title = s.controls.menu;
   btnMenu.setAttribute('aria-label', btnMenu.title);
   btnPdf.title = s.controls.pdf;
   btnReset.title = s.controls.reset;
@@ -1206,6 +1486,18 @@ function applyLanguage() {
   pdfIntro.textContent = s.pdf.intro;
   pdfOpenText.textContent = s.pdf.open;
   pdfDownloadText.textContent = s.pdf.download;
+  pdfLoadingText.textContent = s.pdf.loading;
+  pdfViewerHint.textContent = s.pdf.viewerHint;
+  pdfFallbackText.textContent = s.pdf.fallback;
+  updatePdfToolLabels();
+  if (pdfPages.hidden && pdfFallback.hidden) {
+    setPdfStatus(s.pdf.loading);
+  } else if (!pdfPages.hidden && pdfDoc) {
+    setPdfStatus(s.pdf.ready(pdfDoc.numPages));
+    Array.from(pdfPages.querySelectorAll('.pdf-page-label')).forEach((label, index) => {
+      label.textContent = `${currentLang === 'es' ? 'Página' : 'Page'} ${index + 1}`;
+    });
+  }
   labModalTitle.textContent = s.lab.title;
   theorySubtitle.textContent = s.lab.theorySubtitle;
   theoryLearnLabel.textContent = s.lab.theoryLearn;
@@ -1298,10 +1590,37 @@ btnInfo.addEventListener('click',()=>levelOverlay.classList.add('active'));
 levelOverlay.addEventListener('click',e=>{if(e.target===levelOverlay)levelOverlay.classList.remove('active');});
 document.getElementById('closePreview').addEventListener('click',()=>{activePreviewPlatform=null;previewOverlay.classList.remove('active');});
 previewOverlay.addEventListener('click',e=>{if(e.target===previewOverlay){activePreviewPlatform=null;previewOverlay.classList.remove('active');}});
-btnPdf.addEventListener('click',()=>pdfOverlay.classList.add('active'));
+btnPdf.addEventListener('click',openPdfViewer);
 document.getElementById('closePdf').addEventListener('click',()=>pdfOverlay.classList.remove('active'));
 pdfOverlay.addEventListener('click',e=>{if(e.target===pdfOverlay)pdfOverlay.classList.remove('active');});
+pdfZoomOut.addEventListener('click',()=>{pdfZoom = clampPdfZoom(pdfZoom - 0.16); renderPdfDocument();});
+pdfZoomReset.addEventListener('click',()=>{pdfZoom = window.innerWidth <= 768 ? 0.96 : 1; renderPdfDocument();});
+pdfZoomIn.addEventListener('click',()=>{pdfZoom = clampPdfZoom(pdfZoom + 0.16); renderPdfDocument();});
+pdfFullscreen.addEventListener('click', async () => {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+      return;
+    }
+    if (pdfCard.requestFullscreen) {
+      await pdfCard.requestFullscreen();
+      return;
+    }
+    window.open(PDF_URL, '_blank', 'noopener');
+  } catch (error) {
+    console.error('Fullscreen error:', error);
+    window.open(PDF_URL, '_blank', 'noopener');
+  }
+});
 [btnPdf,btnReset,btnAuto,btnDragon,btnLab].forEach(btn=>btn.addEventListener('click',()=>setControlsMenuOpen(false)));
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  setControlsMenuOpen(false);
+  levelOverlay.classList.remove('active');
+  previewOverlay.classList.remove('active');
+  pdfOverlay.classList.remove('active');
+  labOverlay.classList.remove('active');
+});
 
 function handleHover(cx,cy){
   lastPointer = { x: cx, y: cy };
@@ -1341,7 +1660,8 @@ function showPlatformPreview(rawPlatform){
   previewOverlay.classList.add('active');
 }
 
-window.addEventListener('resize',()=>{W=window.innerWidth;H=window.innerHeight;aspect=W/H;renderer.setSize(W,H);applyCam();});
+window.addEventListener('resize',()=>{W=window.innerWidth;H=window.innerHeight;aspect=W/H;renderer.setSize(W,H);applyCam();schedulePdfRerender();});
+document.addEventListener('fullscreenchange', schedulePdfRerender);
 
 /* =====================================================================
    LOOP DE ANIMACIÓN
