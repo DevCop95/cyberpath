@@ -215,7 +215,7 @@ canvas{display:block}
   <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
   <div class="level-panel"><div class="lp-row"><span class="lp-num" style="color:#00ff88">6</span><span class="lp-label">Principiante</span></div><div class="lp-row"><span class="lp-num" style="color:#ff9500">6</span><span class="lp-label">Intermedio</span></div><div class="lp-row"><span class="lp-num" style="color:#ff5555">6</span><span class="lp-label">Avanzado</span></div></div>
   <div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div>Principiante</div><div class="leg-item"><div class="leg-dot" style="background:#ff9500"></div>Intermedio</div><div class="leg-item"><div class="leg-dot" style="background:#ff5555"></div>Avanzado</div></div>
-  <div class="hint">Arrastra para rotar · Click para visitar</div>
+  <div class="hint">Arrastra para rotar · Click para visitar · El dragón revela cada plataforma</div>
   <div class="controls">
     <button class="ctrl-btn" id="btnReset" title="Reset"><i class="fa-solid fa-house" style="font-size:18px"></i></button>
     <button class="ctrl-btn" id="btnAuto" title="Auto-rotar"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button>
@@ -1276,7 +1276,70 @@ john:x:1001:1001::/home/john:/bin/bash`,
   }
 ];
 
-let currentLab = LABS[0];
+/* =====================================================================
+   PROGRESO — localStorage
+   ===================================================================== */
+const STORAGE_KEY = 'cyberpath_v1';
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      return { completed: new Set(p.completed || []), history: p.history || {}, current: p.current || LABS[0].id };
+    }
+  } catch(e) {}
+  return { completed: new Set(), history: {}, current: LABS[0].id };
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      completed: [...progress.completed],
+      history: progress.history,
+      current: currentLab ? currentLab.id : LABS[0].id
+    }));
+  } catch(e) {}
+}
+
+const progress = loadProgress();
+
+function isUnlocked(lab) {
+  const idx = LABS.findIndex(l => l.id === lab.id);
+  if (idx === 0) return true;
+  return progress.completed.has(LABS[idx - 1].id);
+}
+
+function markCompleted(labId) {
+  if (progress.completed.has(labId)) return;
+  progress.completed.add(labId);
+  const idx = LABS.findIndex(l => l.id === labId);
+  setTimeout(() => {
+    if (idx < LABS.length - 1) {
+      const next = LABS[idx + 1];
+      labPrint(`<span style="color:#00ff88;font-weight:bold">╔══ 🔓 LABORATORIO DESBLOQUEADO ══╗</span>`);
+      labPrint(`<span style="color:#e0e0e8">   → ${next.title}</span>`);
+      labPrint(`<span style="color:#505060">╚═══════════════════════════════════╝</span>`);
+      labPrint('');
+    } else {
+      labPrint(`<span style="color:#00ff88;font-weight:bold">🏆 ¡TODOS LOS LABORATORIOS COMPLETADOS!</span>`);
+      labPrint('');
+    }
+    saveProgress();
+    refreshSidebar();
+  }, 300);
+}
+
+function saveTerminalHistory() {
+  if (!currentLab) return;
+  progress.history[currentLab.id] = document.getElementById('labTerminal').innerHTML;
+  saveProgress();
+}
+
+/* =====================================================================
+   LAB CORE
+   ===================================================================== */
+let currentLab = null;
 let hintIndex = 0;
 
 function labPrint(html) {
@@ -1317,6 +1380,20 @@ function loadTheory(lab) {
 }
 
 function loadLab(lab) {
+  if (!isUnlocked(lab)) {
+    const idx = LABS.findIndex(l => l.id === lab.id);
+    const prev = LABS[idx - 1];
+    // Mostrar brevemente un mensaje de bloqueo sin cambiar el lab activo
+    const term = document.getElementById('labTerminal');
+    const flash = document.createElement('div');
+    flash.innerHTML = `<span style="color:#ff5555">🔒 Completa primero: <b style="color:#e0e0e8">${prev.title}</b></span>`;
+    flash.style.cssText = 'position:absolute;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(255,85,85,0.12);border:1px solid rgba(255,85,85,0.3);border-radius:8px;padding:8px 16px;font-size:0.72rem;white-space:nowrap;z-index:99;pointer-events:none';
+    document.getElementById('labBodyFlex').style.position='relative';
+    document.getElementById('labBodyFlex').appendChild(flash);
+    setTimeout(() => flash.remove(), 2200);
+    return;
+  }
+
   currentLab = lab;
   hintIndex = 0;
   document.getElementById('labTitle').textContent = lab.title;
@@ -1329,52 +1406,123 @@ function loadLab(lab) {
   obj.innerHTML = lab.objectives.map((o,i)=>
     `<span style="font-size:0.62rem;padding:2px 8px;border-radius:12px;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)">${i+1}. ${o}</span>`
   ).join('');
-  // sidebar active
-  document.querySelectorAll('.lab-item').forEach(el=>{
-    el.style.background = el.dataset.id===lab.id ? 'rgba(167,139,250,0.12)' : '';
-    const isMob = window.innerWidth <= 768;
-    if (isMob) {
-      el.style.borderLeft = 'none';
-      el.style.borderBottom = el.dataset.id===lab.id ? '3px solid #a78bfa' : '3px solid transparent';
-    } else {
-      el.style.borderLeft = el.dataset.id===lab.id ? '3px solid #a78bfa' : '3px solid transparent';
-      el.style.borderBottom = '';
-    }
-  });
-  labClear();
-  labPrint(lab.startMsg);
-  labPrint('');
-  // Show theory panel
-  loadTheory(lab);
+
+  refreshSidebar();
+  progress.current = lab.id;
+
+  const saved = progress.history[lab.id];
+  if (saved) {
+    // Restaurar donde lo dejaron, sin mostrar teoría de nuevo
+    document.getElementById('labTerminal').innerHTML = saved;
+    document.getElementById('labTerminal').scrollTop = document.getElementById('labTerminal').scrollHeight;
+    document.getElementById('theoryPanel').classList.remove('visible');
+  } else {
+    // Primera vez en este lab
+    labClear();
+    labPrint(lab.startMsg);
+    labPrint('');
+    loadTheory(lab);
+  }
+  saveProgress();
 }
 
 function runLabCommand(raw) {
   const cmd = raw.trim();
   if (!cmd) return;
   labPrintCmd(cmd);
-  if (cmd === 'clear') { labClear(); labPrint(currentLab.startMsg); labPrint(''); return; }
+
+  if (cmd === 'clear') {
+    // Borrar historial guardado de este lab también
+    delete progress.history[currentLab.id];
+    labClear();
+    labPrint(currentLab.startMsg);
+    labPrint('');
+    saveProgress();
+    return;
+  }
   if (cmd === 'hint') {
     const h = currentLab.hints[hintIndex % currentLab.hints.length];
     labPrint(`<span style="color:#ff9500">💡 Pista: ${h}</span>`);
-    hintIndex++; return;
+    hintIndex++;
+    saveTerminalHistory();
+    return;
   }
-  // fuzzy match: normalize spaces
+
   const norm = cmd.replace(/\s+/g,' ');
   let found = currentLab.commands[norm] || currentLab.commands[cmd];
   if (!found) {
-    // partial match
     const keys = Object.keys(currentLab.commands);
     const match = keys.find(k => norm.startsWith(k.split(' ')[0]) && k !== 'help');
     if (match && Math.abs(norm.length - match.length) < 8) found = currentLab.commands[match];
   }
+
   if (found) {
     labPrint(`<span style="color:#c0c0d0">${found}</span>`);
+    // Detectar FLAG completada
+    if (found.includes('FLAG{') && !progress.completed.has(currentLab.id)) {
+      markCompleted(currentLab.id);
+    }
   } else {
     labPrint(`<span style="color:#ff5555">bash: ${cmd.split(' ')[0]}: command not found</span>`);
     labPrint(`<span style="color:#505060">Escribe <span style="color:#a78bfa">help</span> para ver comandos disponibles</span>`);
   }
   labPrint('');
+  saveTerminalHistory();
 }
+
+/* =====================================================================
+   SIDEBAR con estados: bloqueado / completado / activo / libre
+   ===================================================================== */
+function refreshSidebar() {
+  document.querySelectorAll('.lab-item').forEach(el => {
+    const lab = LABS.find(l => l.id === el.dataset.id);
+    if (!lab) return;
+    const unlocked = isUnlocked(lab);
+    const done = progress.completed.has(lab.id);
+    const active = currentLab && currentLab.id === lab.id;
+    const isMob = window.innerWidth <= 768;
+
+    if (!unlocked) {
+      el.style.opacity = '0.4';
+      el.style.cursor = 'not-allowed';
+      el.style.background = '';
+      el.style.borderLeft = isMob ? 'none' : '3px solid transparent';
+      el.style.borderBottom = isMob ? '3px solid transparent' : '';
+      // Badge locked
+      const badge = el.querySelector('.sb-status');
+      if (badge) { badge.textContent = '🔒'; badge.style.color = '#505060'; }
+    } else {
+      el.style.opacity = '1';
+      el.style.cursor = 'pointer';
+      el.style.background = active ? 'rgba(167,139,250,0.12)' : '';
+      el.style.borderLeft = isMob ? 'none' : (active ? '3px solid #a78bfa' : '3px solid transparent');
+      el.style.borderBottom = isMob ? (active ? '3px solid #a78bfa' : '3px solid transparent') : '';
+      const badge = el.querySelector('.sb-status');
+      if (badge) {
+        if (done) { badge.textContent = '✓'; badge.style.color = '#00ff88'; }
+        else { badge.textContent = ''; }
+      }
+    }
+  });
+}
+
+// Build sidebar
+const sidebar = document.getElementById('labSidebar');
+LABS.forEach(lab => {
+  const item = document.createElement('div');
+  item.className = 'lab-item';
+  item.dataset.id = lab.id;
+  item.style.cssText = 'padding:10px 14px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s;display:flex;justify-content:space-between;align-items:center;gap:8px';
+  item.innerHTML = `<div style="min-width:0">
+    <div style="font-size:0.72rem;color:#c0c0d0;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${lab.title}</div>
+    <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:${lab.diffColor}22;color:${lab.diffColor}">${lab.difficulty}</span>
+  </div>
+  <span class="sb-status" style="font-size:0.75rem;flex-shrink:0"></span>`;
+  item.addEventListener('click', () => loadLab(lab));
+  item.addEventListener('mouseenter', () => { if(isUnlocked(lab) && (!currentLab || item.dataset.id !== currentLab.id)) item.style.background='rgba(255,255,255,0.04)'; });
+  item.addEventListener('mouseleave', () => { if(!currentLab || item.dataset.id !== currentLab.id) item.style.background = (currentLab && item.dataset.id === currentLab.id) ? 'rgba(167,139,250,0.12)' : ''; });
+  sidebar.appendChild(item);
+});
 
 // Theory panel buttons
 document.getElementById('theoryStartBtn').addEventListener('click', () => {
@@ -1383,21 +1531,6 @@ document.getElementById('theoryStartBtn').addEventListener('click', () => {
 });
 document.getElementById('theoryToggleBtn').addEventListener('click', () => {
   loadTheory(currentLab);
-});
-
-// Build sidebar
-const sidebar = document.getElementById('labSidebar');
-LABS.forEach(lab => {
-  const item = document.createElement('div');
-  item.className = 'lab-item';
-  item.dataset.id = lab.id;
-  item.style.cssText = 'padding:10px 14px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s';
-  item.innerHTML = `<div style="font-size:0.72rem;color:#c0c0d0;margin-bottom:3px">${lab.title}</div>
-    <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:${lab.diffColor}22;color:${lab.diffColor}">${lab.difficulty}</span>`;
-  item.addEventListener('click', () => loadLab(lab));
-  item.addEventListener('mouseenter', () => { if(item.dataset.id !== currentLab.id) item.style.background='rgba(255,255,255,0.04)'; });
-  item.addEventListener('mouseleave', () => { if(item.dataset.id !== currentLab.id) item.style.background=''; });
-  sidebar.appendChild(item);
 });
 
 // Input handling
@@ -1415,12 +1548,23 @@ document.getElementById('labInput').addEventListener('keydown', e => {
   }
 });
 document.getElementById('labHint').addEventListener('click', () => runLabCommand('hint'));
-document.getElementById('labReset').addEventListener('click', () => loadLab(currentLab));
+document.getElementById('labReset').addEventListener('click', () => {
+  // Reset borra historial de este lab
+  delete progress.history[currentLab.id];
+  progress.completed.delete(currentLab.id);
+  saveProgress();
+  refreshSidebar();
+  loadLab(currentLab);
+});
 
 const labOverlay = document.getElementById('labOverlay');
 document.getElementById('btnLab').addEventListener('click', () => {
   labOverlay.classList.add('active');
-  if (!document.getElementById('labTerminal').children.length) loadLab(LABS[0]);
+  // Abrir el lab donde el usuario estaba, o el primero desbloqueado
+  if (!currentLab) {
+    const resumeLab = LABS.find(l => l.id === progress.current) || LABS[0];
+    loadLab(resumeLab);
+  }
   setTimeout(() => document.getElementById('labInput').focus(), 100);
 });
 document.getElementById('closeLabModal').addEventListener('click', () => labOverlay.classList.remove('active'));
