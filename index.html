@@ -25,16 +25,16 @@ canvas{display:block}
 .tt-features{font-size:0.6rem;color:#606070;margin-top:4px}
 .tt-features span{display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;background:rgba(0,255,136,0.1);border-radius:4px;color:#00cc66}
 .tt-click{font-size:0.65rem;margin-top:8px;color:#00ff88;display:flex;align-items:center;gap:6px}
-#speechBubble{position:fixed;background:rgba(4,4,14,0.97);border:1px solid rgba(0,255,136,0.5);border-radius:14px;padding:14px 18px;max-width:260px;pointer-events:none;opacity:0;transition:opacity 0.35s;z-index:50;box-shadow:0 0 30px rgba(0,255,136,0.25),0 0 60px rgba(0,255,136,0.08)}
+#speechBubble{position:fixed;background:rgba(4,4,14,0.55);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:14px 18px;max-width:240px;pointer-events:none;opacity:0;transition:opacity 0.35s;z-index:50;box-shadow:0 0 16px rgba(0,255,136,0.08)}
 #speechBubble.visible{opacity:1}
-#speechBubble::after{content:'';position:absolute;bottom:-9px;left:24px;width:16px;height:16px;background:rgba(4,4,14,0.97);border-right:1px solid rgba(0,255,136,0.5);border-bottom:1px solid rgba(0,255,136,0.5);transform:rotate(45deg)}
+#speechBubble::after{content:'';position:absolute;bottom:-9px;left:24px;width:16px;height:16px;background:rgba(4,4,14,0.55);border-right:1px solid rgba(0,255,136,0.2);border-bottom:1px solid rgba(0,255,136,0.2);transform:rotate(45deg)}
 .sb-dragon{font-size:0.6rem;color:#606070;letter-spacing:2px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
 .sb-dragon-dot{width:6px;height:6px;border-radius:50%;background:#00ff88;animation:sbPulse 1s infinite}
 @keyframes sbPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .sb-name{font-family:'Space Grotesk',sans-serif;color:#e0e0e8;font-size:1rem;margin-bottom:5px}
 .sb-badge{display:inline-block;font-size:0.58rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:8px;letter-spacing:1px}
-.sb-cmd{font-size:0.62rem;color:#00ff88;font-family:'JetBrains Mono',monospace;margin-bottom:6px;padding:4px 8px;background:rgba(0,255,136,0.07);border-radius:6px;border-left:2px solid #00ff88}
-.sb-desc{font-size:0.65rem;color:#707080;line-height:1.45}
+.sb-cmd{font-size:0.62rem;color:#00ff88;font-family:'JetBrains Mono',monospace;margin-bottom:0;padding:4px 8px;background:rgba(0,255,136,0.07);border-radius:6px;border-left:2px solid #00ff88}
+.sb-desc{display:none}
 #dragonInfo{position:absolute;bottom:70px;right:12px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:8px 12px;pointer-events:none;font-size:0.65rem;color:#505060;text-align:right;min-width:120px}
 #dragonInfo .di-name{color:#00ff88;font-family:'Space Grotesk',sans-serif;font-size:0.75rem;margin-bottom:2px}
 #dragonInfo .di-status{color:#404050;font-size:0.6rem}
@@ -79,29 +79,103 @@ canvas{display:block}
 .ctrl-btn{background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.18);color:#808090;width:36px;height:36px;border-radius:8px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-family:inherit}
 .ctrl-btn:hover{border-color:#00ff88;color:#00ff88}
 .ctrl-btn.active{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,0.08)}
-.level-panel{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.level-panel{display:none}
 .lp-row{display:flex;align-items:center;gap:8px;background:rgba(5,5,16,0.75);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:6px 12px}
 .lp-num{font-size:1rem;font-weight:700}
 .lp-label{font-size:0.68rem;color:#606070}
 #btnInfo{position:absolute;top:12px;left:12px;width:36px;height:36px;border-radius:8px;background:rgba(5,5,16,0.85);border:1px solid rgba(0,255,136,0.3);color:#00ff88;font-weight:700;font-size:1rem;cursor:pointer;pointer-events:all;display:none;align-items:center;justify-content:center;transition:all 0.15s}
 #btnInfo:hover{background:rgba(0,255,136,0.12)}
-@media(max-width:768px){.header{top:8px}.header h1{font-size:1.3rem}.level-panel{display:none}#btnInfo{display:flex}.hint{bottom:56px;font-size:0.65rem}.legend{bottom:12px;padding:6px 12px;gap:10px}.leg-item{font-size:0.65rem}.controls{top:8px;right:8px}.ctrl-btn{width:34px;height:34px}.modal-card{padding:16px 16px 20px}.preview-meta{grid-template-columns:1fr}#dragonInfo{display:none}
-  /* Lab modal mobile */
-  #labOverlay .modal-card{height:95vh;max-height:95vh;border-radius:14px}
-  #labSidebarWrapper{width:100%!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;overflow-x:auto;overflow-y:hidden!important;display:flex!important;flex-direction:row!important;padding:6px 8px!important;gap:6px;max-height:52px}
-  #labSidebar{display:flex!important;flex-direction:row!important;gap:6px;padding:0!important;width:max-content}
-  .lab-item{padding:6px 12px!important;border-left:none!important;border-bottom:3px solid transparent;border-radius:8px;white-space:nowrap;flex-shrink:0}
-  #labInputBar{flex-wrap:wrap;gap:6px!important;padding:8px 10px!important}
-  #labInputBar #labPrompt{display:none}
-  #labInputBar #labInput{min-width:0;font-size:0.75rem!important}
-  #labInputBar #labRun{padding:6px 14px!important;font-size:0.7rem!important}
-  #labInputBar #labHint,#labInputBar #labReset{padding:6px 10px!important}
-  #labDescArea{padding:10px 12px!important}
-  #labTerminal{font-size:0.7rem!important;padding:10px 12px!important}
+@media(max-width:768px){
+  .header{top:8px}
+  .header h1{font-size:1.3rem}
+  .level-panel{display:none}
+  #btnInfo{display:flex}
+  .hint{bottom:56px;font-size:0.65rem}
+  .legend{bottom:12px;padding:6px 12px;gap:10px}
+  .leg-item{font-size:0.65rem}
+  .controls{top:8px;right:8px}
+  .ctrl-btn{width:34px;height:34px}
+  #levelOverlay .modal-card,#previewOverlay .modal-card{padding:16px 16px 20px}
+  .preview-meta{grid-template-columns:1fr}
+  #dragonInfo{display:none}
+
+  /* ── Lab modal mobile ── */
+  #labOverlay{padding:8px!important}
+  #labOverlay .modal-card,#labModalCard{
+    height:calc(100vh - 16px)!important;
+    max-height:calc(100vh - 16px)!important;
+    border-radius:14px!important;
+    overflow:hidden!important;
+    padding:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  #labBodyFlex{
+    flex:1!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+    min-height:0!important;
+  }
+  #labSidebarWrapper{
+    width:100%!important;
+    height:44px!important;
+    max-height:44px!important;
+    min-height:44px!important;
+    border-right:none!important;
+    border-bottom:1px solid rgba(255,255,255,0.07)!important;
+    flex-shrink:0!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    padding:4px 8px!important;
+    gap:4px!important;
+  }
+  #labSidebar{
+    display:flex!important;
+    flex-direction:row!important;
+    gap:6px!important;
+    padding:0!important;
+    width:max-content!important;
+    align-items:center!important;
+  }
+  .lab-item{
+    padding:0 10px!important;
+    border-left:none!important;
+    border-bottom:3px solid transparent!important;
+    border-radius:8px!important;
+    white-space:nowrap!important;
+    flex-shrink:0!important;
+    display:flex!important;
+    align-items:center!important;
+    height:34px!important;
+    overflow:hidden!important;
+  }
+  /* En mobile: ocultar badge, mostrar solo el título truncado */
+  .lab-item>span{display:none!important}
+  .lab-item>div{font-size:0.7rem!important;white-space:nowrap!important;overflow:hidden!important;max-width:120px!important;text-overflow:ellipsis!important;margin-bottom:0!important}
+  #labDescArea{padding:8px 12px!important;flex-shrink:0!important}
+  #labTerminal{flex:1!important;font-size:0.7rem!important;padding:10px 12px!important;overflow-y:auto!important}
+  #labInputBar{flex-wrap:nowrap!important;gap:6px!important;padding:8px 10px!important;flex-shrink:0!important}
+  #labInputBar #labPrompt{display:none!important}
+  #labInputBar #labInput{min-width:0!important;font-size:0.75rem!important;flex:1!important}
+  #labInputBar #labRun{padding:6px 12px!important;font-size:0.7rem!important;white-space:nowrap!important;flex-shrink:0!important}
+  #labInputBar #labHint,#labInputBar #labReset{padding:6px 10px!important;flex-shrink:0!important}
+  #theoryPanel{padding:14px 14px 18px!important}
 }
-@media(max-width:480px){.header h1{font-size:1.15rem}.controls{gap:4px}.ctrl-btn{width:32px;height:32px}#btnInfo{width:32px;height:32px}.legend{gap:8px;padding:5px 10px}.leg-item{font-size:0.6rem;gap:4px}.leg-dot{width:7px;height:7px}.hint{display:none}
-  #labOverlay .modal-card{height:100vh;max-height:100vh;border-radius:0}
-  #labSidebarWrapper{max-height:46px}
+@media(max-width:480px){
+  .header h1{font-size:1.15rem}
+  .controls{gap:4px}
+  .ctrl-btn{width:32px;height:32px}
+  #btnInfo{width:32px;height:32px}
+  .legend{gap:8px;padding:5px 10px}
+  .leg-item{font-size:0.6rem;gap:4px}
+  .leg-dot{width:7px;height:7px}
+  .hint{display:none}
+  #labOverlay{padding:0!important}
+  #labOverlay .modal-card,#labModalCard{height:100vh!important;max-height:100vh!important;border-radius:0!important}
+  #labSidebarWrapper{max-height:46px!important;min-height:40px!important}
   #labTerminal{font-size:0.67rem!important}
 }
 /* ── Theory / Clase Magistral ── */
@@ -141,7 +215,7 @@ canvas{display:block}
   <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
   <div class="level-panel"><div class="lp-row"><span class="lp-num" style="color:#00ff88">6</span><span class="lp-label">Principiante</span></div><div class="lp-row"><span class="lp-num" style="color:#ff9500">6</span><span class="lp-label">Intermedio</span></div><div class="lp-row"><span class="lp-num" style="color:#ff5555">6</span><span class="lp-label">Avanzado</span></div></div>
   <div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div>Principiante</div><div class="leg-item"><div class="leg-dot" style="background:#ff9500"></div>Intermedio</div><div class="leg-item"><div class="leg-dot" style="background:#ff5555"></div>Avanzado</div></div>
-  <div class="hint">Arrastra para rotar · Click para visitar · El dragón revela cada plataforma</div>
+  <div class="hint">Arrastra para rotar · Click para visitar</div>
   <div class="controls">
     <button class="ctrl-btn" id="btnReset" title="Reset"><i class="fa-solid fa-house" style="font-size:18px"></i></button>
     <button class="ctrl-btn" id="btnAuto" title="Auto-rotar"><i class="fa-solid fa-play" style="font-size:16px" id="autoIcon"></i></button>
@@ -156,7 +230,7 @@ canvas{display:block}
 
 <!-- ═══ LAB MODAL ═══ -->
 <div class="modal-overlay" id="labOverlay">
-  <div class="modal-card" style="max-width:860px;padding:0;overflow:hidden;display:flex;flex-direction:column;height:88vh">
+  <div class="modal-card" id="labModalCard" style="max-width:860px;padding:0;overflow:hidden;display:flex;flex-direction:column;height:88vh">
     <!-- Header -->
     <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(167,139,250,0.2);flex-shrink:0">
       <div style="display:flex;align-items:center;gap:10px">
@@ -228,7 +302,7 @@ canvas{display:block}
 <!-- ═══ SVG DRAGON OVERLAY ═══ -->
 <svg id="dragonSVG" xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
-     style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:8;overflow:visible;opacity:0.45">
+     style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:8;overflow:visible;opacity:0.6">
   <defs>
     <g id="DCabeza">
       <path style="fill:#00bb55" d="M-28.9,-1.1L-28.55 -1.95Q-28.1 -3.1 -27.25 -2.95L-26.7 -2.95Q-27.7 -1.65 -28.9 -1.1M-18.35,-1.8Q-15.1 -10.3 -9.6 -6.05Q-15.1 -6.2 -18.35 -1.8M-18.35,1.1Q-15.1 5.45 -9.6 5.35Q-15.1 9.55 -18.35 1.1M-26.7,2.2L-27.25 2.25Q-28.1 2.4 -28.55 1.2L-28.9 0.35Q-27.7 0.9 -26.7 2.2"/>
@@ -558,7 +632,7 @@ const DN = 40;
 const dElems = [];
 for (let i = 0; i < DN; i++) dElems[i] = { use: null, x: W/2, y: H/4 };
 
-const dPointer = { x: W/2, y: H/2 };
+const dPointer = { x: W * (0.2 + Math.random() * 0.6), y: H * (0.2 + Math.random() * 0.6) };
 let dFrm = Math.random();
 let dRad = 0;
 const dRadM = 90;
@@ -605,7 +679,7 @@ for (let i = 1; i < DN; i++) {
   if (i === 1) {
     el = document.createElementNS(svgNS, 'use');
     el.setAttributeNS(xlinkNS, 'xlink:href', '#DCabeza');
-  } else if (i === 8) {
+  } else if (i === 3) {
     el = document.createElementNS(svgNS, 'use');
     el.setAttributeNS(xlinkNS, 'xlink:href', '#DAletas');
   } else {
@@ -619,7 +693,8 @@ for (let i = 1; i < DN; i++) {
     el.setAttribute('y', -h / 2);
   }
   dElems[i].use = el;
-  dElems[i].noRotate = (i !== 1 && i !== 8);
+  dElems[i].noRotate = (i !== 1 && i !== 3 && i !== 8);
+  dElems[i].isWing   = (i === 3);
   dragonScreen.appendChild(el);
 }
 
@@ -654,10 +729,15 @@ function updateSVGDragon(dt) {
     e.y += (ep.y - e.y + (Math.sin(a) * (100 - i)) / 5) / 4;
     const s = (162 + 4 * (1 - i)) / 180;
     const tx = (ep.x + e.x) / 2, ty = (ep.y + e.y) / 2;
-    if (e.noRotate) {
+    const deg = (180 / Math.PI) * a;
+    if (e.isWing) {
+      // Aleteo: scaleY oscila entre 0.6 y 1.4 para simular batir de alas
+      const flap = s * (1 + 0.45 * Math.sin(dFrm * 18));
+      e.use.setAttribute('transform', `translate(${tx},${ty}) rotate(${deg}) scale(${s},${flap})`);
+    } else if (e.noRotate) {
       e.use.setAttribute('transform', `translate(${tx},${ty}) scale(${s},${s})`);
     } else {
-      e.use.setAttribute('transform', `translate(${tx},${ty}) rotate(${(180/Math.PI)*a}) scale(${s},${s})`);
+      e.use.setAttribute('transform', `translate(${tx},${ty}) rotate(${deg}) scale(${s},${s})`);
     }
   }
 
@@ -669,26 +749,6 @@ function updateSVGDragon(dt) {
     dPointer.y += (H/2 - dPointer.y) * 0.04;
   }
 
-  // ── Detección de proximidad con plataformas (por pantalla) ──
-  const headX = dElems[1].x, headY = dElems[1].y;
-  let closest = -1, closestDist = Infinity;
-  platformWorldPos.forEach((pos, idx) => {
-    const sc = worldToScreen(pos.clone().setY(pos.y + 2));
-    const dist = Math.hypot(sc.x - headX, sc.y - headY);
-    if (dist < 90 && dist < closestDist) { closestDist = dist; closest = idx; }
-  });
-
-  if (closest !== -1) {
-    dragonNearIdx = closest;
-    if (speechTimer <= 0) {
-      const pf = PLATFORMS[closest];
-      showSpeech({...pf, idx: closest}, headX, headY);
-    }
-    speechTimer = 3.5;
-  } else {
-    dragonNearIdx = -1;
-    if (speechTimer > 0) { speechTimer -= dt; if (speechTimer <= 0) hideSpeech(); }
-  }
 }
 
 /* =====================================================================
@@ -701,36 +761,7 @@ const sbCmd     = document.getElementById('sbCmd');
 const sbDesc    = document.getElementById('sbDesc');
 const diStatus  = document.getElementById('diStatus');
 
-function showSpeech(platform, screenX, screenY) {
-  if (lastSpeechIdx === platform.idx) return;
-  lastSpeechIdx = platform.idx;
-
-  sbName.textContent = platform.name;
-  sbBadge.textContent = LEVEL_NAMES[platform.level];
-  sbBadge.style.background = LEVEL_COLORS[platform.level] + '22';
-  sbBadge.style.color = LEVEL_COLORS[platform.level];
-  sbCmd.textContent = DRAGON_MSGS[Math.floor(Math.random()*DRAGON_MSGS.length)];
-
-  // PRETEXT: layout del texto antes de posicionar — sin adivinanzas de altura
-  const maxBubbleW = 230;
-  const descFont = '11px JetBrains Mono';
-  const prep = ptPrepare(platform.desc, descFont);
-  const { lineCount } = ptLayout(prep, maxBubbleW - 32, 15);
-
-  // PRETEXT: layoutWithLines para renderizar correctamente en el bubble
-  const { lines } = ptLayoutWithLines(prep, maxBubbleW - 32, 15);
-  sbDesc.textContent = lines.slice(0, 3).map(l=>l.text).join(' ');
-
-  const bubbleH = 100 + lineCount * 15;
-  const sx = Math.min(W-260, Math.max(10, screenX-20));
-  const sy = Math.min(H-bubbleH-20, Math.max(10, screenY-bubbleH-20));
-  speechBubble.style.left = sx+'px';
-  speechBubble.style.top  = sy+'px';
-  speechBubble.classList.add('visible');
-
-  diStatus.textContent = `Hackeando: ${platform.name}`;
-  speechTimer = 4;
-}
+function showSpeech(platform, screenX, screenY) {}
 
 function hideSpeech() {
   speechBubble.classList.remove('visible');
