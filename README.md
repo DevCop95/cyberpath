@@ -18,7 +18,7 @@ Public demo:
 
 ## Overview
 
-CyberPath organizes 18 recommended platforms into three skill tiers:
+CyberPath organizes 21 recommended platforms into three skill tiers:
 
 - Beginner
 - Intermediate
@@ -28,7 +28,7 @@ The interface is designed to feel like a living roadmap instead of a static list
 
 ## Main Features
 
-- Interactive 3D roadmap with 18 cybersecurity platforms
+- Interactive 3D roadmap with 21 cybersecurity platforms
 - ES / EN language toggle
 - Embedded PDF preview inside the site
 - Platform detail modal with description, level reasoning, features, and technical metadata
@@ -45,6 +45,7 @@ The interface is designed to feel like a living roadmap instead of a static list
 - OWASP Juice Shop
 - Hacker101
 - CryptoHack
+- Lakera Gandalf
 
 ### Intermediate
 
@@ -54,6 +55,7 @@ The interface is designed to feel like a living roadmap instead of a static list
 - PentesterLab
 - CTFChallenge
 - YesWeHack DOJO
+- Tensor Trust
 
 ### Advanced
 
@@ -63,6 +65,7 @@ The interface is designed to feel like a living roadmap instead of a static list
 - APIsec University
 - Google CTF
 - Hacking Hub
+- AI Village
 
 ## Built-in Labs
 
