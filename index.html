@@ -301,9 +301,9 @@ canvas{display:block}
   </div>
   <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
   <div class="level-panel">
-    <div class="lp-row"><span class="lp-num" style="color:#00ff88">6</span><span class="lp-label" id="levelPanelBeginner">Principiante</span></div>
-    <div class="lp-row"><span class="lp-num" style="color:#ff9500">6</span><span class="lp-label" id="levelPanelIntermediate">Intermedio</span></div>
-    <div class="lp-row"><span class="lp-num" style="color:#ff5555">6</span><span class="lp-label" id="levelPanelAdvanced">Avanzado</span></div>
+    <div class="lp-row"><span class="lp-num" style="color:#00ff88">7</span><span class="lp-label" id="levelPanelBeginner">Principiante</span></div>
+    <div class="lp-row"><span class="lp-num" style="color:#ff9500">7</span><span class="lp-label" id="levelPanelIntermediate">Intermedio</span></div>
+    <div class="lp-row"><span class="lp-num" style="color:#ff5555">7</span><span class="lp-label" id="levelPanelAdvanced">Avanzado</span></div>
   </div>
   <div class="legend">
     <div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div><span id="legendBeginner">Principiante</span></div>
@@ -592,18 +592,21 @@ const PLATFORMS = [
   { name:'OWASP Juice Shop', url:'https://juice-shop.github.io', domain:'owasp.org', level:0, desc:'Aplicación web vulnerable moderna que cubre las 10 vulnerabilidades OWASP Top 10.', reason:'Entorno seguro para practicar hacking web sin riesgos, con documentación excelente.', features:['OWASP Top 10','Docker/K8s ready','Scoreboard','Open Source'], type:'App Vulnerable', lang:'Multi', price:'Gratis' },
   { name:'Hacker101', url:'https://hacker101.com', domain:'hacker101.com', level:0, desc:'Cursos gratuitos de HackerOne para aprender bug bounty y seguridad web desde cero.', reason:'Contenido creado por expertos en bug bounty, enfocado en habilidades prácticas.', features:['Cursos en video','Retos prácticos','Certificados','Enfoque bug bounty'], type:'Cursos + CTF', lang:'Inglés', price:'Gratis' },
   { name:'CryptoHack', url:'https://cryptohack.org', domain:'cryptohack.org', level:0, desc:'Plataforma interactiva para aprender criptografía moderna mediante retos de código.', reason:'Introduce conceptos criptográficos con ejemplos prácticos y Python.', features:['Criptografía aplicada','Python integrado','Progreso gamificado','Comunidad Discord'], type:'Crypto CTF', lang:'Inglés', price:'Gratis' },
+  { name:'Lakera Gandalf', url:'https://gandalf.lakera.ai/', domain:'lakera.ai', level:0, desc:'Juego interactivo para aprender sobre inyección de prompts en IA.', reason:'Introduce conceptos de seguridad en IA de forma práctica y sin necesidad de conocimientos de programación.', features:['Inyección de prompts','Educativo','Divertido','IA'], type:'CTF de IA', lang:'Inglés', price:'Gratis' },
   { name:'Hack The Box', url:'https://hackthebox.com', domain:'hackthebox.com', level:1, desc:'Plataforma líder con máquinas vulnerables reales, CTFs y certificaciones profesionales.', reason:'Requiere conocimientos básicos de pentesting; menos guías, más investigación autónoma.', features:['Máquinas reales','Academy integrada','Certificaciones','Ranking global'], type:'Labs + CTF', lang:'Inglés', price:'Freemium' },
   { name:'PortSwigger', url:'https://portswigger.net/web-security', domain:'portswigger.net', level:1, desc:'Academy gratuita de los creadores de Burp Suite, con laboratorios de seguridad web.', reason:'Profundiza en vulnerabilidades web con teoría sólida y práctica guiada.', features:['Burp Suite integrado','Teoría + práctica','Certificación disponible','Actualizado constantemente'], type:'Academy Web', lang:'Inglés', price:'Gratis' },
   { name:'Root Me', url:'https://root-me.org', domain:'root-me.org', level:1, desc:'Plataforma francesa con +1000 retos de seguridad informática en múltiples categorías.', reason:'Variedad de desafíos que requieren aplicar conocimientos de forma creativa.', features:['1000+ retos','Múltiples categorías','Writeups comunitarios','Sin costo'], type:'Challenge Platform', lang:'FR/EN', price:'Gratis' },
   { name:'PentesterLab', url:'https://pentesterlab.com', domain:'pentesterlab.com', level:1, desc:'Ejercicios prácticos enfocados en vulnerabilidades web y metodologías de pentesting.', reason:'Enseña el cómo y por qué de cada exploit, ideal para consolidar conocimientos.', features:['Ejercicios guiados','Badges de progreso','Enfoque metodológico','Pro + Free'], type:'Hands-on Labs', lang:'Inglés', price:'Freemium' },
   { name:'CTFChallenge', url:'https://ctfchallenge.co.uk', domain:'ctfchallenge.co.uk', level:1, desc:'Agregador de CTFs con calendario, writeups y recursos para competidores.', reason:'Ayuda a transicionar de aprendizaje guiado a competencia real.', features:['Calendario CTF','Writeups','Recursos de estudio','Comunidad activa'], type:'CTF Aggregator', lang:'Inglés', price:'Gratis' },
   { name:'YesWeHack DOJO', url:'https://dojo-yeswehack.com', domain:'yeswehack.com', level:1, desc:'Entrenamiento en bug bounty con escenarios reales y metodología profesional.', reason:'Puente entre aprendizaje y bug bounty real, con enfoque en reportes profesionales.', features:['Escenarios reales','Metodología pro','Preparación bug bounty','Plataforma europea'], type:'Bug Bounty Training', lang:'EN/FR', price:'Freemium' },
+  { name:'Tensor Trust', url:'https://tensortrust.ai/', domain:'tensortrust.ai', level:1, desc:'Juego de ataque y defensa para modelos de lenguaje grandes (LLMs).', reason:'Permite crear y romper defensas de inyección de prompts, requiriendo un pensamiento más estratégico.', features:['Seguridad de LLMs','Ataque y defensa','Inyección de prompts','IA'], type:'CTF de IA', lang:'Inglés', price:'Gratis' },
   { name:'VulnHub', url:'https://vulnhub.com', domain:'vulnhub.com', level:2, desc:'Repositorio de máquinas vulnerables para descargar y practicar en entorno local.', reason:'Requiere configurar laboratorios propios; ideal para simular entornos reales.', features:['Máquinas descargables','Sin límites de tiempo','Comunidad de creadores','100% offline'], type:'VM Repository', lang:'Inglés', price:'Gratis' },
   { name:'crAPI (OWASP)', url:'https://github.com/OWASP/crAPI', domain:'github.com', level:2, desc:'Aplicación de referencia vulnerable para practicar seguridad en APIs modernas.', reason:'Enfocado en APIs REST/GraphQL, requiere conocimientos de arquitectura avanzada.', features:['APIs vulnerables','Docker/K8s','OWASP API Top 10','Open Source'], type:'API Security Lab', lang:'Multi', price:'Gratis' },
   { name:'Metasploitable 3', url:'https://github.com/rapid7/metasploitable3', domain:'rapid7.com', level:2, desc:'Máquina vulnerable diseñada para probar herramientas de pentesting como Metasploit.', reason:'Entorno complejo con múltiples servicios vulnerables; requiere análisis profundo.', features:['Múltiples vectores','Integración Metasploit','Documentación técnica','Enterprise focus'], type:'Vulnerable VM', lang:'Inglés', price:'Gratis' },
   { name:'APIsec University', url:'https://apisecuniversity.com', domain:'apisecuniversity.com', level:2, desc:'Cursos especializados en seguridad de APIs con laboratorios prácticos y certificaciones.', reason:'Contenido avanzado para profesionales que trabajan con arquitecturas modernas.', features:['Cursos especializados','Labs prácticos','Certificación','Enfoque enterprise'], type:'API Security Academy', lang:'Inglés', price:'Freemium' },
   { name:'Google CTF', url:'https://capturetheflag.withgoogle.com', domain:'google.com', level:2, desc:'CTF anual de Google con desafíos de nivel mundial en criptografía, reversing y exploits.', reason:'Retos diseñados por ingenieros de Google; requieren pensamiento creativo avanzado.', features:['Desafíos de élite','Tecnologías Google','Writeups oficiales','Competencia global'], type:'Elite CTF', lang:'Inglés', price:'Gratis' },
   { name:'Hacking Hub', url:'https://hackinghub.io', domain:'hackinghub.io', level:2, desc:'Plataforma emergente con laboratorios de pentesting y rutas de certificación avanzada.', reason:'Contenido para quienes buscan especializarse en seguridad ofensiva avanzada.', features:['Rutas especializadas','Labs realistas','Mentoría disponible','Enfoque certificaciones'], type:'Advanced Labs', lang:'Inglés', price:'Premium' },
+  { name:'AI Village', url:'https://aivillage.org/', domain:'aivillage.org', level:2, desc:'Comunidad e iniciativas centradas en la intersección de la inteligencia artificial y la seguridad.', reason:'Ofrece recursos avanzados, talleres y CTFs especializados en seguridad de IA y ML.', features:['Seguridad de IA/ML','Comunidad','Workshops','CTFs especializados'], type:'Comunidad + CTF', lang:'Inglés', price:'Gratis' },
 ];
 
 const LANG_STORAGE_KEY = 'cyberpath_lang';
@@ -612,7 +615,7 @@ let currentLang = (localStorage.getItem(LANG_STORAGE_KEY) || 'es') === 'en' ? 'e
 const UI_STRINGS = {
   es: {
     pageTitle: 'CyberPath — Dragon Edition',
-    headerSubtitle: 'Roadmap interactivo · 18 plataformas',
+    headerSubtitle: 'Roadmap interactivo · 21 plataformas',
     tooltipAction: 'Abrir plataforma',
     levelNames: ['PRINCIPIANTE', 'INTERMEDIO', 'AVANZADO'],
     levelLabels: ['Principiante', 'Intermedio', 'Avanzado'],
@@ -700,7 +703,7 @@ const UI_STRINGS = {
   },
   en: {
     pageTitle: 'CyberPath — Dragon Edition',
-    headerSubtitle: 'Interactive roadmap · 18 platforms',
+    headerSubtitle: 'Interactive roadmap · 21 platforms',
     tooltipAction: 'Open platform',
     levelNames: ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'],
     levelLabels: ['Beginner', 'Intermediate', 'Advanced'],
@@ -807,6 +810,9 @@ const PLATFORM_I18N = {
   'APIsec University': { en: { desc:'Specialized API security courses with hands-on labs and certifications.', reason:'Advanced content for professionals working with modern architectures.', features:['Specialized courses','Hands-on labs','Certification','Enterprise focus'], lang:'English' } },
   'Google CTF': { en: { desc:'Google’s annual CTF with world-class crypto, reversing, and exploit challenges.', reason:'Challenges designed by Google engineers and built for advanced creative thinking.', features:['Elite challenges','Google tech','Official write-ups','Global competition'], lang:'English', price:'Free' } },
   'Hacking Hub': { en: { desc:'Emerging platform with pentesting labs and advanced certification paths.', reason:'Built for learners who want to specialize in advanced offensive security.', features:['Specialized paths','Realistic labs','Mentorship available','Certification focus'], lang:'English' } },
+  'Lakera Gandalf': { en: { desc:'Interactive game to learn about prompt injection in AI.', reason:'Introduces AI security concepts practically and without requiring programming knowledge.', features:['Prompt injection','Educational','Fun','AI'], lang:'English' } },
+  'Tensor Trust': { en: { desc:'Attack and defense game for Large Language Models (LLMs).', reason:'Allows creating and breaking prompt injection defenses, requiring strategic thinking.', features:['LLM Security','Attack and defense','Prompt injection','AI'], lang:'English' } },
+  'AI Village': { en: { desc:'Community and initiatives focused on the intersection of AI and security.', reason:'Provides advanced resources, workshops, and specialized CTFs for AI/ML security.', features:['AI/ML Security','Community','Workshops','Specialized CTFs'], lang:'English' } },
 };
 
 function getStrings() {
@@ -865,12 +871,12 @@ const LEVEL_COLORS = ['#00ff88', '#ff9500', '#ff5555'];
 const LEVEL_NAMES  = ['PRINCIPIANTE', 'INTERMEDIO', 'AVANZADO'];
 const SX = 4.6, SZ = 6.5;
 const GRID_POS = [
-  [-2.5*SX,0,-SZ],[-1.5*SX,0,-SZ],[-0.5*SX,0,-SZ],[0.5*SX,0,-SZ],[1.5*SX,0,-SZ],[2.5*SX,0,-SZ],
-  [2.5*SX,0,0],[1.5*SX,0,0],[0.5*SX,0,0],[-0.5*SX,0,0],[-1.5*SX,0,0],[-2.5*SX,0,0],
-  [-2.5*SX,0,SZ],[-1.5*SX,0,SZ],[-0.5*SX,0,SZ],[0.5*SX,0,SZ],[1.5*SX,0,SZ],[2.5*SX,0,SZ]
+  [-3*SX,0,-SZ],[-2*SX,0,-SZ],[-1*SX,0,-SZ],[0,0,-SZ],[1*SX,0,-SZ],[2*SX,0,-SZ],[3*SX,0,-SZ],
+  [3*SX,0,0],[2*SX,0,0],[1*SX,0,0],[0,0,0],[-1*SX,0,0],[-2*SX,0,0],[-3*SX,0,0],
+  [-3*SX,0,SZ],[-2*SX,0,SZ],[-1*SX,0,SZ],[0,0,SZ],[1*SX,0,SZ],[2*SX,0,SZ],[3*SX,0,SZ]
 ];
 
-let W = window.innerWidth, H = window.innerHeight, aspect = W/H, BASE_F = 34;
+let W = window.innerWidth, H = window.innerHeight, aspect = W/H, BASE_F = 40;
 const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 renderer.setSize(W,H); renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -899,18 +905,21 @@ const PLATFORM_ABBR = {
   'OWASP Juice Shop': 'OWS',
   'Hacker101':        'H101',
   'CryptoHack':       'CRYP',
+  'Lakera Gandalf':   'GNDF',
   'Hack The Box':     'HTB',
   'PortSwigger':      'PSW',
   'Root Me':          'R-ME',
   'PentesterLab':     'PLB',
   'CTFChallenge':     'CTC',
   'YesWeHack DOJO':   'YWH',
+  'Tensor Trust':     'TENS',
   'VulnHub':          'VHB',
   'crAPI (OWASP)':    'API',
   'Metasploitable 3': 'MS3',
   'APIsec University':'APIsec',
   'Google CTF':       'GCTF',
   'Hacking Hub':      'HUB',
+  'AI Village':       'AIV',
 };
 
 function makeLogoTexture(p) {
@@ -1008,8 +1017,8 @@ function buildPath(){
   const pts=[];
   GRID_POS.forEach(([x,,z],i)=>{
     pts.push(new THREE.Vector3(x,0.12,z));
-    if(i===5){pts.push(new THREE.Vector3(x+2.0,0.12,z));pts.push(new THREE.Vector3(x+2.0,0.12,(z+GRID_POS[6][2])/2));pts.push(new THREE.Vector3(GRID_POS[6][0]+2.0,0.12,GRID_POS[6][2]));}
-    if(i===11){pts.push(new THREE.Vector3(x-2.0,0.12,z));pts.push(new THREE.Vector3(x-2.0,0.12,(z+GRID_POS[12][2])/2));pts.push(new THREE.Vector3(GRID_POS[12][0]-2.0,0.12,GRID_POS[12][2]));}
+    if(i===6){pts.push(new THREE.Vector3(x+2.0,0.12,z));pts.push(new THREE.Vector3(x+2.0,0.12,(z+GRID_POS[7][2])/2));pts.push(new THREE.Vector3(GRID_POS[7][0]+2.0,0.12,GRID_POS[7][2]));}
+    if(i===13){pts.push(new THREE.Vector3(x-2.0,0.12,z));pts.push(new THREE.Vector3(x-2.0,0.12,(z+GRID_POS[14][2])/2));pts.push(new THREE.Vector3(GRID_POS[14][0]-2.0,0.12,GRID_POS[14][2]));}
   });
   const curve=new THREE.CatmullRomCurve3(pts,false,'catmullrom',0.5);
   const tubeG=new THREE.TubeGeometry(curve,260,0.055,8,false);
