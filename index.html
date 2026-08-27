@@ -21,6 +21,11 @@
 <meta name="twitter:description" content="Explore the interactive offensive security roadmap, launch labs, switch ES/EN, and open the PDF without leaving the site.">
 <meta name="twitter:image" content="https://devcop95.github.io/cyberpath/assets/cyberpath-social.svg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23050510'/><text x='50' y='68' font-size='58' text-anchor='middle' font-family='monospace' fill='%2300ff88'>%3E_</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -37,7 +42,7 @@ canvas{display:block}
 .header{position:absolute;top:calc(12px + var(--safe-top));left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;width:100%;max-width:90vw}
 .header h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.2rem,4vw,1.8rem);color:#00ff88;text-shadow:0 0 20px rgba(0,255,136,0.5);letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .header p{color:#505060;font-size:0.7rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#tooltip{position:absolute;background:rgba(5,5,16,0.98);border:1px solid rgba(0,255,136,0.35);border-radius:12px;padding:12px 16px;min-width:200px;max-width:280px;opacity:0;transition:opacity 0.15s;pointer-events:none;box-shadow:0 0 20px rgba(0,255,136,0.15);z-index:20}
+#tooltip{position:absolute;background:rgba(5,5,16,0.98);border:1px solid rgba(0,255,136,0.35);border-radius:12px;padding:12px 16px;min-width:200px;max-width:280px;opacity:0;transition:opacity 0.15s ease,transform 0.15s ease;pointer-events:none;box-shadow:0 0 20px rgba(0,255,136,0.15);z-index:20;will-change:opacity,transform;transform:translateZ(0)}
 #tooltip.visible{opacity:1}
 .tt-num{font-size:0.65rem;color:#505060;margin-bottom:2px;letter-spacing:1px}
 .tt-name{font-family:'Space Grotesk',sans-serif;font-size:0.95rem;color:#e0e0e8;margin-bottom:4px}
@@ -47,7 +52,7 @@ canvas{display:block}
 .tt-features{font-size:0.6rem;color:#606070;margin-top:4px}
 .tt-features span{display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;background:rgba(0,255,136,0.1);border-radius:4px;color:#00cc66}
 .tt-click{font-size:0.65rem;margin-top:8px;color:#00ff88;display:flex;align-items:center;gap:6px}
-#speechBubble{position:fixed;background:rgba(4,4,14,0.55);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:14px 18px;max-width:240px;pointer-events:none;opacity:0;transition:opacity 0.35s;z-index:50;box-shadow:0 0 16px rgba(0,255,136,0.08)}
+#speechBubble{position:fixed;background:rgba(4,4,14,0.55);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:14px 18px;max-width:240px;pointer-events:none;opacity:0;transition:opacity 0.35s ease,transform 0.35s ease;z-index:50;box-shadow:0 0 16px rgba(0,255,136,0.08);will-change:opacity,transform;transform:translateZ(0)}
 #speechBubble.visible{opacity:1}
 #speechBubble::after{content:'';position:absolute;bottom:-9px;left:24px;width:16px;height:16px;background:rgba(4,4,14,0.55);border-right:1px solid rgba(0,255,136,0.2);border-bottom:1px solid rgba(0,255,136,0.2);transform:rotate(45deg)}
 .sb-dragon{font-size:0.6rem;color:#606070;letter-spacing:2px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
@@ -274,7 +279,7 @@ canvas{display:block}
 <div id="ui">
   <div class="header">
     <h1>&gt;_ cyberpath &nbsp;<span style="color:#ff3333;font-size:0.75em;vertical-align:middle"><i class="fa-solid fa-dragon"></i></span></h1>
-    <p id="headerSubtitle">Roadmap interactivo · 18 plataformas</p>
+    <p id="headerSubtitle">Roadmap interactivo · 23 plataformas</p>
   </div>
   <div id="tooltip">
     <div class="tt-num" id="ttNum">PLATAFORMA #01</div>
@@ -302,8 +307,8 @@ canvas{display:block}
   <button id="btnInfo" title="¿Por qué estos niveles?"><i class="fa-solid fa-circle-question" style="font-size:18px"></i></button>
   <div class="level-panel">
     <div class="lp-row"><span class="lp-num" style="color:#00ff88">7</span><span class="lp-label" id="levelPanelBeginner">Principiante</span></div>
-    <div class="lp-row"><span class="lp-num" style="color:#ff9500">7</span><span class="lp-label" id="levelPanelIntermediate">Intermedio</span></div>
-    <div class="lp-row"><span class="lp-num" style="color:#ff5555">7</span><span class="lp-label" id="levelPanelAdvanced">Avanzado</span></div>
+    <div class="lp-row"><span class="lp-num" style="color:#ff9500">8</span><span class="lp-label" id="levelPanelIntermediate">Intermedio</span></div>
+    <div class="lp-row"><span class="lp-num" style="color:#ff5555">8</span><span class="lp-label" id="levelPanelAdvanced">Avanzado</span></div>
   </div>
   <div class="legend">
     <div class="leg-item"><div class="leg-dot" style="background:#00ff88"></div><span id="legendBeginner">Principiante</span></div>
@@ -1176,6 +1181,28 @@ function updateSVGDragon(dt) {
     dPointer.y += (H/2 - dPointer.y) * 0.04;
   }
 
+  // Detección optimizada de proximidad a plataformas para Speech Bubble
+  if (cachedPlatformScreenPos.length > 0) {
+    const head = dElems[1];
+    let closestDist = Infinity;
+    let closestIdx = -1;
+    for (let pIdx = 0; pIdx < cachedPlatformScreenPos.length; pIdx++) {
+      const sp = cachedPlatformScreenPos[pIdx];
+      const dist = Math.hypot(sp.x - head.x, sp.y - head.y);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIdx = pIdx;
+      }
+    }
+
+    if (closestDist < 85 && closestIdx !== -1) {
+      dragonNearIdx = closestIdx;
+      showSpeech(PLATFORMS[closestIdx], head.x, head.y);
+    } else if (dragonNearIdx !== -1) {
+      dragonNearIdx = -1;
+      hideSpeech();
+    }
+  }
 }
 
 /* =====================================================================
@@ -1266,11 +1293,29 @@ if (window.pdfjsLib) {
   window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_URL;
 }
 
-function showSpeech(platform, screenX, screenY) {}
+function showSpeech(platform, screenX, screenY) {
+  if (!platform || !dragonEnabled) return;
+  const p = getPlatformCopy(platform);
+  sbName.textContent = p.name;
+  sbBadge.textContent = getLevelName(p.level);
+  sbBadge.style.background = LEVEL_COLORS[p.level] + '22';
+  sbBadge.style.color = LEVEL_COLORS[p.level];
+  const glyph = HACKING_GLYPHS[(platform.level * 7 + PLATFORMS.indexOf(platform)) % HACKING_GLYPHS.length];
+  sbCmd.textContent = `> ${glyph}`;
+
+  const bw = 240;
+  let bx = screenX + 20;
+  let by = screenY - 88;
+  if (bx + bw > W - 16) bx = screenX - bw - 20;
+  if (by < 16) by = screenY + 24;
+  speechBubble.style.left = `${Math.max(12, bx)}px`;
+  speechBubble.style.top = `${Math.max(12, by)}px`;
+  speechBubble.classList.add('visible');
+}
 
 function hideSpeech() {
   speechBubble.classList.remove('visible');
-  lastSpeechIdx = -1;
+  dragonNearIdx = -1;
 }
 
 function worldToScreen(v3) {
@@ -1526,6 +1571,12 @@ function applyLanguage() {
   labRunText.textContent = s.lab.run;
   labHintBtn.title = s.lab.hintTitle;
   labResetBtn.title = s.lab.resetTitle;
+  const lpNums = document.querySelectorAll('.level-panel .lp-num');
+  if (lpNums.length >= 3) {
+    lpNums[0].textContent = PLATFORMS.filter(p => p.level === 0).length;
+    lpNums[1].textContent = PLATFORMS.filter(p => p.level === 1).length;
+    lpNums[2].textContent = PLATFORMS.filter(p => p.level === 2).length;
+  }
   renderLevelModal();
   refreshLanguageButtons();
   updateDragonStatus();
@@ -1550,24 +1601,45 @@ let controlsMenuOpen=false;
 const sph={theta:Math.PI*0.22,phi:0.82};
 const CAM_R=55;
 
+let cachedPlatformScreenPos = [];
+function updatePlatformScreenPositions() {
+  if (!platformWorldPos || platformWorldPos.length === 0) return;
+  cachedPlatformScreenPos = platformWorldPos.map(pos => worldToScreen(pos));
+}
+
 function applyCam(){
   const f=BASE_F/zoomF;
   camera.left=-f*aspect/2;camera.right=f*aspect/2;camera.top=f/2;camera.bottom=-f/2;
   camera.updateProjectionMatrix();
   camera.position.set(CAM_R*Math.sin(sph.phi)*Math.sin(sph.theta),CAM_R*Math.cos(sph.phi),CAM_R*Math.sin(sph.phi)*Math.cos(sph.theta));
   camera.lookAt(0,0,0);
+  updatePlatformScreenPositions();
+}
+
+let hoverRafPending = false;
+let pendingHoverCoords = { x: 0, y: 0 };
+function queueHandleHover(cx, cy) {
+  pendingHoverCoords.x = cx;
+  pendingHoverCoords.y = cy;
+  if (!hoverRafPending) {
+    hoverRafPending = true;
+    requestAnimationFrame(() => {
+      handleHover(pendingHoverCoords.x, pendingHoverCoords.y);
+      hoverRafPending = false;
+    });
+  }
 }
 
 let dragging=false,prevM={x:0,y:0};
 const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 renderer.domElement.addEventListener('mousedown',e=>{if(isMobile)return;dragging=true;prevM={x:e.clientX,y:e.clientY};renderer.domElement.style.cursor='grabbing';});
 window.addEventListener('mouseup',()=>{dragging=false;renderer.domElement.style.cursor='';});
-window.addEventListener('mousemove',e=>{if(dragging&&!isMobile){sph.theta-=(e.clientX-prevM.x)*0.007;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.clientY-prevM.y)*0.007));prevM={x:e.clientX,y:e.clientY};applyCam();}handleHover(e.clientX,e.clientY);});
+window.addEventListener('mousemove',e=>{if(dragging&&!isMobile){sph.theta-=(e.clientX-prevM.x)*0.007;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.clientY-prevM.y)*0.007));prevM={x:e.clientX,y:e.clientY};applyCam();}queueHandleHover(e.clientX,e.clientY);});
 renderer.domElement.addEventListener('wheel',e=>{if(isMobile){e.preventDefault();return;}zoomF=Math.max(MIN_Z,Math.min(MAX_Z,zoomF-e.deltaY*0.0015));applyCam();},{passive:false});
 let prevT=null, touchStartPos=null, touchMoved=false, pinchDist=null;
 function touchDist(t0,t1){const dx=t1.clientX-t0.clientX,dy=t1.clientY-t0.clientY;return Math.sqrt(dx*dx+dy*dy);}
 renderer.domElement.addEventListener('touchstart',e=>{
-  if(e.touches.length===1){prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};touchStartPos={x:e.touches[0].clientX,y:e.touches[0].clientY};touchMoved=false;handleHover(e.touches[0].clientX,e.touches[0].clientY);}
+  if(e.touches.length===1){prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};touchStartPos={x:e.touches[0].clientX,y:e.touches[0].clientY};touchMoved=false;queueHandleHover(e.touches[0].clientX,e.touches[0].clientY);}
   else if(e.touches.length===2){pinchDist=touchDist(e.touches[0],e.touches[1]);hovered=null;tooltip.classList.remove('visible');}
 },{passive:true});
 renderer.domElement.addEventListener('touchmove',e=>{
@@ -1576,7 +1648,7 @@ renderer.domElement.addEventListener('touchmove',e=>{
     if(pinchDist)zoomF=Math.max(MIN_Z,Math.min(MAX_Z,zoomF+(d-pinchDist)*0.0018));
     pinchDist=d;touchMoved=true;applyCam();e.preventDefault();return;
   }
-  if(!prevT||e.touches.length!==1)return;const dx=e.touches[0].clientX-touchStartPos.x,dy=e.touches[0].clientY-touchStartPos.y;if(Math.sqrt(dx*dx+dy*dy)>8)touchMoved=true;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();handleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();
+  if(!prevT||e.touches.length!==1)return;const dx=e.touches[0].clientX-touchStartPos.x,dy=e.touches[0].clientY-touchStartPos.y;if(Math.sqrt(dx*dx+dy*dy)>8)touchMoved=true;sph.theta-=(e.touches[0].clientX-prevT.x)*0.008;sph.phi=Math.max(0.3,Math.min(1.3,sph.phi-(e.touches[0].clientY-prevT.y)*0.008));prevT={x:e.touches[0].clientX,y:e.touches[0].clientY};applyCam();queueHandleHover(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();
 },{passive:false});
 renderer.domElement.addEventListener('touchend',e=>{if(e.touches.length<2)pinchDist=null;if(!touchMoved&&hovered&&e.changedTouches.length===1){showPlatformPreview(hovered);}touchStartPos=null;},{passive:true});
 
@@ -2548,9 +2620,140 @@ function loadLab(lab) {
   saveProgress();
 }
 
+let commandHistory = [];
+let historyIndex = -1;
+let tempCommandInput = '';
+
+function findMatchingLabCommand(cmd, activeLab) {
+  const norm = cmd.trim().replace(/\s+/g, ' ');
+  if (!norm) return null;
+
+  // 1. Coincidencia exacta directa
+  if (activeLab.commands[norm]) return activeLab.commands[norm];
+  if (activeLab.commands[cmd]) return activeLab.commands[cmd];
+
+  // 2. Normalización de nmap
+  if (/^nmap\b/i.test(norm)) {
+    if (norm.includes('10.10.10.5')) {
+      const hasSV = /-sV\b/i.test(norm) || /-s[a-zA-Z]*V/i.test(norm);
+      const hasSC = /-sC\b/i.test(norm) || /-s[a-zA-Z]*C/i.test(norm);
+      if (hasSV && hasSC) {
+        return activeLab.commands['nmap -sV -sC 10.10.10.5'];
+      }
+      if (hasSV) {
+        return activeLab.commands['nmap -sV 10.10.10.5'];
+      }
+      return activeLab.commands['nmap 10.10.10.5'];
+    }
+  }
+
+  // 3. Normalización de curl
+  if (/^curl\b/i.test(norm)) {
+    // curl http://10.10.10.5
+    if (norm.includes('10.10.10.5')) {
+      if (norm.includes('/flag')) return activeLab.commands['curl http://10.10.10.5:8080/flag'];
+      if (norm.includes('/users')) return activeLab.commands['curl http://10.10.10.5:8080/users'];
+      if (norm.includes(':8080')) return activeLab.commands['curl http://10.10.10.5:8080'];
+      return activeLab.commands['curl http://10.10.10.5'];
+    }
+    // curl SQLi targets
+    if (norm.includes('vuln-app.local/login')) {
+      if (norm.includes("' OR '1'='1") || norm.includes("' or '1'='1") || norm.includes("' OR 1=1")) {
+        return activeLab.commands["curl -X POST http://vuln-app.local/login -d \"user=' OR '1'='1' --&pass=x\""];
+      }
+      if (norm.includes("admin'") && (norm.includes('--') || norm.includes('#') || norm.includes('pass='))) {
+        return activeLab.commands["curl -X POST http://vuln-app.local/login -d \"user=admin' --&pass=x\""];
+      }
+      if (norm.includes("admin'") || norm.includes("'")) {
+        return activeLab.commands["curl -X POST http://vuln-app.local/login -d \"user=admin'&pass=x\""];
+      }
+      if (norm.includes('pass=admin123')) {
+        return activeLab.commands["curl -X POST http://vuln-app.local/login -d \"user=admin&pass=admin123\""];
+      }
+      return activeLab.commands["curl -X POST http://vuln-app.local/login -d \"user=admin&pass=admin\""];
+    }
+    if (norm.includes('vuln-app.local/flags')) {
+      return activeLab.commands["curl http://vuln-app.local/flags -H \"Authorization: eyJ...\""];
+    }
+    if (norm.includes('vuln-app.local/dashboard')) {
+      return activeLab.commands["curl http://vuln-app.local/dashboard -H \"Authorization: eyJ...\""];
+    }
+  }
+
+  // 4. Normalización de sqlmap
+  if (/^sqlmap\b/i.test(norm)) {
+    if (norm.includes('--dump') || norm.includes('-T flags')) {
+      return activeLab.commands["sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' -D webapp_db -T flags --dump"];
+    }
+    if (norm.includes('--tables') || norm.includes('-D webapp_db')) {
+      return activeLab.commands["sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' -D webapp_db --tables"];
+    }
+    if (norm.includes('--dbs')) {
+      return activeLab.commands["sqlmap -u http://vuln-app.local/login --data='user=admin&pass=x' --dbs"];
+    }
+  }
+
+  // 5. Normalización de find
+  if (/^find\b/i.test(norm) || /^\/usr\/bin\/find\b/i.test(norm)) {
+    if (norm.includes('-perm -4000') || norm.includes('4000')) {
+      return activeLab.commands['find / -perm -4000 -type f 2>/dev/null'] || activeLab.commands['find / -perm -4000 -type f'];
+    }
+    if (norm.includes('flag.txt.enc') || (norm.includes('-name') && norm.includes('flag'))) {
+      return activeLab.commands['find / -name "flag*" 2>/dev/null'] || activeLab.commands['find / -name "*.txt" 2>/dev/null'];
+    }
+    if (norm.includes('.txt') || (norm.includes('-name') && norm.includes('txt'))) {
+      return activeLab.commands['find / -name "*.txt" 2>/dev/null'];
+    }
+    if (norm.includes('-exec')) {
+      if (norm.includes('/root/root.txt')) return activeLab.commands['/usr/bin/find . -exec cat /root/root.txt \\;'];
+      if (norm.includes('/bin/bash') || norm.includes('bash') || norm.includes('sh')) return activeLab.commands['/usr/bin/find . -exec /bin/bash -p \\;'];
+      if (norm.includes('whoami')) return activeLab.commands['/usr/bin/find . -exec whoami \\;'];
+    }
+  }
+
+  // 6. Normalización de base64
+  if (/^base64\b/i.test(norm)) {
+    if (norm.includes('-d') || norm.includes('--decode') || norm.includes('flag')) {
+      return activeLab.commands['base64 -d flag.txt.enc'];
+    }
+  }
+
+  // 7. Normalización de john
+  if (/^john\b/i.test(norm)) {
+    if (norm.includes('--show')) return activeLab.commands['john shadow --show'] || activeLab.commands['john <archivo> --show'];
+    if (norm.includes('rockyou') || norm.includes('--wordlist')) {
+      return activeLab.commands['john shadow --wordlist=/usr/share/wordlists/rockyou.txt'] || activeLab.commands['john <archivo> --wordlist=<wl>'];
+    }
+  }
+
+  // 8. Normalización de ssh
+  if (/^ssh\b/i.test(norm)) {
+    if (norm.includes('admin@10.10.10.8')) {
+      if (norm.includes('-p 22') || norm.includes('admin123')) return activeLab.commands['ssh admin@10.10.10.8 -p 22'];
+      return activeLab.commands['ssh admin@10.10.10.8'] || activeLab.commands['ssh admin@10.10.10.8 -p 22'];
+    }
+  }
+
+  // 9. Comprobación de prefijo difuso como fallback
+  const keys = Object.keys(activeLab.commands);
+  const match = keys.find(k => norm.startsWith(k.split(' ')[0]) && k !== 'help');
+  if (match && Math.abs(norm.length - match.length) < 8) return activeLab.commands[match];
+
+  return null;
+}
+
 function runLabCommand(raw) {
   const cmd = raw.trim();
   if (!cmd) return;
+
+  // Registrar en historial si no es duplicado consecutivo
+  if (commandHistory.length === 0 || commandHistory[commandHistory.length - 1] !== cmd) {
+    commandHistory.push(cmd);
+    if (commandHistory.length > 50) commandHistory.shift();
+  }
+  historyIndex = -1;
+  tempCommandInput = '';
+
   const activeLab = getLabCopy(currentLab);
   labPrintCmd(cmd);
 
@@ -2570,14 +2773,20 @@ function runLabCommand(raw) {
     saveTerminalHistory();
     return;
   }
-
-  const norm = cmd.replace(/\s+/g,' ');
-  let found = activeLab.commands[norm] || activeLab.commands[cmd];
-  if (!found) {
-    const keys = Object.keys(activeLab.commands);
-    const match = keys.find(k => norm.startsWith(k.split(' ')[0]) && k !== 'help');
-    if (match && Math.abs(norm.length - match.length) < 8) found = activeLab.commands[match];
+  if (cmd === 'history') {
+    if (commandHistory.length === 0) {
+      labPrint('<span style="color:#606070">No hay comandos en el historial</span>');
+    } else {
+      commandHistory.forEach((c, idx) => {
+        labPrint(`<span style="color:#606070">${String(idx + 1).padStart(3, ' ')}  </span><span style="color:#c0c0d0">${c.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>`);
+      });
+    }
+    labPrint('');
+    saveTerminalHistory();
+    return;
   }
+
+  let found = findMatchingLabCommand(cmd, activeLab);
 
   if (found) {
     labPrint(`<span style="color:#c0c0d0">${found}</span>`);
@@ -2670,10 +2879,30 @@ document.getElementById('labRun').addEventListener('click', () => {
   inp.focus();
 });
 document.getElementById('labInput').addEventListener('keydown', e => {
+  const inp = e.target;
   if (e.key === 'Enter') {
-    const inp = e.target;
     runLabCommand(inp.value);
     inp.value = '';
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (commandHistory.length > 0) {
+      if (historyIndex === -1) {
+        tempCommandInput = inp.value;
+      }
+      if (historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        inp.value = commandHistory[commandHistory.length - 1 - historyIndex];
+      }
+    }
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (historyIndex > 0) {
+      historyIndex--;
+      inp.value = commandHistory[commandHistory.length - 1 - historyIndex];
+    } else if (historyIndex === 0) {
+      historyIndex = -1;
+      inp.value = tempCommandInput;
+    }
   }
 });
 document.getElementById('labHint').addEventListener('click', () => runLabCommand('hint'));
